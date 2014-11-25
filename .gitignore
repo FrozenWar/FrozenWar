@@ -17,3 +17,5 @@ hs_err_pid*
 /.gradle/
 /.settings/
 
+# shouldn't be changed after initial commit.
+/.classpath
