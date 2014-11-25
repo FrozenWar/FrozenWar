@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>MLP:FW calc</title>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript">
+			function update(){
+				$.ajax({
+					url:'/calc',
+					data:{
+						a:$('#A').val(),
+						b:$('#B').val()
+					},
+					success:function(msg){
+						$('#result').html(msg);
+					}
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div>|로 구분합니다 대상|체력|마나.</div>
+		<div class='item'>공격자: <input type="text" id="A"></div>
+		<div class='item'>대상자: <input type="text" id="B"></div>
+		<div onclick="update()" style="text-align:center; width:175px; color:#fff; background-color:#585c62; height:1.6em;line-height:1.6em;">update</div>
+		<div id="result" style="width:100%; border:1px solid #efefef;">
+
+		</div>
+	</body>
+</html>
