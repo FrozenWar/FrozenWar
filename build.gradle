@@ -1,27 +1,50 @@
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.7
-version = '1.0'
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'FrozenWar', 'Implementation-Version': version
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.stehno:gradle-natives:0.2.1'
     }
 }
+
+apply plugin:'com.stehno.natives'
+
+sourceCompatibility = 1.7
+version = '0.0.1'
+
+mainClassName = 'com.frozenwar.FrozenWar'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.1'
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
-uploadArchives {
-    repositories {
-       flatDir {
-           dirs 'repos'
-       }
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
     }
 }
+
+natives {
+    jars = [
+        'lwjgl-platform-2.9.1-natives-windows', 
+        'lwjgl-platform-2.9.1-natives-osx', 
+        'lwjgl-platform-2.9.1-natives-linux'
+    ]
+    platforms = 'linux'
+}
+
+run {
+    systemProperty 'java.library.path', file( 'build/natives/linux' )
+}
+
+run.dependsOn unpackNatives
