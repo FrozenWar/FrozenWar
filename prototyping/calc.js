@@ -1,12 +1,17 @@
 (function(){
+	var fs = require('fs');
+	
+	
 	var MATCH = {
-		"hp":"체력","atk":"전투력","def":"방어력","spd":"기동력","msp":"마력소모치","mn":"마력",rng:'사거리','type':''
+		"hp":"체력","atk":"전투력","def":"방어력","spd":"기동력","msp":"마력소모치","mn":"마력",rng:'사거리','type':'',
+		'cost':'비용'
 	};
 
 	function toString(o){
 		var a = [];
 		for(k in o){
 			if(typeof o[k] == 'object'){
+				if(k == 'cost')continue;
 				if(o[k][1] == 0)
 					a.push(MATCH[k] + ':' + o[k][0]);
 				else
@@ -24,27 +29,28 @@
 		return '<b>' + o['name'] + '</b> ' + a.join(', ');
 	}
 
-	var fs = require('fs');
 	fs.readFile('units.json', 'utf-8', function(err, data){
 		if(err) throw (err);
 		var u = JSON.parse(data).units;
 
-		function news(n, hp, mn){
-			if(!u[n]) return undefined;
-			var p = {name:n};
-			var o = u[n];
+		function news(n){
+			var o = u[n.name];
+			if(!o) return undefined;
+			var p = {
+				name:n.name
+			};
 			for(k in o){
-				p[k] = o[k];
+				if(n[k])
+					p[k] = n[k];
+				else
+					p[k] = o[k];
 			}
 			if(typeof p.atk == 'number')
 				p.atk = [p.atk, 0];
 			else
 				p.atk = [p.atk[0], p.atk[1]-p.atk[0]];
-
+			
 			p.type = p.rng ? '원거리유닛' : '근거리유닛';
-
-			if(hp)	p.hp = Math.min( parseInt(hp), p.hp );
-			if(mn)	p.mn = Math.min( parseInt(mn), p.mn );
 
 			return p;
 		}
@@ -64,11 +70,8 @@
 		}
 
 		function calc(o){
-			var n1 = o.a.split('|');
-			var n2 = o.b.split('|');
-
-			var p1 = news(n1[0], n1[1], n1[2]);
-			var p2 = news(n2[0], n2[1], n2[2]);
+			var p1 = news(hron.decode(o.a));
+			var p2 = news(hron.decode(o.b));
 
 			if(p1&&p2){
 
@@ -103,12 +106,13 @@
 		var express	 = require('express');
 		var app		 = express();
 		var http	 = require('http').Server(app);
+		var bodyParser=require('body-parser');
+		var hron	 = require('./hron.js');
 
+		app.use(bodyParser.urlencoded());
 		app.use('/', express.static(__dirname));
-		app.get('/calc', function(req, res){
-			console.log( req.query );
-
-			res.send(calc(req.query));
+		app.post('/calc', function(req, res){
+			res.send(calc(req.body));
 		});
 
 		app.listen(5001, function(){

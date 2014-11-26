@@ -4,28 +4,26 @@
 		<meta charset="utf-8">
 		<title>MLP:FW calc</title>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script type="text/javascript">
-			function update(){
-				$.ajax({
-					url:'/calc',
-					data:{
-						a:$('#A').val(),
-						b:$('#B').val()
-					},
-					success:function(msg){
-						$('#result').html(msg);
-					}
-				});
-			}
-		</script>
+		<script type="text/javascript" src="https://raw.githubusercontent.com/tnRaro/hron/master/hron.js"></script>
+		<script type="text/javascript" src="engine.js"></script>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<div>|로 구분합니다 대상|체력|마나.</div>
-		<div class='item'>공격자: <input type="text" id="A"></div>
-		<div class='item'>대상자: <input type="text" id="B"></div>
-		<div onclick="update()" style="text-align:center; width:175px; color:#fff; background-color:#585c62; height:1.6em;line-height:1.6em;">update</div>
-		<div id="result" style="width:100%; border:1px solid #efefef;">
+		<div id="war" class="container">
+			<div>|로 구분합니다 대상|체력|마나.</div>
+			<div class='item'>공격자: <input type="text" id="A"></div>
+			<div class='item'>대상자: <input type="text" id="B"></div>
+			<div class="button" onclick="war_update()">update</div>
+			<div id="result" class="result">
 
+			</div>
+		</div>
+		<div id="init" class="container">
+			
+			<div class="button" onclick="init_update()">update</div>
+			<div class="result">
+
+			</div>
 		</div>
 	</body>
 </html>

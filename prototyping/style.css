@@ -1,0 +1,13 @@
+
+.button {
+	text-align:center; width:175px; color:#fff; background-color:#585c62; height:1.6em;line-height:1.6em;
+}
+
+#result {
+	width:100%; border:1px solid #efefef;
+}
+
+.container {
+	margin-bottom: 10px;
+	border-bottom: 2px solid #efefef;
+}
