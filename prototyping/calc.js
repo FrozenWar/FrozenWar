@@ -69,9 +69,9 @@
 			return r;
 		}
 
-		function calc(o){
-			var p1 = news(hron.decode(o.a));
-			var p2 = news(hron.decode(o.b));
+		function war(a,b){
+			var p1 = news(a);
+			var p2 = news(b);
 
 			if(p1&&p2){
 
@@ -103,11 +103,27 @@
 			return 'fail';
 		}
 
+		function calc(o){
+			var r = {};
+
+			var c = hron.decode(o.content);
+
+			switch(o.status){
+				case 'war':
+					r.content = war(c[0], c[1]);
+					break;
+				default:
+					r.error = 'don\'t support';
+			}
+
+			return r;
+		}
+
 		var express	 = require('express');
 		var app		 = express();
 		var http	 = require('http').Server(app);
 		var bodyParser=require('body-parser');
-		var hron	 = require('./hron.js');
+		var hron	 = require('hron');
 
 		app.use(bodyParser.urlencoded());
 		app.use('/', express.static(__dirname));

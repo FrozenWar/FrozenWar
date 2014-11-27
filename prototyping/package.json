@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.9.3",
-    "express": "^4.10.4"
+    "express": "^4.10.4",
+    "hron": "^0.1.0"
   }
 }
