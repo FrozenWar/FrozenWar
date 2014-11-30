@@ -11,5 +11,7 @@
   "repository": {
   },
   "dependencies": {
+    "express": "4.x",
+    "serve-static": "*"
   }
 }
