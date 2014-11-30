@@ -6,7 +6,8 @@ var engine = (function(exports){
 		def:'방어',
 		non:'무능',
 	}
-	var status = 'war';
+	var status = 'set';
+	var setlen = 0;
 
 	function news(t){
 		var o = {};
@@ -24,29 +25,65 @@ var engine = (function(exports){
 		return o;
 	}
 
-	exports.update = function(){
+	function newd(){
+		var o = $('<div>');
+		o.attr('class', 'item');
+
+		setlen++;
+		o.append($('<div class="w100"><input class="infoset'+setlen+' form-control" placeholder="name"></div>'));
+		o.append($('<div class="w50"><input class="infoset'+setlen+' form-control" placeholder="num"></div>'));
+
+		return o;
+	}
+
+	function set(){
 		var items = [];
-		var p = infoc(status, true);
+		var p = $('#set');
 		if(!p)	return false;
 		var il = p.children('.item');
 		console.log(il);
 		for(var i=0;i<il.length-1;i++){
 			items.push(news(i));
 		}
-		console.log(items);
+		return items;
+	}
 
-		$.ajax({
-			url:'/calc',
-			type:'POST',
-			data:{
-				status:status,
-				content:hron.encode(items)
-			},
-			success:function(msg){
-				if(msg.error)	throw false;
-				$('#result').html(msg.content);
-			}
-		});
+	function war(){
+		var items = [];
+		var p = $('#war');
+		if(!p)	return false;
+		var il = p.children('.item');
+		console.log(il);
+		for(var i=0;i<il.length-1;i++){
+			items.push(news(i));
+		}
+		return items;
+	}
+
+	exports.update = function(){
+		var a;
+		switch(status){
+			case 'set':
+				a = set();
+				break;
+			case 'war':
+				a = war();
+				break;
+		}
+		if(a){
+			$.ajax({
+				url:'/calc',
+				type:'POST',
+				data:{
+					status:status,
+					content:hron.encode(a)
+				},
+				success:function(msg){
+					if(msg.error)	throw false;
+					$('#result').html(msg.content);
+				}
+			});
+		}
 	}
 
 	exports.status = function(e){
@@ -59,6 +96,10 @@ var engine = (function(exports){
 		}
 	}
 
+	exports.addset = function(){
+		$('#set').append(newd());
+	}
+
 	function statusUpdate(){
 		$('#status_result').html(MATCH[status]);
 
@@ -67,15 +108,13 @@ var engine = (function(exports){
 		}, 'change', status);
 	}
 
-	function infoc(e, g){
+	function infoc(e){
 		if(!e) e = status;
 		var c = $('.infoc');
 		for(var i=0;i<c.length;i++){
 			var t = $(c[i]);
-			var ds = t.data('status');
+			var ds = t.attr('id');
 			if(ds==e){
-				if(g)
-					return t;
 				t.toggleClass('mienai', false);
 			}else{
 				t.toggleClass('mienai', true);

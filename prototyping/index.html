@@ -3,46 +3,64 @@
 	<head>
 		<meta charset="utf-8">
 		<title>MLP:FW calc</title>
+		<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="style.css">
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="https://raw.githubusercontent.com/tnRaro/hron/master/index.js?v=0.1.2"></script>
+		<!--<script type="text/javascript" src="https://raw.githubusercontent.com/tnRaro/hron/master/index.js?v=0.1.2"></script>-->
+
+		<script type="text/javascript" src="http://kari.tnraro.com:5000/lib/index.js"></script>
 		<script type="text/javascript" src="engine.js"></script>
 		<script type="text/javascript" src="events.js"></script>
-		<link rel="stylesheet" href="style.css">
-		<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body>
 		<div class="container">
 			<div id="info">
-				<div id="head">Info</div>
-				<div data-status="war" class="infoc mienai">
-					<div class='item'><div class="w75">&nbsp;</div><div class="w100">이름</div><div class="w50">체력</div><div class="w50">힘</div></div>
+				<div class="head">Info</div>
+				<div id="set" class="infoc mienai">
+					<div class='item'>
+						<div class="w100">이름</div>
+						<div class="w50">수량</div>
+						<div class="w50"><button class="btn btn-default" onclick="engine.addset()">+</button></div>
+					</div>
+					<div class='item'>
+						<div class="w100"><input class="infoset0 form-control" placeholder="name"></div>
+						<div class="w50"><input class="infoset0 form-control" placeholder="num"></div>
+					</div>
+				</div>
+				<div id="war" class="infoc mienai">
+					<div class='item'>
+						<div class="w75">&nbsp;</div>
+						<div class="w100">이름</div>
+						<div class="w50">체력</div>
+						<div class="w50">힘</div>
+					</div>
 					<div class='item'>
 						<div class="w75">공격자: </div>
-						<div class="w100"><input class="infowar0 form-control" placeholder="name"></div>
-						<div class="w50"><input class="infowar0 form-control" placeholder="hp"></div>
-						<div class="w50"><input class="infowar0 form-control" placeholder="mn"></div>
+						<div><input class="infowar0 form-control w100" placeholder="name"></div>
+						<div><input class="infowar0 form-control w50"  placeholder="hp"></div>
+						<div><input class="infowar0 form-control w50"  placeholder="mn"></div>
 					</div>
 					<div class='item'>
 						<div class="w75">대상자: </div>
-						<div class="w100"><input class="infowar1 form-control" placeholder="name"></div>
-						<div class="w50"><input class="infowar1 form-control" placeholder="hp"></div>
-						<div class="w50"><input class="infowar1 form-control" placeholder="mn"></div>
+						<div><input class="infowar1 form-control w100" placeholder="name"></div>
+						<div><input class="infowar1 form-control w50"  placeholder="hp"></div>
+						<div><input class="infowar1 form-control w50"  placeholder="mn"></div>
 					</div>
 				</div>
-				<div data-status="non" class="infoc mienai">
+				<div id="non" class="infoc mienai">
 					<div class='item'><div class="w75">&nbsp;</div><div class="w100">이름</div><div class="w50">체력</div><div class="w50">힘</div></div>
 					<div class='item'>
 						<div class="w75">대상: </div>
-						<div class="w100"><input class="infonon0 form-control" placeholder="name"></div>
-						<div class="w50"><input class="infonon0 form-control" placeholder="hp"></div>
-						<div class="w50"><input class="infonon0 form-control" placeholder="mn"></div>
+						<input class="infonon0 form-control" placeholder="name">
+						<input class="infonon0 form-control" placeholder="hp">
+						<input class="infonon0 form-control" placeholder="mn">
 					</div>
 				</div>
 			</div>
 			<hr>
 			<div id="option">
-				<div id="head">Option</div>
+				<div class="head">Option</div>
 				<div class="item btn-group" id="status">
 					<div class='btn-group'>
 						<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">

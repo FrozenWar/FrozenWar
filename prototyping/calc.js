@@ -66,6 +66,7 @@
 				b.def		// 방어력
 			);
 			b.hp -= r;
+			a.mn -= u[a.name]
 			return r;
 		}
 
@@ -76,6 +77,20 @@
 			if(p1&&p2){
 
 				//console.log(p1, p2);
+
+				var d1 = op(p1, p2);
+				var d2 = op(p2, p1);
+
+				var r = {
+					atk:{
+						unit:p1,
+						fluctuation:d1
+					},
+					def:{
+						unit:p2,
+						fluctuation:d2
+					}
+				};
 
 				var r = '';
 				r += '<div>';
@@ -103,14 +118,53 @@
 			return 'fail';
 		}
 
+		function set(a){
+			var r = '';
+
+			var al = 0;
+			var ar = 0;
+
+			for(var i in a){
+				var t = a[i];
+				if(t.name&&t.num){
+					var p = news(t);
+					if(!p)continue;
+
+					al += p.cost[0] * t.num;
+					ar += p.cost[1] * t.num;
+
+					r += '<p>';
+					r += t.name;
+					r += ' ';
+					r += t.num;
+					r += '량';
+					r += '</p>';
+
+					console.log(p.cost);
+				}
+			}
+
+			r += '<hr><p> Total: ';
+			r += al;
+			r += '병력/';
+			r += ar;
+			r += '보급</p>';
+
+			return r;
+		}
+
 		function calc(o){
 			var r = {};
 
 			var c = hron.decode(o.content);
+			console.log(c);
 
 			switch(o.status){
 				case 'war':
 					r.content = war(c[0], c[1]);
+					break;
+				case 'set':
+					r.content = set(c);
 					break;
 				default:
 					r.error = 'don\'t support';
