@@ -1,9 +1,8 @@
 package com.frozenwar.base;
 
-public abstract class Handler {
+import com.frozenwar.base.world.World;
 
-  public Handler() {
-    // TODO Auto-generated constructor stub
-  }
-
+public interface Handler extends GameObject {
+  
+  public void handle(World world, Action action);
 }

@@ -1,9 +1,6 @@
 package com.frozenwar.base;
 
-public abstract class Action {
-
-  public Action() {
-    // TODO Auto-generated constructor stub
-  }
-
+public interface Action extends GameObject {
+  public void run();
+  public boolean undo();
 }
