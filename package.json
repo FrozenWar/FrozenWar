@@ -1,0 +1,15 @@
+{
+  "name": "FrozenWar",
+  "version": "0.0.1",
+  "description": "A turn based strategy game based on My Little Pony - Friendship is Magic.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ["yoo2001818", "tnRaro"],
+  "license": "MIT",
+  "repository": {
+  },
+  "dependencies": {
+  }
+}
