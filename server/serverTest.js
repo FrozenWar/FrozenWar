@@ -38,5 +38,6 @@ for(var y = 0; y < map.height; ++y) {
     }
 }
 
-//Yay.
-console.log(JSON.stringify(map.serialize(), undefined, 2));
+var tile = map.getTileByOffset(new Base.Point(4,4));
+console.log(JSON.stringify(tile.getRelative(Base.Direction.TOP_LEFT, 2).serialize(), undefined, 2));
+//console.log(JSON.stringify(map.serialize(), undefined, 2));

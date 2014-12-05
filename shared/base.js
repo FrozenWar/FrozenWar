@@ -59,6 +59,7 @@ var Session = function(isServer, map, domain) {
     this.turns = [];
     this.map = map;
     this.domain = domain;
+    this.systems = [];
 };
 
 Session.prototype.spawnEntity = function(domain, id) {
@@ -75,8 +76,21 @@ Session.prototype.spawnEntity = function(domain, id) {
     return entity;
 }
 
+Session.prototype.runSystems = function() {
+    this.systems.forEach(function(value) {
+        value();
+    });
+}
+
+Session.prototype.addSystem = function(domain) {
+   var system = this.domain.get(domain);
+   this.systems.push(domain);
+}
+
 var Player = function(client) {
     this.client = client;
+    this.id = null;
+    this.name = '';
     this.resources = [];
 }
 
@@ -108,8 +122,9 @@ var Tile = function(position, map) {
  * @returns a tile object or null.
  **/
 Tile.prototype.getRelative = function(direction, distance) {
+    if(!distance) distance = 1;
     var dirPoint = this.map.direction[direction].multiply(distance);
-    return this.map.getTile(this.x + dirPoint.x, this.y + dirPoint.y);
+    return this.map.getTile(new Point(this.position.x + dirPoint.x, this.position.y + dirPoint.y));
 }
 
 Tile.prototype.serialize = function() {
