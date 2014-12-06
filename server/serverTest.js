@@ -93,7 +93,7 @@ domain.assign('com.example.MoveAction', {
             console.log('Tried to move a entity without position?');
             return;
         }
-        if(action.direction == null || !action.distance) {
+        if(action.args.direction == null || !action.args.distance) {
             console.log('Arguments not specificed');
             return;
         }
@@ -102,10 +102,10 @@ domain.assign('com.example.MoveAction', {
             return;
         }
         action.result = {previous: {x:position.x, y:position.y}};
-        energy.energy -= movable.energy * action.distance;
+        energy.energy -= movable.energy * action.args.distance;
         
         var prevTile = action.session.map.getTile(position);
-        var newTile = prevTile.getRelative(action.direction, action.distance);
+        var newTile = prevTile.getRelative(action.args.direction, action.args.distance);
         prevTile.children.splice(prevTile.children.indexOf(action.entity), 1);
         newTile.children.push(action.entity);
         position.x = newTile.position.x;
@@ -162,15 +162,13 @@ tile.children.push(unit);
 session.next();
 
 // As a player, I want to move my unit to LEFT.
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit);
-moveAction.direction = Base.Direction.LEFT;
-moveAction.distance = 2;
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+{direction: Base.Direction.LEFT, distance: 2});
 session.runAction(moveAction);
 
 // As a player, I want to move my unit to RIGHT.
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit);
-moveAction.direction = Base.Direction.RIGHT;
-moveAction.distance = 2;
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+{direction: Base.Direction.RIGHT, distance: 2});
 session.runAction(moveAction);
 
 session.next();
@@ -178,9 +176,8 @@ session.next();
 // TABLE FLIP!
 session.runAction(new Base.Action('com.example.TableFlipAction', session, player, null));
 
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit);
-moveAction.direction = Base.Direction.TOP_RIGHT;
-moveAction.distance = 2;
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+{direction: Base.Direction.TOP_RIGHT, distance: 2});
 session.runAction(moveAction);
 
 console.log(JSON.stringify(session.serialize(), undefined, 2));

@@ -47,11 +47,12 @@ Entity.prototype.addComponent = function(domain) {
     return component;
 }
 
-var Action = function(domain, session, player, entity) {
+var Action = function(domain, session, player, entity, args) {
     this.domain = domain;
     this.session = session;
     this.player = player;
     this.entity = entity;
+    this.args = args;
     this.result = null;
 };
 
@@ -60,6 +61,7 @@ Action.prototype.serialize = function() {
         domain: this.domain,
         player: (this.player ? this.player.id : -1),
         entity: (this.entity ? this.entity.id : -1),
+        args: this.args,
         result: this.result
     };
 }
