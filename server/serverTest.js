@@ -59,7 +59,7 @@ domain.assign('com.example.TurnNotiSystem', {
         console.log('~~ Turn '+(session.turnId+1)+' ~~');
     },
     order: function(session) {
-        console.log('~~ '+session.players[session.getTurn().order].name+'\'s turn ~~');
+        console.log('~~ '+session.getPlayer().name+'\'s turn ~~');
     },
 });
 domain.assign('com.example.EnergyHealAction', {

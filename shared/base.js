@@ -178,7 +178,7 @@ Session.prototype.undoLastAction = function() {
 }
 
 Session.prototype.getPlayer = function() {
-    return this.getTurn().getPlayer();
+    return this.getTurn().getPlayer(this);
 }
 
 var Player = function(client) {
