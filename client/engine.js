@@ -1,29 +1,14 @@
 var socket = (function(exports){
-	exports.isSupported = function(){
-		return ('WebSocket' in window);
-	}
-
 	var so;
 
 	exports.init = function(src){
-		if(!exports.isSupported) return false;
-		so = new WebSocket(src);
+		so = io(info.get('host'));
 
-		so.onmessage = function(e){
-			console.log(e);
-		}
+		so.on('ppp', function(data){
+			console.log(data);
 
-		so.onopen = function(e){
-			console.log("opened");
-		}
-
-		so.onclose = function(e){
-			console.log("closed");
-		}
-
-		so.onerror = function(e){
-			console.log(e);
-		}
+			so.emit('hello', {pony:'pedo'});
+		});
 	}
 
 	return exports;
