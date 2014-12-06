@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "4.x",
-    "serve-static": "*"
+    "serve-static": "*",
+    "socket.io": "*"
   }
 }

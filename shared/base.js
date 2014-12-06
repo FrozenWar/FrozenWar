@@ -116,15 +116,16 @@ Session.prototype.spawnEntity = function(domain, id) {
 
 Session.prototype.runSystems = function(mode) {
     var self = this;
-    this.systems.forEach(function(value) {
-        if(value[mode] && typeof(value[mode]) == 'function') value[mode](self);
-        if(value['all'] && typeof(value['all']) == 'function') value['all'](self);
-    });
+    for(var key in this.systems) {
+        var system = this.systems[key];
+        if(system[mode] && typeof(system[mode]) == 'function') system[mode](self);
+        if(system['all'] && typeof(system['all']) == 'function') system['all'](self);
+    }
 }
 
 Session.prototype.addSystem = function(domain) {
     var system = this.domain.get(domain);
-    this.systems.push(system);
+    this.systems[domain] = system;
 }
 
 Session.prototype.addPlayer = function(player) {
@@ -181,11 +182,37 @@ Session.prototype.getPlayer = function() {
     return this.getTurn().getPlayer(this);
 }
 
+Session.prototype.serialize = function() {
+    var self = this;
+    return {
+        players: this.players,
+        turns: (function() {
+            var array = [];
+            self.turns.forEach(function(value) {
+                array.push(value.serialize());
+            });
+            return array;
+        })(),
+        map: this.map.serialize(),
+        domain: this.domain.keys(),
+        systems: Object.keys(this.systems),
+        turnId: this.turnId
+    };
+}
+
 var Player = function(client) {
     this.client = client;
     this.id = null;
     this.name = '';
     this.resources = [];
+}
+
+Player.prototype.serialize = function() {
+    return {
+        id: this.id,
+        name: this.name,
+        resources: this.resources
+    };
 }
 
 var Turn = function(id) {
@@ -208,6 +235,14 @@ Turn.prototype.isFinished = function(session) {
 
 Turn.prototype.getPlayer = function(session) {
     return session.players[this.order];
+}
+
+Turn.prototype.serialize = function() {
+    var array = [];
+    this.actions.forEach(function(value) {
+        array.push(value.serialize());
+    });
+    return array;
 }
 
 var Point = function(x, y) {

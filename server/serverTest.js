@@ -140,7 +140,7 @@ session.addSystem('com.example.TurnNotiSystem');
 session.addSystem('com.example.EnergySystem');
 
 // Iterate by offset coord
-for(var y = 0; y < map.height; ++y) {
+/*for(var y = 0; y < map.height; ++y) {
     for(var x = 0; x < map.width; ++x) {
         var tile = map.getTileByOffset(new Base.Point(x, y));
         var entity = session.spawnEntity('com.example.GrassEntity');
@@ -148,7 +148,7 @@ for(var y = 0; y < map.height; ++y) {
         entity.components[positionComponent].y = tile.position.y;
         tile.children.push(entity);
     }
-}
+}*/
 
 // Spawn a movable entity
 var tile = map.getTileByOffset(new Base.Point(4, 4));
@@ -177,9 +177,10 @@ session.next();
 
 // TABLE FLIP!
 session.runAction(new Base.Action('com.example.TableFlipAction', session, player, null));
-session.undoLastAction();
 
 var moveAction = new Base.Action('com.example.MoveAction', session, player, unit);
 moveAction.direction = Base.Direction.TOP_RIGHT;
 moveAction.distance = 2;
 session.runAction(moveAction);
+
+console.log(JSON.stringify(session.serialize(), undefined, 2));
