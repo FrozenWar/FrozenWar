@@ -20,7 +20,8 @@ var Entity = function(session, id) {
     if(this.id == null) {
         if(session.isServer) {
             // Request ID from the session
-            // TODO
+            this.id = session._entityCount;
+            session._entityCount ++;
         } else {
             // Throw an exception
             throw new Error('Clients can\'t create Entity without given id');
@@ -46,12 +47,46 @@ Entity.prototype.addComponent = function(domain) {
     return component;
 }
 
-var Action = function(domain, session, player, target, id) {
-    this.id = id;
+var Action = function(domain, session, player, entity) {
+    this.domain = domain;
     this.session = session;
     this.player = player;
-    this.target = target;
+    this.entity = entity;
+    this.result = null;
 };
+
+Action.prototype.serialize = function() {
+    return {
+        domain: this.domain,
+        player: (this.player ? this.player.id : -1),
+        entity: (this.entity ? this.entity.id : -1),
+        result: this.result
+    };
+}
+
+Action.prototype.getExec = function() {
+    return this.session.domain.get(this.domain);
+}
+
+Action.prototype.run = function() {
+    if(this.result != null) throw new Error('Action already has run.');
+    var run = this.getExec();
+    if(typeof(run) == 'function') {
+        run(this);
+    } else {
+        run.run(this);
+    }
+}
+
+Action.prototype.undo = function() {
+    if(this.result == null) throw new Error('Action didn\'t run.');
+    var undo = this.getExec().undo;
+    if(undo && typeof(undo) == 'function') {
+        undo(this);
+    } else {
+        throw new Error('Action doesn\'t support undo.');
+    }
+}
 
 var Session = function(isServer, map, domain) {
     this.isServer = isServer;
@@ -60,6 +95,9 @@ var Session = function(isServer, map, domain) {
     this.map = map;
     this.domain = domain;
     this.systems = [];
+    this._entityCount = 0;
+    this._playerCount = 0;
+    this.turnId = -1;
 };
 
 Session.prototype.spawnEntity = function(domain, id) {
@@ -76,15 +114,71 @@ Session.prototype.spawnEntity = function(domain, id) {
     return entity;
 }
 
-Session.prototype.runSystems = function() {
+Session.prototype.runSystems = function(mode) {
+    var self = this;
     this.systems.forEach(function(value) {
-        value();
+        if(value[mode] && typeof(value[mode]) == 'function') value[mode](self);
+        if(value['all'] && typeof(value['all']) == 'function') value['all'](self);
     });
 }
 
 Session.prototype.addSystem = function(domain) {
-   var system = this.domain.get(domain);
-   this.systems.push(domain);
+    var system = this.domain.get(domain);
+    this.systems.push(system);
+}
+
+Session.prototype.addPlayer = function(player) {
+    if(this.turnId >= 0) throw new Error('Players can only be added before starting turn');
+    player.id = this._playerCount;
+    this._playerCount ++;
+    this.players.push(player);
+}
+
+Session.prototype.getTurn = function() {
+    return this.turns[this.turns.length-1];
+}
+
+Session.prototype.nextTurn = function() {
+    if(this.getTurn() && !this.getTurn().isFinished(this)) {
+        throw new Error('There are some players left before calling nextTurn.');
+    }
+    this.turnId ++;
+    var turn = new Turn(this.turnId);
+    this.turns.push(turn);
+    if(this.turnId == 0) {
+        // Initial turn
+        this.runSystems('init');
+    }
+    this.runSystems('turn');
+    turn.order = 0;
+    this.runSystems('order');
+    return turn;
+}
+
+Session.prototype.next = function() {
+    if(this.getTurn() && !this.getTurn().isFinished(this)) {
+        this.getTurn().next(this);
+        // TODO should I put this code?
+        if(this.getTurn().isFinished(this)) {
+            this.nextTurn();
+        }
+    } else {
+        this.nextTurn();
+    }
+    return this.getTurn();
+}
+
+Session.prototype.runAction = function(action) {
+    action.run();
+    if(action.result != null) this.getTurn().actions.push(action);
+}
+
+Session.prototype.undoLastAction = function() {
+    this.getTurn().actions.pop().undo();
+}
+
+Session.prototype.getPlayer = function() {
+    return this.getTurn().getPlayer();
 }
 
 var Player = function(client) {
@@ -98,6 +192,22 @@ var Turn = function(id) {
     this.id = id;
     this.order = -1;
     this.actions = [];
+}
+
+Turn.prototype.next = function(session) {
+    if(this.isFinished(session)) {
+        throw new Error('Turn is over. Call session.nextTurn instead.');
+    }
+    session.runSystems('order');
+    this.order ++;
+}
+
+Turn.prototype.isFinished = function(session) {
+    return session.players.length-1 <= this.order;
+}
+
+Turn.prototype.getPlayer = function(session) {
+    return session.players[this.order];
 }
 
 var Point = function(x, y) {
@@ -188,6 +298,14 @@ Map.prototype.toOffsetCoord = function(point) {
  **/
 Map.prototype.toAxialCoord = function(point) {
     return new Point(point.x - (point.y/2 | 0), point.y);
+}
+
+Map.prototype.forEach = function(callback) {
+    for(var y = 0; y < this.height; ++y) {
+        for(var x = 0; x < this.width; ++x) {
+            this._data[y][x].children.forEach(callback);
+        }
+    }
 }
 
 Map.prototype.serialize = function() {
