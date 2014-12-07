@@ -47,6 +47,13 @@ Entity.prototype.addComponent = function(domain) {
     return component;
 }
 
+/**
+ * @param domain action's domain
+ * @param session session
+ * @param player player object
+ * @param entity entity's ID or -1
+ * @param args args
+ **/
 var Action = function(domain, session, player, entity, args) {
     this.domain = domain;
     this.session = session;
@@ -60,10 +67,14 @@ Action.prototype.serialize = function() {
     return {
         domain: this.domain,
         player: (this.player ? this.player.id : -1),
-        entity: (this.entity ? this.entity.id : -1),
+        entity: this.entity,
         args: this.args,
         result: this.result
     };
+}
+
+Action.prototype.getEntity = function() {
+    return this.session.map.searchEntity(this.entity);
 }
 
 Action.prototype.getExec = function() {

@@ -8,6 +8,7 @@ var socket;
 var username = '';
 var isServer = false;
 var playerId = 0;
+var session;
 
 var logger = {
     log: function(data) {
@@ -156,18 +157,44 @@ function init() {
     socket.on('disconnect', function() {
         logger.error('Disconnected');
     });
-    socket.on('startSession', function(session, pid) {
+    socket.on('startSession', function(rawSession, pid) {
         logger.info('Game session data received');
-        logger.log(JSON.stringify(session));
+        logger.log(JSON.stringify(rawSession));
         playerId = pid;
         logger.info('Player id : '+playerId);
+        
+        session = domain.get('init')(false, rawSession);
+        
+        session.runSystems('init');
     });
     socket.on('turnOrder', function(order, turnId) {
         logger.info(order+'\'s turn. (turn '+turnId+')');
+        
+        session.turnId = turnId;
+        session.getTurn().order = order;
+        if(order == 0) {
+            session.runSystems('turn');
+        }
+        session.runSystems('order');
     });
     socket.on('turnUpdate', function(data) {
         logger.info(JSON.stringify(data));
+        
+        var turn = new Turn(data.id);
+        turn.order = data.order;
+        data.actions.forEach(function(value) {
+            var action = new Action(value.domain, session, session.getPlayer(value.player), value.entity, value.args);
+            action.result = value.result;
+            data.actions.push(action);
+        });
+        session.turns[turn.id] = turn;
     });
+    /*
+        socket.emit('action', action.serialize());
+        socket.emit('endTurn');
+        session.runSystems('frame');
+        playerId
+     */
 }
 
 function startGame() {

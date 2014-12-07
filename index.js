@@ -112,7 +112,7 @@ io.on('connection', function(socket){
             return;
         }
         // Start game session
-        var session = domain.get('init')();
+        var session = domain.get('init')(true);
         room.clients.forEach(function(value) {
             var player = new domain.Player(value);
             session.addPlayer(player);
