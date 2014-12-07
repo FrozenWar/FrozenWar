@@ -424,7 +424,7 @@ Domain.prototype.keys = function() {
     return Object.keys(this.table);
 }
 
-if(module && module.exports) {
+if(typeof module != 'undefined' && module.exports) {
     module.exports.Server = Server;
     module.exports.Client = Client;
     module.exports.Entity = Entity;
