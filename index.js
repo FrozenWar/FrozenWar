@@ -87,7 +87,7 @@ io.on('connection', function(socket){
     socket.on('nickname', function(nickname, callback) {
         console.log(nickname + ' connected');
         client.nickname = nickname;
-        callback();
+        if(callback) callback();
     });
     socket.on('roomConnect', function(roomId, callback) {
         console.log(client.nickname + ' joined to room '+roomId);
@@ -97,7 +97,7 @@ io.on('connection', function(socket){
             io.to('room_'+roomId).emit('roomUpdate', room.serialize()); 
             socket.join('room_'+roomId);
             client.room = room;
-            callback(room.serialize());
+            if(callback) callback(room.serialize());
         } else {
             console.log('new room');
             var room = new Room(roomId);
@@ -105,7 +105,7 @@ io.on('connection', function(socket){
             room.clients.push(client);
             socket.join('room_'+roomId);
             client.room = room;
-            callback(room.serialize());
+            if(callback) callback(room.serialize());
         }
     });
     socket.on('chat', function(value) {
@@ -145,18 +145,20 @@ io.on('connection', function(socket){
         console.log(client.nickname + ' action issued');
         var room = client.room;
         if(!room) return;
+        if(!room.session) return;
         if(room.session.getTurn().order != client.player.id) {
-            callback(null, 'Not your turn yet');
+            if(callback) callback(null, 'Not your turn yet');
             socket.emit('err', 'Not your turn yet');
             return;
         }
         var actionObj = runAction(room.session, room, client, action);
-        callback(actionObj.serialize());
+        if(callback) callback(actionObj.serialize());
     });
     socket.on('endTurn', function(){
         console.log(client.nickname + ' action issued');
         var room = client.room;
         if(!room) return;
+        if(!room.session) return;
         if(room.session.getTurn().order != client.player.id) {
             socket.emit('err', 'Not your turn yet');
             return;
@@ -168,6 +170,17 @@ io.on('connection', function(socket){
         if(client.room) {
             client.room.clients.splice(client.room.clients.indexOf(client), 1);
             io.to('room_'+client.room.name).emit('roomUpdate', client.room.serialize()); 
+            if(client.room.session) {
+                io.to('room_'+client.room.name).emit('err', 'Room exploded');
+                client.room.clients.forEach(function(value) {
+                    value.socket.disconnect('unauthorized');
+                });
+                delete rooms[client.room.name];
+            } else {
+                if(client.room.clients.length == 0) {
+                    delete rooms[client.room.name];
+                }
+            }
         }
         clients.splice(clients.indexOf(client), 1);
     });
