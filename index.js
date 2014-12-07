@@ -16,7 +16,7 @@ app.get('/', function(req, res){
 });
 
 if (!module.parent) {
-    var server = http.listen(isProduction ? 80 : 3001, function(err) {
+    var server = http.listen(isProduction ? 80 : 8000, function(err) {
         console.log('Listening on port %d', server.address().port);
     });
 }
