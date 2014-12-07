@@ -106,10 +106,51 @@ io.on('connection', function(socket){
     });
     socket.on('startSession', function(){
         console.log(client.nickname + ' game start');
-        if(client.room.session) {
+        var room = client.room;
+        if(!room) return;
+        if(room.session) {
             return;
         }
-        // TODO start game session
+        // Start game session
+        var session = domain.get('init')();
+        room.clients.forEach(function(value) {
+            var player = new domain.Player(value);
+            session.addPlayer(player);
+            value.player = player;
+            player.name = value.nickname;
+        });
+        room.session = session;
+        // Send map information
+        room.clients.forEach(function(value) {
+            value.socket.emit('startSession', session.serialize(), value.player.id);
+        });
+        room.sendTurn = 0;
+        room.sendOrder = 0;
+        // Wait for clients to load...
+        setTimeout(function() {
+            finishOrder(session, room);
+        }, 2000);
+    });
+    socket.on('action', function(action, callback){
+        console.log(client.nickname + ' action issued');
+        var room = client.room;
+        if(!room) return;
+        if(room.session.getTurn().order != client.player.id) {
+            callback(null, 'Not your turn yet');
+            socket.emit('error', 'Not your turn yet');
+            return;
+        }
+        callback(runAction(room.session, room, client, action));
+    });
+    socket.on('endTurn', function(){
+        console.log(client.nickname + ' action issued');
+        var room = client.room;
+        if(!room) return;
+        if(room.session.getTurn().order != client.player.id) {
+            socket.emit('error', 'Not your turn yet');
+            return;
+        }
+        finishOrder(room.session, room);
     });
     socket.on('disconnect', function(){
         console.log(client.nickname + ' disconnected');
@@ -120,3 +161,22 @@ io.on('connection', function(socket){
         clients.splice(clients.indexOf(client), 1);
     });
 });
+
+function finishOrder(session, room) {
+    var turn = session.next();
+    while(room.sendTurn < session.turns.length) {
+        var pastTurn = session.turns[room.sendTurn];
+        // TODO more efficient way to send actions
+        io.to('room_'+room.name).emit('turnUpdate', pastTurn);
+        room.sendTurn++;
+        room.sendOrder = 0;
+    }
+    io.to('room_'+room.name).emit('turnOrder', turn.order, session.turnId);
+}
+
+function runAction(session, room, client, action) {
+    var actionObj = new domain.Action(action.domain, session, client.player, 
+        session.searchEntity(action.entity), action.args);
+    session.runAction(actionObj);
+    return actionObj;
+}

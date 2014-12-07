@@ -7,6 +7,7 @@ var id = 0;
 var socket;
 var username = '';
 var isServer = false;
+var playerId = 0;
 
 var logger = {
     log: function(data) {
@@ -155,8 +156,17 @@ function init() {
     socket.on('disconnect', function() {
         logger.error('Disconnected');
     });
-    socket.on('startSession', function(session) {
-        
+    socket.on('startSession', function(session, pid) {
+        logger.info('Game session data received');
+        logger.log(JSON.stringify(session));
+        playerId = pid;
+        logger.info('Player id : '+playerId);
+    });
+    socket.on('turnOrder', function(order, turnId) {
+        logger.info(order+'\'s turn. (turn '+turnId+')');
+    });
+    socket.on('turnUpdate', function(data) {
+        logger.info(JSON.stringify(data));
     });
 }
 

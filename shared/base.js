@@ -187,7 +187,13 @@ Session.prototype.getPlayer = function() {
 Session.prototype.serialize = function() {
     var self = this;
     return {
-        players: this.players,
+        players: (function() {
+            var array = [];
+            self.players.forEach(function(value) {
+                array.push(value.serialize());
+            });
+            return array;
+        })(),
         turns: (function() {
             var array = [];
             self.turns.forEach(function(value) {
@@ -296,6 +302,18 @@ var Map = function(width, height) {
         }
     }
 };
+
+Map.prototype.searchEntity = function(id) {
+    for(var y = 0; y < this.height; ++y) {
+        for(var x = 0; x < this.width; ++x) {
+            var tile = this._data[y][x];
+            for(var i = 0; i < tile.children.length; ++i) {
+                if(tile.children[i].id == id) return tile.children[i];
+            }
+        }
+    }
+    return null;
+}
 
 /**
  * Returns a tile object by axial coordinate.

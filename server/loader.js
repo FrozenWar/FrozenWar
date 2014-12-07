@@ -24,3 +24,5 @@ urls.forEach(function(value) {
 });
 
 module.exports = scope.domain;
+module.exports.Player = scope.Player;
+module.exports.Action = scope.Action;
