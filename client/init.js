@@ -105,7 +105,7 @@ $(function() {
 });
 
 function init() {
-    socket = io();
+    socket = io('/', {reconnection: false});
     document.getElementById('textForm').onsubmit = function() {
         if(this.chat.value.trim() == '') return false;
         socket.emit('chat', this.chat.value);
@@ -188,6 +188,9 @@ function init() {
             data.actions.push(action);
         });
         session.turns[turn.id] = turn;
+    });
+    socket.on('err', function(data) {
+        logger.error(data);
     });
     /*
         socket.emit('action', action.serialize());

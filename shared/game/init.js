@@ -44,7 +44,7 @@ domain.assign('init', function(isServer, rawSession) {
           session.turns[value.id] = turn;
         });
         rawSession.systems.forEach(function(value) {
-          session.addSystems(value);
+          session.addSystem(value);
         });
         session.turnId = rawSession.turnId;
         return session;

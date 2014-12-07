@@ -137,7 +137,7 @@ io.on('connection', function(socket){
         if(!room) return;
         if(room.session.getTurn().order != client.player.id) {
             callback(null, 'Not your turn yet');
-            socket.emit('error', 'Not your turn yet');
+            socket.emit('err', 'Not your turn yet');
             return;
         }
         callback(runAction(room.session, room, client, action));
@@ -147,7 +147,7 @@ io.on('connection', function(socket){
         var room = client.room;
         if(!room) return;
         if(room.session.getTurn().order != client.player.id) {
-            socket.emit('error', 'Not your turn yet');
+            socket.emit('err', 'Not your turn yet');
             return;
         }
         finishOrder(room.session, room);
@@ -168,7 +168,7 @@ function finishOrder(session, room) {
         var pastTurn = session.turns[room.sendTurn];
         // TODO more efficient way to send actions
         io.to('room_'+room.name).emit('turnUpdate', pastTurn);
-        room.sendTurn++;
+        room.sendTurn = session.turns.length - 1;
         room.sendOrder = 0;
     }
     io.to('room_'+room.name).emit('turnOrder', turn.order, session.turnId);

@@ -249,7 +249,7 @@ Turn.prototype.next = function(session) {
 }
 
 Turn.prototype.isFinished = function(session) {
-    return session.players.length-1 <= this.order;
+    return session.players.length <= this.order;
 }
 
 Turn.prototype.getPlayer = function(session) {
