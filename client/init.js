@@ -159,7 +159,6 @@ function init() {
     });
     socket.on('startSession', function(rawSession, pid) {
         logger.info('Game session data received');
-        logger.log(JSON.stringify(rawSession));
         playerId = pid;
         logger.info('Player id : '+playerId);
         
@@ -168,26 +167,25 @@ function init() {
         session.runSystems('init');
     });
     socket.on('turnOrder', function(order, turnId) {
-        logger.info(order+'\'s turn. (turn '+turnId+')');
-        
         session.turnId = turnId;
+        if(!session.turns[turnId]) {
+          session.turns[turnId] = new Turn(turnId);
+        }
         session.getTurn().order = order;
+        logger.info(session.getPlayer(order).name+'\'s turn. (turn '+turnId+')');
         if(order == 0) {
             session.runSystems('turn');
         }
         session.runSystems('order');
     });
     socket.on('turnUpdate', function(data) {
-        logger.info(JSON.stringify(data));
-        
         var turn = new Turn(data.id);
         turn.order = data.order;
         data.actions.forEach(function(value, key) {
             var action = new Action(value.domain, session, session.getPlayer(value.player), value.entity, value.args);
             action.result = value.result;
             turn.actions.push(action);
-            console.log(turn.id, session.turns[turn.id].actions.length, key);
-            if(session.turns[turn.id] && session.turns[turn.id].actions.length <= key) {
+            if((session.turns[turn.id] ? session.turns[turn.id].actions.length : 0) <= key) {
                 domain.get(action.domain).run(action);
             }
         });

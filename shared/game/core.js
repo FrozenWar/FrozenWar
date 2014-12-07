@@ -11,9 +11,9 @@ domain.assign('sampleSys', {
     init: function(session) {
         console.log('init');
         if(session.isServer) {
-            console.log('I am server!');
+            logger.log('I am server!');
         } else {
-            console.log('I am client!');
+            logger.log('I am client!');
         }
     },
     turn: function(session) {
@@ -30,7 +30,7 @@ domain.assign('sampleAct', {
             console.log('I roll a dice.');
             action.result = Math.random()*6+1|0;
         } else {
-            console.log('Rolled a dice! It was '+action.result+'!');
+            logger.log('Rolled a dice! It was '+action.result+'!');
         }
     },
     undo: function(action) {
