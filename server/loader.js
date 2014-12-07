@@ -9,6 +9,7 @@ var scope = require('../shared/base.js');
 var domain = new scope.Domain();
 scope.domain = domain;
 scope.console = console;
+scope.isServer = true;
 
 var sandbox = vm.createContext(scope);
 

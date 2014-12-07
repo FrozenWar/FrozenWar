@@ -25,10 +25,98 @@ var domain = require('./server/loader');
 console.log('Loaded game data.');
 console.log(domain.keys());
 
+var clients = [];
+var rooms = [];
+
+var Client = function(socket) {
+    this.socket = socket;
+    this.id = Client._clientId++;
+    this.nickname = null;
+    this.room = null;
+}
+
+Client.prototype.serialize = function() {
+    return {
+        id: this.id,
+        nickname: this.nickname
+    };
+}
+
+Client._clientId = 0;
+
+function getClientById(id) {
+    for(var i = 0; i < clients.length; ++i) {
+        if(clients[i].id == id) return clients[i];
+    }
+}
+
+var Room = function(name) {
+    this.name = name;
+    this.clients = [];
+    this.session = null;
+}
+
+Room.prototype.serialize = function() {
+    return {
+        name: this.name,
+        clients: (function(it) {
+            var arr = [];
+            it.clients.forEach(function(value) {
+                arr.push(value.serialize());
+            });
+            return arr;
+        })(this)
+    };
+}
+
 io.on('connection', function(socket){
-  console.log('Client connected, sending domain list');
-  socket.emit('domain', domain.keys());
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+    console.log('Client connected, sending domain list');
+    var client = new Client(socket);
+    clients.push(client);
+    socket.emit('handshake', domain.keys(), client.id);
+    socket.on('nickname', function(nickname, callback) {
+        console.log(nickname + ' connected');
+        client.nickname = nickname;
+        callback();
+    });
+    socket.on('roomConnect', function(roomId, callback) {
+        console.log(client.nickname + ' joined to room '+roomId);
+        if(rooms[roomId]) {
+            var room = rooms[roomId];
+            room.clients.push(client);
+            io.to('room_'+roomId).emit('roomUpdate', room.serialize()); 
+            socket.join('room_'+roomId);
+            client.room = room;
+            callback(room.serialize());
+        } else {
+            console.log('new room');
+            var room = new Room(roomId);
+            rooms[roomId] = room;
+            room.clients.push(client);
+            socket.join('room_'+roomId);
+            client.room = room;
+            callback(room.serialize());
+        }
+    });
+    socket.on('chat', function(value) {
+        console.log(client.nickname + ':' + value);
+        if(client.room) {
+            io.to('room_'+client.room.name).emit('chat', client.serialize(), value); 
+        }
+    });
+    socket.on('startSession', function(){
+        console.log(client.nickname + ' game start');
+        if(client.room.session) {
+            return;
+        }
+        // TODO start game session
+    });
+    socket.on('disconnect', function(){
+        console.log(client.nickname + ' disconnected');
+        if(client.room) {
+            client.room.clients.splice(client.room.clients.indexOf(client), 1);
+            io.to('room_'+client.room.name).emit('roomUpdate', client.room.serialize()); 
+        }
+        clients.splice(clients.indexOf(client), 1);
+    });
 });
