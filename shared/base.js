@@ -257,11 +257,17 @@ Turn.prototype.getPlayer = function(session) {
 }
 
 Turn.prototype.serialize = function() {
-    var array = [];
-    this.actions.forEach(function(value) {
-        array.push(value.serialize());
-    });
-    return array;
+    return {
+        actions: (function(obj) {
+            var array = [];
+            obj.actions.forEach(function(value) {
+                array.push(value.serialize());
+            });
+            return array;
+        })(this),
+        order: this.order,
+        id: this.id
+    };
 }
 
 var Point = function(x, y) {

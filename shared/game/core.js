@@ -23,3 +23,20 @@ domain.assign('sampleSys', {
         console.log('all');
     },
 });
+
+domain.assign('sampleAct', {
+    run: function(action) {
+        if(action.session.isServer) {
+            console.log('I roll a dice.');
+            action.result = Math.random()*6+1|0;
+        } else {
+            console.log('Rolled a dice! It was '+action.result+'!');
+        }
+    },
+    undo: function(action) {
+        if(action.session.isServer) {
+            // undo
+            action.result = {};
+        }
+    }
+});

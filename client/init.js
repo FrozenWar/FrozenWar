@@ -182,10 +182,14 @@ function init() {
         
         var turn = new Turn(data.id);
         turn.order = data.order;
-        data.actions.forEach(function(value) {
+        data.actions.forEach(function(value, key) {
             var action = new Action(value.domain, session, session.getPlayer(value.player), value.entity, value.args);
             action.result = value.result;
-            data.actions.push(action);
+            turn.actions.push(action);
+            console.log(turn.id, session.turns[turn.id].actions.length, key);
+            if(session.turns[turn.id] && session.turns[turn.id].actions.length <= key) {
+                domain.get(action.domain).run(action);
+            }
         });
         session.turns[turn.id] = turn;
     });
@@ -193,7 +197,7 @@ function init() {
         logger.error(data);
     });
     /*
-        socket.emit('action', action.serialize());
+        sendActon(action, callback);
         socket.emit('endTurn');
         session.runSystems('frame');
         playerId
@@ -202,4 +206,14 @@ function init() {
 
 function startGame() {
     socket.emit('startSession');
+}
+
+function sendAction(action, callback) {
+    socket.emit('action', action.serialize(), function(data) {
+        var action = new Action(data.domain, session, session.getPlayer(data.player), data.entity, data.args);
+        action.result = data.result;
+        session.getTurn().actions.push(action);
+        domain.get(action.domain).run(action);
+        if(callback) callback(action);
+    });
 }

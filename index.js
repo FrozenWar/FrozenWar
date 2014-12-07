@@ -140,7 +140,8 @@ io.on('connection', function(socket){
             socket.emit('err', 'Not your turn yet');
             return;
         }
-        callback(runAction(room.session, room, client, action));
+        var actionObj = runAction(room.session, room, client, action);
+        callback(actionObj.serialize());
     });
     socket.on('endTurn', function(){
         console.log(client.nickname + ' action issued');
@@ -167,8 +168,9 @@ function finishOrder(session, room) {
     while(room.sendTurn < session.turns.length) {
         var pastTurn = session.turns[room.sendTurn];
         // TODO more efficient way to send actions
-        io.to('room_'+room.name).emit('turnUpdate', pastTurn);
+        io.to('room_'+room.name).emit('turnUpdate', pastTurn.serialize());
         room.sendTurn = session.turns.length - 1;
+        break;
         room.sendOrder = 0;
     }
     io.to('room_'+room.name).emit('turnOrder', turn.order, session.turnId);
@@ -176,7 +178,7 @@ function finishOrder(session, room) {
 
 function runAction(session, room, client, action) {
     var actionObj = new domain.Action(action.domain, session, client.player, 
-        session.searchEntity(action.entity), action.args);
+        action.entity, action.args);
     session.runAction(actionObj);
     return actionObj;
 }
