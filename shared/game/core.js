@@ -1,4 +1,6 @@
 domain.assign('posComp', {x: 0, y: 0});
+domain.assign('ownerComp', {player: -1});
+domain.assign('actionComp', {actions: []});
 
 domain.assign('sampleSys', {
     system: 0,
@@ -38,5 +40,20 @@ domain.assign('sampleAct', {
             // undo
             action.result = {};
         }
+    }
+});
+
+domain.assign('moveLib', {
+    move: function(entity, to) {
+        var pos = entity.components['posComp'];
+        if(!pos) {
+            throw new Error('Tried to move entity that doesn\'t have position');
+        }
+        var tile = entity.session.map.getTile(pos);
+        var newTile = entity.session.map.getTile(to);
+        tile.children.splice(tile.children.indexOf(entity), 1);
+        newTile.children.push(entity);
+        pos.x = to.x;
+        pos.y = to.y;
     }
 });
