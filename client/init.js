@@ -165,6 +165,7 @@ function init() {
         session = domain.get('init')(false, rawSession);
         
         session.runSystems('init');
+        renderMap(session);
     });
     socket.on('turnOrder', function(order, turnId) {
         session.turnId = turnId;
@@ -190,6 +191,7 @@ function init() {
             }
         });
         session.turns[turn.id] = turn;
+        renderMap(session);
     });
     socket.on('err', function(data) {
         logger.error(data);

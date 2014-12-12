@@ -27,3 +27,6 @@
 #chat .error {
   color: #D1625B;
 }
+#canvas {
+  border:1px solid #000000;
+}

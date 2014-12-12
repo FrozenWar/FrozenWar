@@ -1,14 +1,63 @@
 domain.assign('posComp', {x: 0, y: 0});
 domain.assign('ownerComp', {player: -1});
 domain.assign('actionComp', {actions: []});
+domain.assign('tileComp', {type: 'grass', color: "#00ff00"});
+domain.assign('renderComp', {name: 'null', color: '#000000', background: '#ffffff'});
+
+domain.assign('unitEntity', {
+    posComp: {},
+    renderComp: {
+        name: 'Unit',
+        color: '#1E98D3',
+        background: '#9EDBF9'
+    },
+    actionComp: {
+        actions: ['infoAct']
+    }
+});
+
+
+domain.assign('grassEntity', {
+    posComp: {},
+    tileComp: {
+        type: 'grass',
+        color: '#71CC66'
+    }
+});
+
+domain.assign('spawnAct', {
+    run: function(action) {
+        
+    },
+    undo: function(action) {
+        
+    }
+});
+
+domain.assign('moveAct', {
+    run: function(action) {
+        
+    },
+    undo: function(action) {
+    
+    }
+});
+
+domain.assign('infoAct', {
+    run: function(action) {
+        logger.log(JSON.stringify(action.getEntity()));
+        if(action.session.isServer) {
+            action.result = true;
+        }
+    },
+    undo: function(action) {
+    
+    }
+});
 
 domain.assign('sampleSys', {
     system: 0,
     order: function(session) {
-        console.log('order');
-        session.map.forEach(function(entity) {
-            console.log('Hi entity '+entity.id);
-        });
     },
     init: function(session) {
         console.log('init');
@@ -19,10 +68,9 @@ domain.assign('sampleSys', {
         }
     },
     turn: function(session) {
-        console.log('turn');
+        logger.info('New turn started');
     },
     all: function(session) {
-        console.log('all');
     },
 });
 
