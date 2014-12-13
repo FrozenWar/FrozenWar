@@ -30,7 +30,7 @@ function renderMap(session) {
                     desc = obj.components['tileComp'].type;
                 }
             });
-            if(x == cursorPos.x && y == cursorPos.y) {
+            if(tile.position.x == cursorPos.x && tile.position.y == cursorPos.y) {
                 color = '#FFFFFF';
             }
             cxt.beginPath();
@@ -109,7 +109,7 @@ window.addEventListener('load', function() {
             }
         }
         if(session && (cursorPos.x != tilePos.x || cursorPos.y != tilePos.y)) {
-            cursorPos = tilePos;
+            cursorPos = session.map.toAxialCoord(tilePos);
             renderMap(session);
         }
     });
