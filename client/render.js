@@ -30,7 +30,7 @@ function renderMap(session) {
                     desc = obj.components['tileComp'].type;
                 }
             });
-            if(tile.position.x == cursorPos.x && tile.position.y == cursorPos.y) {
+            if(x == cursorPos.x && y == cursorPos.y) {
                 color = '#FFFFFF';
             }
             cxt.beginPath();
@@ -79,8 +79,35 @@ window.addEventListener('load', function() {
         var elPos = { X:pos.left , Y:pos.top };
         var mPos  = { x:e.pageX-elPos.X, y:e.pageY-elPos.Y };
         var tilePos = {};
-        tilePos.y = (mPos.y) / (hexMap.height-hexMap.sideY)|0;
-        tilePos.x = (mPos.x) / (hexMap.width) - tilePos.y / 2 | 0;
+        var posY = mPos.y / (hexMap.height-hexMap.sideY) | 0;
+        var posX = mPos.x / hexMap.width | 0;
+        var pixelX = mPos.x % hexMap.width;
+        var pixelY = mPos.y % (hexMap.height-hexMap.sideY);
+        if((posY&1) == 0) {
+            tilePos.y = posY;
+            tilePos.x = posX;
+            if(pixelX < (hexMap.sideX - (hexMap.sideX/hexMap.sideY * pixelY))) {
+                tilePos.y -= 1;
+                tilePos.x -= 1;
+            }
+            if(pixelX > (hexMap.sideX + (hexMap.sideX/hexMap.sideY * pixelY))) {
+                tilePos.y -= 1;
+            }
+        } else {
+            tilePos.y = posY;
+            tilePos.x = posX;
+            if(pixelX < hexMap.sideX) {
+                if(pixelX > (hexMap.sideX / hexMap.sideY * pixelY)) {
+                    tilePos.y -= 1;
+                } else {
+                    tilePos.x -= 1;
+                }
+            } else {
+                if(pixelX < (hexMap.width - hexMap.sideX / hexMap.sideY * pixelY)) {
+                    tilePos.y -= 1;
+                }
+            }
+        }
         if(session && (cursorPos.x != tilePos.x || cursorPos.y != tilePos.y)) {
             cursorPos = tilePos;
             renderMap(session);
