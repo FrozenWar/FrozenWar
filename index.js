@@ -80,7 +80,7 @@ Room.prototype.serialize = function() {
 }
 
 io.on('connection', function(socket){
-    console.log('Client connected, sending domain list');
+    console.log('A client connected, sending domain list');
     var client = new Client(socket);
     clients.push(client);
     socket.emit('handshake', domain.keys(), client.id);
@@ -93,13 +93,16 @@ io.on('connection', function(socket){
         console.log(client.nickname + ' joined to room '+roomId);
         if(rooms[roomId]) {
             var room = rooms[roomId];
+            if(room.session) {
+                io.to('room_'+client.room.name).emit('err', 'Game in session');
+                return;
+            }
             room.clients.push(client);
             io.to('room_'+roomId).emit('roomUpdate', room.serialize()); 
             socket.join('room_'+roomId);
             client.room = room;
             if(callback) callback(room.serialize());
         } else {
-            console.log('new room');
             var room = new Room(roomId);
             rooms[roomId] = room;
             room.clients.push(client);
@@ -109,18 +112,18 @@ io.on('connection', function(socket){
         }
     });
     socket.on('chat', function(value) {
-        console.log(client.nickname + ':' + value);
         if(client.room) {
+            console.log('['+client.room.name+'] '+client.nickname+': '+value);
             io.to('room_'+client.room.name).emit('chat', client.serialize(), value); 
         }
     });
     socket.on('startSession', function(){
-        console.log(client.nickname + ' game start');
         var room = client.room;
         if(!room) return;
         if(room.session) {
             return;
         }
+        console.log('['+client.room.name+'] '+client.nickname+' started game session');
         // Start game session
         var session = domain.get('init')(true);
         room.clients.forEach(function(value) {
@@ -136,13 +139,9 @@ io.on('connection', function(socket){
         });
         room.sendTurn = 0;
         room.sendOrder = 0;
-        // Wait for clients to load...
-        setTimeout(function() {
-            finishOrder(session, room);
-        }, 2000);
+        finishOrder(session, room);
     });
     socket.on('action', function(action, callback){
-        console.log(client.nickname + ' action issued');
         var room = client.room;
         if(!room) return;
         if(!room.session) return;
@@ -151,11 +150,11 @@ io.on('connection', function(socket){
             socket.emit('err', 'Not your turn yet');
             return;
         }
+        console.log('['+room.name+'] '+client.nickname+' issued an action');
         var actionObj = runAction(room.session, room, client, action);
         if(callback) callback(actionObj.serialize());
     });
     socket.on('endTurn', function(){
-        console.log(client.nickname + ' action issued');
         var room = client.room;
         if(!room) return;
         if(!room.session) return;
@@ -163,6 +162,7 @@ io.on('connection', function(socket){
             socket.emit('err', 'Not your turn yet');
             return;
         }
+        console.log('['+room.name+'] '+client.nickname+' ended turn');
         finishOrder(room.session, room);
     });
     socket.on('disconnect', function(){

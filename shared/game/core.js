@@ -60,7 +60,6 @@ domain.assign('sampleSys', {
     order: function(session) {
     },
     init: function(session) {
-        console.log('init');
         if(session.isServer) {
             logger.log('I am server!');
         } else {
@@ -77,8 +76,8 @@ domain.assign('sampleSys', {
 domain.assign('sampleAct', {
     run: function(action) {
         if(action.session.isServer) {
-            console.log('I roll a dice.');
             action.result = Math.random()*6+1|0;
+            logger.log('Rolled a dice: '+action.result);
         } else {
             logger.log('Rolled a dice! It was '+action.result+'!');
         }

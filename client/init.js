@@ -1,7 +1,6 @@
 var path = '/js/';
 var loadCount = 0;
 var domain;
-var module = {exports: {}};
 var room = {};
 var id = 0;
 var socket;
