@@ -119,18 +119,23 @@ var pag = (function(exports){
 })({});
 
 var inf = (function(exports){
-	/*$.ajax({
-		url:'https://kkiro.kr/frozenwar/transport/info.json',
-		success:function(msg){
-			INFO = msg;
-		}
-	});*/
 
 	var INFO = {};
 
-	/*KARI*/
-	INFO['host'] = 'http://kari.tnraro.com/';
+	/*Default*/
+	INFO['host'] = 'http://localhost:8000/';
 
+	exports.load = function(cb){
+		$.ajax({
+			url:'./server.json',
+			success:function(path){
+				console.info('[SERVER]', path);
+				INFO['host'] = path;
+				if(cb) cb();
+			}
+		});
+	}
+	
 	exports.o = function(e, a){
 		if(e){
 			if(a)
@@ -147,29 +152,32 @@ var inf = (function(exports){
 var domain;
 
 window.onload = function(){
-	domain = new Domain();
+	inf.load(function(){
+		pag.ready(function(e){
+			console.info('[PAGE]', e.page);
+		});
 
-	pag.ready(function(e){
-		console.info('[PAGE]', e.page);
-	});
-
-	$.ajax({
-		url:inf.o('host')+'shared/urls.json',
-		success:function(urls){
-			// base.js를 맨 처음에 불러옴
-			urls.unshift('base.js');
-			function loadNext() {
-				var current = urls.shift();
-				if(!current) {
-					pag.e('waitingroom', ['waitingroom']);
-					return;
+		$.ajax({
+			url:inf.o('host')+'shared/urls.json',
+			success:function(urls){
+				// base.js를 맨 처음에 불러옴
+				urls.unshift('base.js');
+				function loadNext(){
+					var current = urls.shift();
+					if(!current){
+						pag.e('waitingroom', ['waitingroom']);
+						return;
+					}
+					$.getScript(inf.o('host')+'shared/'+current, function(){
+						if(!domain){
+							domain = new Domain();
+						}
+						// 함수 스택 오버플로 안시키려면 필요함
+						setTimeout(loadNext, 0);
+					});
 				}
-				$.getScript(inf.o('host')+'shared/'+current, function() {
-					// 함수 스택 오버플로 안시키려면 필요함
-					setTimeout(loadNext, 0);
-				}
+				loadNext();
 			}
-			loadNext();
-		}
+		});
 	});
 }
