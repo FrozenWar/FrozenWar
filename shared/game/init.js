@@ -26,7 +26,7 @@ domain.assign('init', function(isServer, rawSession) {
             tile.children.push(entity);
         });
         var tile = session.map.getTileByOffset(new Point(3,3));
-        var entity = session.spawnEntity('unitEntity');
+        var entity = session.spawnEntity('warriorEntity');
         entity.components['posComp'].x = tile.position.x;
         entity.components['posComp'].y = tile.position.y;
         tile.children.push(entity);
@@ -45,7 +45,7 @@ domain.assign('init', function(isServer, rawSession) {
           var player = new Player(null);
           player.id = value.id;
           player.name = value.name;
-          player.resources = value.resources;
+          player.components = value.components;
           session.addPlayer(player);
         });
         rawSession.turns.forEach(function(value) {

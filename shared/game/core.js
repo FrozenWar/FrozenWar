@@ -3,16 +3,35 @@ domain.assign('ownerComp', {player: -1});
 domain.assign('actionComp', {actions: []});
 domain.assign('tileComp', {type: 'grass', color: "#00ff00"});
 domain.assign('renderComp', {name: 'null', color: '#000000', background: '#ffffff'});
+domain.assign('healthComp', {health: 0, defense: 0});
+domain.assign('moveComp', {energy: 0, max: 0});
+domain.assign('attackComp', {attack: 0, range: 0});
+domain.assign('energyComp', {energy: 0, max: 0, consume: 0});
 
-domain.assign('unitEntity', {
+domain.assign('warriorEntity', {
     posComp: {},
     renderComp: {
-        name: 'Unit',
+        name: 'Warrior',
         color: '#1E98D3',
         background: '#9EDBF9'
     },
     actionComp: {
         actions: ['infoAct']
+    },
+    healthComp: {
+        health: 120,
+        defense: 30
+    },
+    moveComp: {
+        max: 3
+    },
+    attackComp: {
+        attack: 80,
+        range: 1
+    },
+    energyComp: {
+        max: 35,
+        consume: 5
     }
 });
 
@@ -35,6 +54,24 @@ domain.assign('spawnAct', {
 });
 
 domain.assign('moveAct', {
+    run: function(action) {
+        
+    },
+    undo: function(action) {
+    
+    }
+});
+
+domain.assign('attackAct', {
+    run: function(action) {
+        
+    },
+    undo: function(action) {
+    
+    }
+});
+
+domain.assign('defenseAct', {
     run: function(action) {
         
     },

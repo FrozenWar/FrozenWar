@@ -64,6 +64,11 @@ var lobby = {
         for(var i = 0; i < room.clients.length; ++i) {
             var userListItem = document.createElement('li');
             userListItem.appendChild(document.createTextNode(room.clients[i].nickname + ' #'+room.clients[i].id));
+            if(session && session.getTurn()) {
+                if(session.getPlayer(session.getTurn().order).components.clientId == room.clients[i].id) {
+                    userListItem.style.color = "#ff0000";
+                }
+            }
             lobby.lobbyList.appendChild(userListItem);
         }
     },
@@ -177,6 +182,7 @@ function init() {
             session.runSystems('turn');
         }
         session.runSystems('order');
+        lobby.redraw(room);
     });
     socket.on('turnUpdate', function(data) {
         var turn = new Turn(data.id);

@@ -19,11 +19,14 @@
         </form>
         <div id="lobby">
             <ul id="lobbyList">
-            
             </ul>
-            <button onClick="startGame()">Start</button>
-            <button onClick="sendAction(new Action('sampleAct', session, session.getPlayer(playerId), -1, null))">Roll dice</button>
-            <button onClick="socket.emit('endTurn')">End turn</button>
+            <span id="unitInfo">
+            </span>
+            <span id="buttonList">
+                <button onClick="startGame()">Start</button>
+                <button onClick="sendAction(new Action('sampleAct', session, session.getPlayer(playerId), -1, null))">Roll dice</button>
+                <button onClick="socket.emit('endTurn')">End turn</button>
+            </span>
         </div>
         <div id="game">
             <canvas id="canvas" width="100" height="100">
