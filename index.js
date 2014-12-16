@@ -1,4 +1,5 @@
 var isProduction = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production';
+console.log(process.env.NODE_ENV);
 
 var express = require('express');
 var serveStatic = require('serve-static');
@@ -17,14 +18,13 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 
-app.use('/js', serveStatic(__dirname + '/client'));
-app.use('/js', serveStatic(__dirname + '/shared'));
-app.use(serveStatic(__dirname + '/public'));
-
+app.use('/', serveStatic(__dirname + '/client'));
+app.use('/shared', serveStatic(__dirname + '/shared'));
+/*
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
-
+*/
 if (!module.parent) {
     var server = http.listen(isProduction ? 80 : 8000, function(err) {
         console.log('Listening on port %d', server.address().port);
@@ -100,7 +100,7 @@ io.on('connection', function(socket){
                 return;
             }
             room.clients.push(client);
-            io.to('room_'+roomId).emit('roomUpdate', room.serialize()); 
+            io.to('room_'+roomId).emit('roomUpdate', room.serialize());
             socket.join('room_'+roomId);
             client.room = room;
             if(callback) callback(room.serialize());
@@ -116,7 +116,7 @@ io.on('connection', function(socket){
     socket.on('chat', function(value) {
         if(client.room) {
             console.log('['+client.room.name+'] '+client.nickname+': '+value);
-            io.to('room_'+client.room.name).emit('chat', client.serialize(), value); 
+            io.to('room_'+client.room.name).emit('chat', client.serialize(), value);
         }
     });
     socket.on('startSession', function(){
@@ -172,7 +172,7 @@ io.on('connection', function(socket){
         console.log(client.nickname + ' disconnected');
         if(client.room) {
             client.room.clients.splice(client.room.clients.indexOf(client), 1);
-            io.to('room_'+client.room.name).emit('roomUpdate', client.room.serialize()); 
+            io.to('room_'+client.room.name).emit('roomUpdate', client.room.serialize());
             if(client.room.session) {
                 io.to('room_'+client.room.name).emit('err', 'Room exploded');
                 client.room.clients.forEach(function(value) {
@@ -203,7 +203,7 @@ function finishOrder(session, room) {
 }
 
 function runAction(session, room, client, action) {
-    var actionObj = new domain.Action(action.domain, session, client.player, 
+    var actionObj = new domain.Action(action.domain, session, client.player,
         action.entity, action.args);
     session.runAction(actionObj);
     return actionObj;

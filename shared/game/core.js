@@ -46,19 +46,19 @@ domain.assign('grassEntity', {
 
 domain.assign('spawnAct', {
     run: function(action) {
-        
+
     },
     undo: function(action) {
-        
+
     }
 });
 
 domain.assign('moveAct', {
     run: function(action) {
-        
+
     },
     undo: function(action) {
-    
+
     }
 });
 
@@ -88,7 +88,7 @@ domain.assign('infoAct', {
         }
     },
     undo: function(action) {
-    
+
     }
 });
 

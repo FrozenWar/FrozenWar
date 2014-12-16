@@ -65,7 +65,7 @@ function renderMap(session) {
                     cxt.closePath();
                     cxt.fillStyle = unit.color;
                     cxt.font = '8pt NanumGothic';
-                    cxt.fillText(txtt, px + hexMap.width/2 - cxt.measureText(txtt).width/2, 
+                    cxt.fillText(txtt, px + hexMap.width/2 - cxt.measureText(txtt).width/2,
                         py + hexMap.height / 2 - hexMap.side / 2 + 18);
                 }
             });

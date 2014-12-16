@@ -1,0 +1,143 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400);
+
+/*
+	VERSION: _FW (4)
+
+	development note
+	1 FrozenWar
+	2 ParfaitScript
+	3 DORUNORU
+	4 _FW
+*/
+
+.ecomp{
+	cursor:default;
+	font-family:'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size:12pt;
+	color:#303030;
+	margin: 0px;
+	padding: 2px;
+}
+
+
+/*
+	component override
+*/
+.ecomp span{
+	margin: 0px;
+	padding:0px;
+	display:inline-block;
+	border-radius: 50%;
+	line-height: 50%;
+	min-width:.7em;
+	min-height:.7em;
+}
+
+.ecomp textarea{
+	cursor:auto;
+	border-radius: .5em;
+	padding: .7em;
+	border:1px solid #efefef;
+	outline:none;
+	overflow: auto;
+	width: 100%;
+	box-sizing:border-box;
+	resize: none;
+}
+.ecomp textarea:focus{
+	border:1px solid #57b8ff;
+}
+.ecomp textarea[readonly]{
+	color:#606060;
+	background: #efefef;
+}
+.ecomp textarea[readonly]:focus{
+	border:1px solid #ff5757;
+}
+
+/*
+	utils
+*/
+
+
+.ecomp[data-inner]:after{
+	padding-left: 1.1em;
+	content: attr(data-inner);
+}
+.ecomp[data-title]:before{
+	padding-left: 1.1em;
+	content: attr(data-title);
+}
+
+/*
+	type
+*/
+
+.ecomp[data-type='title']{
+	font-weight: 400;
+	border-bottom: 2px solid #efefef;
+	margin-bottom: .7em;
+	padding: .4em;
+}
+.ecomp[data-type='group']{
+	border-radius: .5em;
+	border:1px solid #efefef;
+	margin: 0px;
+	padding: 10px;
+}
+.ecomp[data-type='container']{
+	margin: 0px;
+	padding: 0px;
+}
+
+/*
+	ecomp status
+*/
+.ecomp[data-status='online']{
+	background-color:#29f241;
+}
+.ecomp[data-status='friend']{
+	background-color:#57b8ff;
+}
+.ecomp[data-status='private']{
+	background-color:#b2b2b2;
+}
+.ecomp[data-status='blocked']{
+	background-color:#ff5757;
+}
+.ecomp[data-status='away']{
+	background-color:#ffef34;
+}
+/*
+	ecomp focus
+*/
+.ecomp[data-focus='online']{
+	border:1px solid #29f241;
+}
+.ecomp[data-focus='friend']{
+	border:1px solid #57b8ff;
+}
+.ecomp[data-focus='private']{
+	border:1px solid #b2b2b2;
+}
+.ecomp[data-focus='blocked']{
+	border:1px solid #ff5757;
+}
+.ecomp[data-focus='away']{
+	border:1px solid #ffef34;
+}
+
+/*
+	etc
+*/
+
+.ecomp::-moz-selection{
+	color:#ff5757;
+}
+.ecomp::selection {
+	color:#57b8ff;
+}
+.ecomp[mienai]{
+	display: none;
+}

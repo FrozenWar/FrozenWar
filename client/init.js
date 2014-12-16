@@ -1,4 +1,4 @@
-var path = '/js/';
+var path = '/shared/';
 var loadCount = 0;
 var domain;
 var room = {};
@@ -89,7 +89,7 @@ $(function() {
     lobby.hide();
     domain = new Domain();
     $.ajax({
-        url: '/js/urls.json', 
+        url: '/shared/urls.json',
         dataType: 'json'
     }).done(function(data) {
         logger.log(data.length+' files to load');
@@ -165,9 +165,9 @@ function init() {
         logger.info('Game session data received');
         playerId = pid;
         logger.info('Player id : '+playerId);
-        
+
         session = domain.get('init')(false, rawSession);
-        
+
         session.runSystems('init');
         renderMap(session);
     });

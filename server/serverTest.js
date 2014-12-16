@@ -103,7 +103,7 @@ domain.assign('com.example.MoveAction', {
         }
         action.result = {previous: {x:position.x, y:position.y}};
         energy.energy -= movable.energy * action.args.distance;
-        
+
         var prevTile = action.session.map.getTile(position);
         var newTile = prevTile.getRelative(action.args.direction, action.args.distance);
         prevTile.children.splice(prevTile.children.indexOf(action.entity), 1);
@@ -162,12 +162,12 @@ tile.children.push(unit);
 session.next();
 
 // As a player, I want to move my unit to LEFT.
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit,
 {direction: Base.Direction.LEFT, distance: 2});
 session.runAction(moveAction);
 
 // As a player, I want to move my unit to RIGHT.
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit,
 {direction: Base.Direction.RIGHT, distance: 2});
 session.runAction(moveAction);
 
@@ -176,7 +176,7 @@ session.next();
 // TABLE FLIP!
 session.runAction(new Base.Action('com.example.TableFlipAction', session, player, null));
 
-var moveAction = new Base.Action('com.example.MoveAction', session, player, unit, 
+var moveAction = new Base.Action('com.example.MoveAction', session, player, unit,
 {direction: Base.Direction.TOP_RIGHT, distance: 2});
 session.runAction(moveAction);
 
