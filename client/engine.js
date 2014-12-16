@@ -156,13 +156,20 @@ window.onload = function(){
 	$.ajax({
 		url:inf.o('host')+'shared/urls.json',
 		success:function(urls){
-
-			for(k in urls){
-				var q = $('<script>');
-				q.attr('src', inf.o('host')+'shared/'+urls[k]);
-				$('head').append(q);
+			// base.js를 맨 처음에 불러옴
+			urls.unshift('base.js');
+			function loadNext() {
+				var current = urls.shift();
+				if(!current) {
+					pag.e('waitingroom', ['waitingroom']);
+					return;
+				}
+				$.getScript(inf.o('host')+'shared/'+current, function() {
+					// 함수 스택 오버플로 안시키려면 필요함
+					setTimeout(loadNext, 0);
+				}
 			}
-			pag.e('waitingroom', ['waitingroom']);
+			loadNext();
 		}
 	});
 }
