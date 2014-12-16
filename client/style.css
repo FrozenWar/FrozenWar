@@ -3,25 +3,39 @@ body {
 
 }
 
-#left {
-	width:650px;
+#waitingroom #left {
+	width:calc(100% - 180px);
 	height:100%;
-	border: 1px solid #ef8253;
+	border: 1px solid #efefef;
+	border-right: none;
+	border-top-left-radius: 0.5em;
 	float:left;
 }
 
-#right {
+#waitingroom #right {
 	width:175px;
 	height: 100%;
 	border:1px solid #efefef;
+	border-top-right-radius: 0.5em;
 	float:left;
 }
 
 #waitingroom {
+	width:825px;
 	height:530px;
 }
 
-.title {
+#waitingroom .title {
 	font-weight: 400;
 
+}
+
+#waitingroom #chat {
+	clear:both;
+}
+
+#input {
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	height:2.7em;
 }

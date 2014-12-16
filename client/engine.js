@@ -2,14 +2,12 @@ var room = (function(exports){
 	var name;
 	var clients;
 
-	exports.enter = function(r){
+	exports.update = function(r){
+		if(!pag.c('waitingroom')) return false;
+
 		name	 = r.name;
 		clients	 = r.clients.concat();
 		console.info(name, '에 들어감');
-	}
-
-	exports.draw_ulist = function(){
-		if(!pag.c('waitingroom')) return false;
 
 		$('#right').children().remove();
 		for(i in clients){
@@ -18,7 +16,7 @@ var room = (function(exports){
 			var d = $('<div>');
 
 			s.addClass('ecomp');
-			s.attr('data-type', 'online');
+			s.attr('data-status', 'online');
 
 			d.addClass('ecomp');
 			d.data('id', c.id);
@@ -36,42 +34,45 @@ var socket = (function(exports){
 	var so;
 
 	exports.ready = function(){
+		if(so) return true;
 		so = io(inf.o('host'));
 
 		//handshake, 도메인, 클라이언트ID
 		so.on('handshake', function(data){
 			console.log(data);
 
-			inf.o('nick', '익명'+Math.random().toFixed(4));
+			inf.o('nick', 'Lolita_'+Math.random().toFixed(4));
 			so.emit('nickname', inf.o('nick'), function(){});
 			inf.o('roomid', 'test');
 			so.emit('roomConnect', inf.o('roomid'), function(d){
-				room.enter(d);
+				room.update(d);
 			});
 		});
 		//roomUpdate, 방정보
 		so.on('roomUpdate', function(r){
-			console.log(r);
+			console.log('roomUpdate', r);
+
+			room.update(r);
 		});
 		//chat, 클라이언트, 값
 		so.on('chat', function(c, v){
-			console.log(c,v);
+			console.log('chat', c,v);
 		});
 		//startSession, 세션정보, 플레이어아이디
 		so.on('startSession', function(s, pi){
-			console.log(s, pi);
+			console.log('startSession', s, pi);
 		});
 		//err, 에러내용
 		so.on('err', function(e){
-			console.log(e);
+			console.log('err', e);
 		});
 		//turnUpdate, 턴데이터
 		so.on('turnUpdate', function(td){
-			console.log(td);
+			console.log('turnUpdate', td);
 		});
 		//turnOrder, 턴순서, 턴번호
 		so.on('turnOrder', function(i, n){
-			console.log(i,n);
+			console.log('turnOrder', i,n);
 		});
 	}
 
@@ -79,14 +80,33 @@ var socket = (function(exports){
 })({});
 
 var pag = (function(exports){
-	exports.e = function(id){
+	var cb;
+
+	exports.e = function(id, scripts){
 		$.ajax({
 			url:'./page/'+id+'.html',
 			success:function(msg){
 				currentPage = id;
+
 				$('#page').html(msg);
+				for(var k in scripts){
+					var d = $('<script>');
+					d.attr('type', 'text/javascript');
+					d.attr('src', '/page/'+scripts[k]+'.js');
+					$('#page').append(d);
+				}
+
+				if(cb)
+					cb({
+						page:id,
+						type:'ready',
+					});
 			}
 		});
+	}
+
+	exports.ready = function(_){
+		cb = _;
 	}
 
 	var currentPage;
@@ -109,7 +129,7 @@ var inf = (function(exports){
 	var INFO = {};
 
 	/*KARI*/
-	INFO['host'] = 'http://kkiro.kr:8000/';
+	INFO['host'] = 'http://kari.tnraro.com/';
 
 	exports.o = function(e, a){
 		if(e){
@@ -129,17 +149,20 @@ var domain;
 window.onload = function(){
 	domain = new Domain();
 
+	pag.ready(function(e){
+		console.info('[PAGE]', e.page);
+	});
+
 	$.ajax({
-		url:'http://kkiro.kr:8000/js/urls.json',
+		url:inf.o('host')+'js/urls.json',
 		success:function(urls){
 
 			for(k in urls){
-				console.log(inf.o('host')+'js/'+urls[k]);
 				var q = $('<script>');
 				q.attr('src', inf.o('host')+'js/'+urls[k]);
 				$('head').append(q);
 			}
-			pag.e('waitingroom');
+			pag.e('waitingroom', ['waitingroom']);
 		}
 	});
 }

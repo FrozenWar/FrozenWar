@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>FrozenWar Prototype</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="/js/render.js"></script>
+        <script src="/js/init.js"></script>
+        <script src="/js/base.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/index.css">
+    </head>
+    <body>
+        <div id="chat">
+            <p class="big">FrozenWar prototype</p>
+        </div>
+        <form id="textForm">
+            <input type="text" name="chat" width="200" autocomplete="off" >
+        </form>
+        <div id="lobby">
+            <ul id="lobbyList">
+
+            </ul>
+            <button onClick="startGame()">Start</button>
+            <button onClick="sendAction(new Action('sampleAct', session, session.getPlayer(playerId), -1, null))">Roll dice</button>
+            <button onClick="socket.emit('endTurn')">End turn</button>
+        </div>
+        <div id="game">
+            <canvas id="canvas" width="100" height="100">
+                Your browser does not support canvas element.
+            </canvas>
+        </div>
+    </body>
+</html>

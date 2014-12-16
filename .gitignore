@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -13,3 +14,6 @@ hs_err_pid*
 
 # Prototyping
 prototyping/node_modules/
+=======
+node_modules/
+>>>>>>> origin/js
