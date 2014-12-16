@@ -10,6 +10,7 @@ body {
 	border-right: none;
 	border-top-left-radius: 0.5em;
 	float:left;
+    overflow-y: auto;
 }
 
 #waitingroom #right {
@@ -38,4 +39,26 @@ body {
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
 	height:2.7em;
+}
+
+#waitingroom .chatbox {
+    min-width:100px;
+    border: none;
+}
+
+#waitingroom .nickname {
+    font-weight: 400;
+    width:150px;
+}
+
+#waitingroom .content {
+    line-height: 1.2em;
+    width: 440px;
+    border-left: 2px solid #efefef;
+    padding-left: .7em;
+    word-wrap: break-word;
+}
+
+#waitingroom .content img{
+    width:100%;
 }

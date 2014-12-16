@@ -33,7 +33,7 @@ var room = (function(exports){
 var socket = (function(exports){
 	var so;
 
-	exports.ready = function(){
+    function ready(){
 		if(so) return true;
 		so = io(inf.o('host'));
 
@@ -57,6 +57,11 @@ var socket = (function(exports){
 		//chat, 클라이언트, 값
 		so.on('chat', function(c, v){
 			console.log('chat', c,v);
+            if(waitingroom)
+                waitingroom.chat({
+                    nickname:c.nickname,
+                    content:v.content
+                });
 		});
 		//startSession, 세션정보, 플레이어아이디
 		so.on('startSession', function(s, pi){
@@ -75,6 +80,13 @@ var socket = (function(exports){
 			console.log('turnOrder', i,n);
 		});
 	}
+
+    function chat(msg){
+        so.emit('chat', {content:msg});
+    }
+
+	exports.ready = ready;
+    exports.chat = chat;
 
 	return exports;
 })({});
@@ -123,20 +135,30 @@ var inf = (function(exports){
 	var INFO = {};
 
 	/*Default*/
-	INFO['host'] = 'http://localhost:8000/';
+	INFO['host'] = 'http://localhost:80/';
 
-	exports.load = function(cb){
+    function oad(cb){
+        console.log('[CALL]', 'oad');
+
 		$.ajax({
 			url:'./server.json',
-			success:function(path){
-				console.info('[SERVER]', path);
-				INFO['host'] = path;
-				if(cb) cb();
+			success:function(msg){
+                var info;
+
+                if(typeof msg == 'string')
+                    info = JSON.parse(msg);
+                else
+                    info = msg;
+
+                for(var k in info)
+                    INFO[k] = info[k];
+
+                if(cb) cb();
 			}
 		});
 	}
-	
-	exports.o = function(e, a){
+
+    function o(e, a){
 		if(e){
 			if(a)
 				INFO[e] = a;
@@ -147,12 +169,15 @@ var inf = (function(exports){
 		return r;
 	}
 
+	exports.oad = oad;
+    exports.o = o;
+
 	return exports;
 })({});
 var domain;
 
 window.onload = function(){
-	inf.load(function(){
+	inf.oad(function(){
 		pag.ready(function(e){
 			console.info('[PAGE]', e.page);
 		});
