@@ -1,4 +1,27 @@
 
 body {
-	background-image: url('assets/bg.jpg');
+
+}
+
+#left {
+	width:650px;
+	height:100%;
+	border: 1px solid #ef8253;
+	float:left;
+}
+
+#right {
+	width:175px;
+	height: 100%;
+	border:1px solid #efefef;
+	float:left;
+}
+
+#waitingroom {
+	height:530px;
+}
+
+.title {
+	font-weight: 400;
+
 }

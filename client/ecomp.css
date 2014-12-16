@@ -1,0 +1,39 @@
+/*
+	<span class="ecomp" data-type="online"></span>
+*/
+
+.ecomp{
+	font-family:sans-serif;
+	font-size:12pt;
+	color:#303030;
+	line-height: 50%;
+	margin: 7px;
+}
+
+.ecomp span{
+	display:inline-block;
+	border-radius: 50%;
+	width:.7em;
+	height:.7em;
+}
+
+.ecomp :after{
+	padding-left: 1.1em;
+	content: attr(data-inner);
+}
+
+.ecomp[data-type='online']{
+	background-color:#2ef746;
+}
+.ecomp[data-type='friend']{
+	background-color:#57b8ff;
+}
+.ecomp[data-type='private']{
+	background-color:#b2b2b2;
+}
+.ecomp[data-type='blocked']{
+	background-color:#ff5757;
+}
+.ecomp[data-type='away']{
+	background-color:#ffef34;
+}

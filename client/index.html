@@ -3,14 +3,23 @@
 	<head>
 		<meta charset="utf-8">
 		<title>꾸꾸꾺ㅇ</title>
+		<link rel="stylesheet" href="ecomp.css">
 		<link rel="stylesheet" href="style.css">
 		<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="http://kkiro.kr:8000/js/base.js"></script>
 		<script type="text/javascript" src="engine.js"></script>
 	</head>
 	<body>
-		<div id="container">
-			<div id="table"></div>
+		<div class="ecomp" data-type="list">
+				<span class="ecomp" data-type="online"></span> Online
+				<span class="ecomp" data-type="friend"></span> Friend
+				<span class="ecomp" data-type="private"></span> Private
+				<span class="ecomp" data-type="blocked"></span> Blocked
+				<span class="ecomp" data-type="away"></span> Away
+		</div>
+		<div id="page">
+
 		</div>
 	</body>
 </html>

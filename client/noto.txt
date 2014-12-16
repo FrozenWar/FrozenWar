@@ -1,0 +1,15 @@
+handshake, 도메인, 클라이언트ID
+roomUpdate, 방정보
+chat, 클라이언트, 값
+startSession, 세션정보, 플레이어아이디
+err, 에러내용
+turnUpdate, 턴데이터
+turnOrder, 턴순서, 턴번호
+
+
+nickname, 닉네임, 콜백()
+roomConnect, 방이름, 콜백(방)
+chat, 값
+startSession
+action, 액션, 콜백(액션)
+endTurn 
