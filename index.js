@@ -18,9 +18,8 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 
-app.use('/js', serveStatic(__dirname + '/client'));
-app.use('/js', serveStatic(__dirname + '/shared'));
-app.use(serveStatic(__dirname + '/public'));
+app.use('/', serveStatic(__dirname + '/client'));
+app.use('/shared', serveStatic(__dirname + '/shared'));
 /*
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
@@ -95,7 +94,9 @@ io.on('connection', function(socket){
         if(rooms[roomId]) {
             var room = rooms[roomId];
             if(room.session) {
-                io.to('room_'+client.room.name).emit('err', 'Game in session');
+                socket.emit('err', 'Game in session');
+                socket.disconnect('unauthorized');
+                clients.splice(clients.indexOf(client), 1);
                 return;
             }
             room.clients.push(client);
@@ -132,6 +133,7 @@ io.on('connection', function(socket){
             session.addPlayer(player);
             value.player = player;
             player.name = value.nickname;
+            player.components.clientId = value.id;
         });
         room.session = session;
         // Send map information

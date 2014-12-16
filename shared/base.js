@@ -223,14 +223,14 @@ var Player = function(client) {
     this.client = client;
     this.id = null;
     this.name = '';
-    this.resources = [];
+    this.components = {};
 }
 
 Player.prototype.serialize = function() {
     return {
         id: this.id,
         name: this.name,
-        resources: this.resources
+        components: this.components
     };
 }
 

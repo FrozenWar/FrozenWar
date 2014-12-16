@@ -154,12 +154,12 @@ window.onload = function(){
 	});
 
 	$.ajax({
-		url:inf.o('host')+'js/urls.json',
+		url:inf.o('host')+'shared/urls.json',
 		success:function(urls){
 
 			for(k in urls){
 				var q = $('<script>');
-				q.attr('src', inf.o('host')+'js/'+urls[k]);
+				q.attr('src', inf.o('host')+'shared/'+urls[k]);
 				$('head').append(q);
 			}
 			pag.e('waitingroom', ['waitingroom']);

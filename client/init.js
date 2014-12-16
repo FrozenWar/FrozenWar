@@ -1,4 +1,4 @@
-var path = '/js/';
+var path = '/shared/';
 var loadCount = 0;
 var domain;
 var room = {};
@@ -64,6 +64,11 @@ var lobby = {
         for(var i = 0; i < room.clients.length; ++i) {
             var userListItem = document.createElement('li');
             userListItem.appendChild(document.createTextNode(room.clients[i].nickname + ' #'+room.clients[i].id));
+            if(session && session.getTurn()) {
+                if(session.getPlayer(session.getTurn().order).components.clientId == room.clients[i].id) {
+                    userListItem.style.color = "#ff0000";
+                }
+            }
             lobby.lobbyList.appendChild(userListItem);
         }
     },
@@ -84,7 +89,7 @@ $(function() {
     lobby.hide();
     domain = new Domain();
     $.ajax({
-        url: '/js/urls.json',
+        url: '/shared/urls.json',
         dataType: 'json'
     }).done(function(data) {
         logger.log(data.length+' files to load');
@@ -177,6 +182,7 @@ function init() {
             session.runSystems('turn');
         }
         session.runSystems('order');
+        lobby.redraw(room);
     });
     socket.on('turnUpdate', function(data) {
         var turn = new Turn(data.id);

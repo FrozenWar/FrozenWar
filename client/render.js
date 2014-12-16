@@ -10,7 +10,7 @@ var HexagonMap = function(width, height) {
 var REGULAR_HEXAGON_RATIO = 2 / Math.sqrt(3);
 
 var hexMap = new HexagonMap(64, REGULAR_HEXAGON_RATIO * 64);
-var cursorPos = {x:-1, y:-1};
+var cursorPos = {x: -1, y: -1, layer: 0};
 function renderMap(session) {
     var canvas = document.getElementById('canvas');
     canvas.width = session.map.width * hexMap.width + hexMap.width / 2;
@@ -110,6 +110,7 @@ window.addEventListener('load', function() {
         }
         if(session && (cursorPos.x != tilePos.x || cursorPos.y != tilePos.y)) {
             cursorPos = session.map.toAxialCoord(tilePos);
+            cursorPos.layer = 0;
             renderMap(session);
         }
     });
