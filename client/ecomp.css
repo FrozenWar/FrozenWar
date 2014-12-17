@@ -32,9 +32,11 @@
 	line-height: 50%;
 	min-width:.7em;
 	min-height:.7em;
+	margin: 0em .3em;
 }
 .ecomp span[rect]{
 	border-radius:0px;
+	margin: 0px;
 }
 
 .ecomp textarea{
