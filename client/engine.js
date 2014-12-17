@@ -41,7 +41,7 @@ var socket = (function(exports){
 		so.on('handshake', function(data){
 			console.log(data);
 
-			inf.o('nick', 'Lolita_'+Math.random().toFixed(4));
+			inf.o('nick', 'JK_'+Math.random().toFixed(4));
 			so.emit('nickname', inf.o('nick'), function(){});
 			inf.o('roomid', 'test');
 			so.emit('roomConnect', inf.o('roomid'), function(d){
