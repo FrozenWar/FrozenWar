@@ -21,7 +21,7 @@ var room = (function(exports){
 			d.addClass('ecomp');
 			d.data('id', c.id);
 			d.append(s);
-			d.append(c.nickname + ' ['+c.id+']');
+			d.append(document.createTextNode(c.nickname + ' ['+c.id+']'));
 
 			$('#right').append(d);
 		}
@@ -60,7 +60,7 @@ var socket = (function(exports){
             if(waitingroom)
                 waitingroom.chat({
                     nickname:c.nickname,
-                    content:v.content
+                    content:v
                 });
 		});
 		//startSession, 세션정보, 플레이어아이디
@@ -82,7 +82,7 @@ var socket = (function(exports){
 	}
 
     function chat(msg){
-        so.emit('chat', {content:msg});
+        so.emit('chat', msg);
     }
 
 	exports.ready = ready;

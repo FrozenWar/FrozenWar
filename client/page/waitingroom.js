@@ -31,8 +31,8 @@ var waitingroom = (function(exports){
     function chat(msg){
         var chatbox = $(raw_chatbox);
 
-        chatbox.children('.nickname').html(msg.nickname);
-        chatbox.children('.content').html(msg.content.replace(/\n/g, '</br>'));
+        chatbox.children('.nickname').append(document.createTextNode(msg.nickname));
+        chatbox.children('.content').append(document.createTextNode(msg.content));
 
         $('#waitingroom #left').append(chatbox);
 
