@@ -1,5 +1,4 @@
 var isProduction = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production';
-console.log(process.env.NODE_ENV);
 
 var express = require('express');
 var serveStatic = require('serve-static');
@@ -20,11 +19,7 @@ app.use(allowCrossDomain);
 
 app.use('/', serveStatic(__dirname + '/client'));
 app.use('/shared', serveStatic(__dirname + '/shared'));
-/*
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/public/index.html');
-});
-*/
+
 if (!module.parent) {
     var server = http.listen(isProduction ? 80 : 8000, function(err) {
         console.log('Listening on port %d', server.address().port);
@@ -85,17 +80,27 @@ io.on('connection', function(socket){
     clients.push(client);
     socket.emit('handshake', domain.keys(), client.id);
     socket.on('nickname', function(nickname, callback) {
+        if(nickname == null) {
+            socket.emit('err', 'nickname cannot be null');
+            socket.disconnect('error');
+            return;
+        }
         console.log(nickname + ' connected');
         client.nickname = nickname;
         if(callback) callback();
     });
     socket.on('roomConnect', function(roomId, callback) {
+        if(roomId == null) {
+            socket.emit('err', 'roomId cannot be null');
+            socket.disconnect('error');
+            return;
+        }
         console.log(client.nickname + ' joined to room '+roomId);
         if(rooms[roomId]) {
             var room = rooms[roomId];
             if(room.session) {
                 socket.emit('err', 'Game in session');
-                socket.disconnect('unauthorized');
+                socket.disconnect('error');
                 clients.splice(clients.indexOf(client), 1);
                 return;
             }
@@ -176,7 +181,7 @@ io.on('connection', function(socket){
             if(client.room.session) {
                 io.to('room_'+client.room.name).emit('err', 'Room exploded');
                 client.room.clients.forEach(function(value) {
-                    value.socket.disconnect('unauthorized');
+                    value.socket.disconnect('error');
                 });
                 delete rooms[client.room.name];
             } else {
