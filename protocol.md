@@ -1,6 +1,9 @@
 FrozenWar 프로토타입 프로토콜
 ============================
 
+** 이 문서는 더 이상 유효하지 않습니다. **
+** This document is obsolete. **
+
 개요
 ----
   FrozenWar 프로토타입은 서버와 통신하기 위해 socket.io를 사용합니다.
