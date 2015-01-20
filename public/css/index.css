@@ -1,32 +1,429 @@
-#chat {
-  padding: 4pt;
-  height: 128pt;
-  overflow: auto;
-  border: 1pt #ddd solid;
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 나눔고딕, NanumGothic, Malgun Gothic, 맑은 고딕, Segoe UI, sans-serif;
 }
-#chat p {
+
+button {
+  font-family: 나눔고딕, NanumGothic, Malgun Gothic, 맑은 고딕, Segoe UI, sans-serif;
+}
+
+.alertify, .alertify-log {
+  font-family: 나눔고딕, NanumGothic, Malgun Gothic, 맑은 고딕, Segoe UI, sans-serif;
+}
+
+.alertify {
+  background: #eee;
+  border: 1px solid #999;
+  border-top: 5pt solid #33A0F1;
+  border-bottom: 2pt solid #999;
+  box-shadow: 0 3px 3px rgba(0,0,0,.3);
+  -webkit-background-clip: padding;     /* Safari 4? Chrome 6? */
+     -moz-background-clip: padding;     /* Firefox 3.6 */
+          background-clip: padding-box; /* Firefox 4, Safari 5, Opera 10, IE 9 */
+}
+  .alertify-text {
+    border: 1px solid #999;
+    border-bottom: 2pt solid #999;
+    padding: 10px;
+  }
+  .alertify-button {
+    color: #1F8CDD !important;
+    background-color: #A2E5FF;
+    border: 1px solid #33A0F1 !important;
+    border-bottom: 2pt solid #33A0F1 !important;
+    padding: 6px 15px;
+    text-decoration: none;
+    -webkit-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	   -moz-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	    -ms-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	     -o-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	        transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+  }
+  .alertify-button:hover,
+  .alertify-button:focus {
+    background-color: #D1F2FF;
+  }
+  .alertify-button:focus {
+    background-color: #E6F8FF;
+  }
+  .alertify-button:active {
+    position: relative;
+  }
+    .alertify-button-cancel,
+    .alertify-button-cancel:hover,
+    .alertify-button-cancel:focus {
+      color: #DD1F2A !important;
+      background-color: #FFA3A2 !important;
+      border: 1px solid #F13533 !important;
+      border-bottom: 2pt solid #F13533 !important;
+      padding: 6px 15px !important;
+      text-decoration: none !important;
+    }
+    .alertify-button-cancel:hover,
+    .alertify-button-cancel:focus {
+      background-color: #FFCECD !important;
+    }
+    .alertify-button-cancel:focus {
+      background-color: #FFE6E6 !important;
+    }
+    .alertify-button-ok,
+    .alertify-button-ok:hover,
+    .alertify-button-ok:focus {
+      color: #2DA32F !important;
+      background-color: #95EE96 !important;
+      border: 1px solid #49AF4B !important;
+      border-bottom: 2pt solid #49AF4B !important;
+      padding: 6px 15px !important;
+      text-decoration: none !important;
+    }
+    .alertify-button-ok:hover,
+    .alertify-button-ok:focus {
+      background-color: #B9F7BA !important;
+    }
+    .alertify-button-ok:focus {
+      background-color: #CFFFD0 !important;
+    }
+
+.alertify-log {
+  background-color: #EEEEEE;
+  border: 1pt #999 solid;
+  border-bottom: 2pt #999 solid;
+  color: #333;
+  padding: 15px;
+  box-shadow: 0 3px 3px rgba(0,0,0,.3);
+  -webkit-background-clip: padding;     /* Safari 4? Chrome 6? */
+     -moz-background-clip: padding;     /* Firefox 3.6 */
+          background-clip: padding-box; /* Firefox 4, Safari 5, Opera 10, IE 9 */
+}
+  .alertify-log-error {
+    color: #DD1F2A;
+    background-color: #FFA3A2;
+    border: 1px solid #F13533;
+    border-bottom: 2pt solid #F13533;
+  }
+  .alertify-log-success {
+    color: #2DA32F;
+    background-color: #95EE96;
+    border: 1px solid #49AF4B;
+    border-bottom: 2pt solid #49AF4B;
+  }
+
+#chatBox {
+  z-index: 999;
+  border-top: 2pt solid #999;
+  background-color: #CECECE;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  height: 150pt;
+  left: 0;
+  right: 0;
+}
+
+#chatLog {
+  overflow: auto;
+  flex: 1 1 auto;
+  margin: 0;
+}
+
+#textForm {
+  flex: 0 0 0;
+  display: block;
+  font-size: 14pt;
+}
+
+#textForm input {
+  width: 100%;
+  border: 1px solid #999;
+  border-bottom: 2pt solid #999;
+  padding: 0px;
+}
+
+.title {
+  font-size: 18pt;
+  padding: 8pt 24pt;
+  background-color: #37C049;
+  color: #FFFFFF;
+  border-bottom: 3pt #3BA249 solid;
+}
+
+.player {
+  margin: 0;
+  position: relative;
+  display: block;
+  background-color: #FFF;
+  padding: 0;
+  border: 0px #999 solid;
+  box-sizing: border-box;
+	-webkit-transform: translate(100px, 0);
+	   -moz-transform: translate(100px, 0);
+	    -ms-transform: translate(100px, 0);
+	     -o-transform: translate(100px, 0);
+	        transform: translate(100px, 0);
+	overflow: hidden;
+	opacity: 0;
+  -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	   -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	    -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	     -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	        transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	max-height: 0;
+}
+
+.player_show {
+  margin-bottom: 3pt;
+	-webkit-transform: translate(0px, 0);
+	   -moz-transform: translate(0px, 0);
+	    -ms-transform: translate(0px, 0);
+	     -o-transform: translate(0px, 0);
+	        transform: translate(0px, 0);
+	opacity: 1;
+	max-height: 32pt;
+  padding: 6pt 20pt;
+  border: 1px #999 solid;
+  border-bottom: 2pt #999 solid;
+}
+
+#lobbyPlayers ul {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0 3px;
+  overflow: hidden;
+}
+
+.player .name {
+  margin-right: 6pt;
+  min-width: 200pt;
+  display: inline-block;
+  border-right: 1pt #aaa solid;
+}
+
+.player .nameself {
+  color: #1F8CDD;
+}
+
+.player .ready {
+  color: #009900;
+}
+
+#lobbyPlayers {
+  background-color: #CECECE;
+  padding: 5pt;
+}
+
+.scene {
+  background-color: #CECECE;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 150pt;
+  left: 0;
+  right: 0;
+}
+
+/** Yeah. default button color is a pony's color. Who cares? */
+.button {
+  margin: 3pt;
+  cursor: pointer;
+  background-color: #9FE7FF;
+  padding: 6pt 30pt;
+  border: 1pt #38abee solid;
+  border-bottom: 2pt #38abee solid;
+  margin-bottom: 3pt;
+  text-align: center;
+  font-size: 14pt;
+  color: #1B8CCE;
+  -webkit-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	   -moz-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	    -ms-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	     -o-transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+	        transition: all 200ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+}
+
+.button:hover {
+  background-color: #C9F1FF;
+}
+
+.buttonGray {
+  background-color: #EEEEEE;
+  border: 1pt #999 solid;
+  border-bottom: 2pt #999 solid;
+  color: #333;
+}
+
+.buttonGray:hover {
+  background-color: #FFFFFF;
+}
+
+.lobbyButtonList {
+  width: 200pt;
+  float: left;
+  margin-right: 3pt;
+}
+
+#game {
+  display: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#canvasContainer {
+  flex: 1 1 auto;
+  background-color: #fff;
+  overflow: scroll;
+  padding: 4px;
+  position: relative;
+}
+
+#unitCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+#tileCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#contextWindow {
+  flex: 0 0 200pt;
+  max-width: 200pt;
+  background-color: #CECECE;
+  border-left: 2pt #999 solid;
+  overflow: auto;
+}
+
+.logbox {
+  display: block;
+  list-style: none;
+  margin: 3pt;
+  padding: 3pt;
+  border: 1px #999 solid;
+  border-bottom: 2pt #999 solid;
+  background-color: #FFF;
+}
+
+.logboxButton {
+  cursor: pointer;
+  background-color: #EEEEEE;
+  border: 1pt #999 solid;
+  border-bottom: 2pt #999 solid;
+}
+
+.logboxButton:hover {
+  background-color: #FFFFFF;
+}
+
+
+.logbox p {
   margin: 0;
   padding: 2pt;
   border-bottom: 1pt #ddd solid;
+  white-space: pre-line;
+  
 }
-#chat .big {
+
+.logbox p.logTitle {
   font-size: 14pt;
 }
-#chat .log {
-  padding-left: 18pt;
-}
-#chat .verbose {
-  color: #5B8BD1;
-}
-#chat .info {
+
+.logbox p.info {
   color: #5BD169;
 }
-#chat .warn {
+
+.logbox p.warn {
   color: #D18F5B;
 }
-#chat .error {
+
+.logbox p.error {
   color: #D1625B;
 }
-#canvas {
-  border:1px solid #000000;
+
+.logbox p.good {
+  color: #5BD169;
 }
+
+.logbox p.bad {
+  color: #D1625B;
+}
+
+.logbox p.caption {
+  color:#999;
+}
+
+.logbox p.tree {
+  margin-left: 8pt;
+  border-left:1pt #ddd solid;
+}
+
+.logbox p.subTree {
+  margin-left: 16pt;
+  border-left:1pt #ddd solid;
+}
+
+.logbox p .nameTag{
+  display:inline-block;
+  min-width:60pt;
+  text-align:right;
+  margin-right: 3pt;
+  padding-right: 3pt;
+  border-right:1pt #ddd solid;
+  color:#999;
+  text-overflow:clip;
+  overflow:hidden;
+  white-space:nowrap;
+}
+
+.logbox p .dataTag{
+  display:inline-block;
+  text-overflow:clip;
+  overflow:hidden;
+  white-space:pre;
+}
+
+#sessionPlayerList {
+  display: block;
+  list-style: none;
+  margin: 3pt;
+  padding: 3pt;
+  border: 1px #999 solid;
+  border-bottom: 2pt #999 solid;
+  background-color: #FFF;
+}
+
+#sessionPlayerList li {
+  display: block;
+  background-color: #FFF;
+	max-height: 32pt;
+  padding: 6pt 10pt;
+  border-bottom: 1px #999 solid;
+}
+
+#sessionPlayerList li.turn {
+  background-color: #C9F1FF;
+}
+
+#sessionPlayerList li:last-child {
+  border-bottom: none;
+}
+
+.miscStuff {
+  color: #333;
+  font-size: 8pt;
+  margin: 0;
+  padding: 0;
+  padding-left: 2pt;
+}
+
+.miscStuff a {
+  color: #666;
+}
+

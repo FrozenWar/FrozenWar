@@ -1,106 +1,107 @@
-domain.assign('posComp', {x: 0, y: 0});
-domain.assign('ownerComp', {player: -1});
-domain.assign('actionComp', {actions: []});
-domain.assign('tileComp', {type: 'grass', color: "#00ff00"});
-domain.assign('renderComp', {name: 'null', color: '#000000', background: '#ffffff'});
+/*
+function startGameSession() {
+  var map = new Map(15, 15);
+  // 네 이거 클라이언트긴 한데 내부적으론 서버로도 동작
+  session = new Session(true, map, domain);
+  // Discover systems
+  var systemList = [];
+  domain.keys().forEach(function(key) {
+      if(domain.get(key).system != null) {
+          systemList.push({key: key, level: domain.get(key).system});
+      }
+  });
+  systemList.sort(function(a, b) {
+      return a.level - b.level;
+  });
+  systemList.forEach(function(domain) {
+      session.addSystem(domain.key);
+  });
+  return session;
+}
 
-domain.assign('unitEntity', {
-    posComp: {},
-    renderComp: {
-        name: 'Unit',
-        color: '#1E98D3',
-        background: '#9EDBF9'
-    },
-    actionComp: {
-        actions: ['infoAct']
-    }
+function runAction(action) {
+  var action;
+  try {
+    action = this.session.runAction(new Action(action.domain, session, session.getPlayer(), action.entity, action.args));
+  } catch (e) {
+    console.log(e);
+    alertify.error(e.toString());
+  }
+  return action;
+}
+*/ //이것들은 클라이언트에서..
+
+domain.assign('LhexDist',function (p1, p2) {
+  return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) +
+          Math.abs(p1.x + p1.y - p2.x - p2.y)) / 2;
 });
 
-
-domain.assign('grassEntity', {
-    posComp: {},
-    tileComp: {
-        type: 'grass',
-        color: '#71CC66'
-    }
+domain.assign('Cpos', {
+  x: 0, y: 0
 });
 
-domain.assign('spawnAct', {
-    run: function(action) {
-        
-    },
-    undo: function(action) {
-        
-    }
+// Will not be implemented in prototype
+domain.assign('Ctile', {
+  name: 'undefined',
+  sight: {}
+});
+domain.assign('Cbuilding', {
+  name: 'undefined',
+  team: null
+});
+domain.assign('Cunit', {
+  name: 'undefined',
+  team: null
 });
 
-domain.assign('moveAct', {
-    run: function(action) {
-        
-    },
-    undo: function(action) {
-    
+domain.assign('Cown', {
+  player: -1,
+  sight: 1
+});
+domain.assign('AchangePlayer', {
+  depends: ['Cown'],
+  debug: true,
+  run: function() {
+    if(this.entity.get('Cown').player != this.player.id) {
+      throw new Error('That is not your entity.');
     }
+    this.result = this.entity.get('Cown').player;
+    this.entity.get('Cown').player = this.args;
+  }
 });
 
-domain.assign('infoAct', {
-    run: function(action) {
-        logger.log(JSON.stringify(action.getEntity()));
-        if(action.session.isServer) {
-            action.result = true;
-        }
-    },
-    undo: function(action) {
-    
-    }
+domain.assign('SspawnBase', {
+  system: 10,
+  init: function(session) {
+    session.players.forEach(function(player) {
+      if(session.isServer) {
+        var x = session.map.width * Math.random() | 0;
+        var y = session.map.height * Math.random() | 0;
+        var setDomain = 'EEarthPonyBase';
+        if(player.resources['team'] == 'pony_pegasus') setDomain = 'EPegasusPonyBase';
+        if(player.resources['team'] == 'pony_unicorn') setDomain = 'EUnicornPonyBase';
+        // You what mate?
+        if(player.resources['team'] == 'debug') setDomain = 'EDebugBase';
+        session.runAction(new Action('AspawnRaw', session, null, null, {
+          x: x - (y/2 | 0),
+          y: y,
+          domain: setDomain,
+          player: player.id
+        }));
+      }
+      player.resources['supply'] = 250;
+      player.resources['troops'] = 500;
+    });
+  }
 });
 
-domain.assign('sampleSys', {
-    system: 0,
-    order: function(session) {
-    },
-    init: function(session) {
-        if(session.isServer) {
-            logger.log('I am server!');
-        } else {
-            logger.log('I am client!');
-        }
-    },
-    turn: function(session) {
-        logger.info('New turn started');
-    },
-    all: function(session) {
-    },
-});
-
-domain.assign('sampleAct', {
-    run: function(action) {
-        if(action.session.isServer) {
-            action.result = Math.random()*6+1|0;
-            logger.log('Rolled a dice: '+action.result);
-        } else {
-            logger.log('Rolled a dice! It was '+action.result+'!');
-        }
-    },
-    undo: function(action) {
-        if(action.session.isServer) {
-            // undo
-            action.result = {};
-        }
-    }
-});
-
-domain.assign('moveLib', {
-    move: function(entity, to) {
-        var pos = entity.components['posComp'];
-        if(!pos) {
-            throw new Error('Tried to move entity that doesn\'t have position');
-        }
-        var tile = entity.session.map.getTile(pos);
-        var newTile = entity.session.map.getTile(to);
-        tile.children.splice(tile.children.indexOf(entity), 1);
-        newTile.children.push(entity);
-        pos.x = to.x;
-        pos.y = to.y;
-    }
+domain.assign('SresourceGive', {
+  system: 100,
+  turn: function(session) {
+    if(session.turnId <= 0) return;
+    session.players.forEach(function(player) {
+      player.resources['supply'] += 30;
+      player.resources['troops'] += 100;
+    });
+  }
 });

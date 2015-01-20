@@ -1,9 +1,9 @@
 // Basicially the client and the server will call init first.
 
-domain.assign('init', function(isServer, rawSession) {
+domain.assign('Linit', function(isServer, rawSession) {
     if(isServer) {
         // Server code here...
-        var map = new Map(10, 10);
+        var map = new Map(15, 15);
         var session = new Session(true, map, domain);
         // Discover systems
         var systemList = [];
@@ -18,18 +18,6 @@ domain.assign('init', function(isServer, rawSession) {
         systemList.forEach(function(domain) {
             session.addSystem(domain.key);
         });
-        // Spawn grass
-        session.map.forEachTile(function(tile) {
-            var entity = session.spawnEntity('grassEntity');
-            entity.components['posComp'].x = tile.position.x;
-            entity.components['posComp'].y = tile.position.y;
-            tile.children.push(entity);
-        });
-        var tile = session.map.getTileByOffset(new Point(3,3));
-        var entity = session.spawnEntity('unitEntity');
-        entity.components['posComp'].x = tile.position.x;
-        entity.components['posComp'].y = tile.position.y;
-        tile.children.push(entity);
         return session;
     } else {
         // Client code here...
@@ -38,7 +26,7 @@ domain.assign('init', function(isServer, rawSession) {
         rawSession.map.entities.forEach(function(value) {
             var entity = new Entity(session, value.id);
             entity.components = value.components;
-            var tile = map.getTile(entity.components['posComp']);
+            var tile = map.getTile(entity.components['Cpos']);
             tile.children.push(entity);
         });
         rawSession.players.forEach(function(value) {

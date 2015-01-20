@@ -1,12 +1,3 @@
-var Server = function() {
-    this.session = null;
-    this.clients = [];
-};
-
-var Client = function() {
-    // TODO Possibly socket, etc
-};
-
 /**
  * Only server should create it without id.
  * Client should create it with given id, or it may conflict.
@@ -37,14 +28,26 @@ Entity.prototype.serialize = function() {
     };
 }
 
-Entity.prototype.addComponent = function(domain) {
+Entity.prototype.add = function(domain) {
     var component = {};
     var prototype = this.session.domain.get(domain);
-    for(var i in prototype) {
-        component[i] = prototype[i];
+    function overwriter(component, prototype) {
+        for(var i in prototype) {
+            if(typeof prototype[i] == 'object' && !Array.isArray(prototype[i])) {
+                if(component[i] == null) component[i] = {};
+                overwriter(component[i], prototype[i]);
+            } else {
+                component[i] = prototype[i];
+            }
+        }
     }
+    overwriter(component, prototype);
     this.components[domain] = component;
     return component;
+}
+
+Entity.prototype.get = function(domain) {
+    return this.components[domain];
 }
 
 /**
@@ -67,14 +70,17 @@ Action.prototype.serialize = function() {
     return {
         domain: this.domain,
         player: (this.player ? this.player.id : -1),
-        entity: this.entity,
+        entity: (this.entity ? this.entity.id : -1),
         args: this.args,
         result: this.result
     };
 }
 
+/**
+ * @deprecated
+ */
 Action.prototype.getEntity = function() {
-    return this.session.map.searchEntity(this.entity);
+    return this.entity;
 }
 
 Action.prototype.getExec = function() {
@@ -82,12 +88,23 @@ Action.prototype.getExec = function() {
 }
 
 Action.prototype.run = function() {
-    if(this.result != null) throw new Error('Action already has run.');
+    if(this.result != null && this.session.isServer) throw new Error('Action already has run.');
+    if(this.result == null && !this.session.isServer) throw new Error('Action has not run on the server yet.');
     var run = this.getExec();
+    if(this.session.debug) {
+      console.log('run action', this.domain, this.player, this.entity, this.args, this.result);
+    }
     if(typeof(run) == 'function') {
-        run(this);
+        run.call(this, this);
     } else {
-        run.run(this);
+        if(run.depends) {
+            for(var key in run.depends) {
+                if(!this.entity.get(run.depends[key])) {
+                    throw new Error('Missing component '+run.depends[key]);
+                }
+            }
+        }
+        run.run.call(this, this);
     }
 }
 
@@ -108,9 +125,12 @@ var Session = function(isServer, map, domain) {
     this.map = map;
     this.domain = domain;
     this.systems = [];
+    this.hooks = [];
     this._entityCount = 0;
     this._playerCount = 0;
     this.turnId = -1;
+    this._actionQueue = [];
+    this.debug = true;
 };
 
 Session.prototype.spawnEntity = function(domain, id) {
@@ -119,10 +139,18 @@ Session.prototype.spawnEntity = function(domain, id) {
     var prototype = this.domain.get(domain);
     // Extend domain's components first.
     Object.keys(prototype).forEach(function(value) {
-        var component = entity.addComponent(value);
-        for(var i in prototype[value]) {
-            component[i] = prototype[value][i];
+        var component = entity.add(value);
+        function overwriter(component, prototype) {
+            for(var i in prototype) {
+                if(typeof prototype[i] == 'object' && !Array.isArray(prototype[i])) {
+                    if(component[i] == null) component[i] = {};
+                    overwriter(component[i], prototype[i]);
+                } else {
+                    component[i] = prototype[i];
+                }
+            }
         }
+        overwriter(component, prototype[value]);
     });
     return entity;
 }
@@ -131,14 +159,28 @@ Session.prototype.runSystems = function(mode) {
     var self = this;
     for(var key in this.systems) {
         var system = this.systems[key];
-        if(system[mode] && typeof(system[mode]) == 'function') system[mode](self);
+        if(system[mode] && typeof(system[mode]) == 'function') {
+            if(this.debug) console.log('run system', mode, key);
+            system[mode](self);
+        }
         if(system['all'] && typeof(system['all']) == 'function') system['all'](self);
     }
+    this.hooks.forEach(function(hook) {
+        if(hook[mode] && typeof(hook[mode]) == 'function') {
+            if(this.debug) console.log('run hook', mode);
+            hook[mode](self);
+        }
+        if(hook['all'] && typeof(hook['all']) == 'function') hook['all'](self);
+    });
 }
 
 Session.prototype.addSystem = function(domain) {
     var system = this.domain.get(domain);
     this.systems[domain] = system;
+}
+
+Session.prototype.addHook = function(hook) {
+    this.hooks.push(hook);
 }
 
 Session.prototype.addPlayer = function(player) {
@@ -183,8 +225,27 @@ Session.prototype.next = function() {
 }
 
 Session.prototype.runAction = function(action) {
-    action.run();
-    if(action.result != null) this.getTurn().actions.push(action);
+    if(this._actionQueue.length == 0) {
+        this._actionQueue.push(action);
+        try {
+          action.run();
+        } finally {
+          var actionEntry;
+          while(actionEntry = this._actionQueue.shift()) {
+            this.getTurn().actions.push(actionEntry);
+            this.runSystems('action');
+          }
+        }
+        return action;
+    } else {
+        this._actionQueue.push(action);
+        action.run();
+        return action;
+    }
+}
+
+Session.prototype.getLastAction = function() {
+    return this.getTurn().actions[this.getTurn().actions.length-1];
 }
 
 Session.prototype.undoLastAction = function() {
@@ -192,6 +253,7 @@ Session.prototype.undoLastAction = function() {
 }
 
 Session.prototype.getPlayer = function() {
+    if(!this.getTurn()) return null;
     return this.getTurn().getPlayer(this);
 }
 
@@ -219,11 +281,10 @@ Session.prototype.serialize = function() {
     };
 }
 
-var Player = function(client) {
-    this.client = client;
+var Player = function() {
     this.id = null;
     this.name = '';
-    this.resources = [];
+    this.resources = {};
 }
 
 Player.prototype.serialize = function() {
@@ -244,8 +305,8 @@ Turn.prototype.next = function(session) {
     if(this.isFinished(session)) {
         throw new Error('Turn is over. Call session.nextTurn instead.');
     }
-    session.runSystems('order');
     this.order ++;
+    session.runSystems('order');
 }
 
 Turn.prototype.isFinished = function(session) {
@@ -374,8 +435,11 @@ Map.prototype.toAxialCoord = function(point) {
 
 Map.prototype.forEach = function(callback) {
     for(var y = 0; y < this.height; ++y) {
+        var yData = this._data[y];
         for(var x = 0; x < this.width; ++x) {
-            this._data[y][x].children.forEach(callback);
+            yData[x].children.forEach(function(entity) {
+              callback(entity, yData[x]);
+            });
         }
     }
 }
@@ -386,6 +450,15 @@ Map.prototype.forEachTile = function(callback) {
             callback(this._data[y][x]);
         }
     }
+}
+
+Map.prototype.forEachByComponents = function(components, callback) {
+  this.forEach(function(entity) {
+    for(var key in components) {
+      if(entity.components[components[key]] == null) return;
+    }
+    callback(entity);
+  });
 }
 
 Map.prototype.serialize = function() {
@@ -433,8 +506,6 @@ Domain.prototype.keys = function() {
 }
 
 if(typeof module != 'undefined' && module.exports) {
-    module.exports.Server = Server;
-    module.exports.Client = Client;
     module.exports.Entity = Entity;
     module.exports.Action = Action;
     module.exports.Session = Session;

@@ -20,6 +20,7 @@ var urls = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../shared/urls.js
 var sharedPath = path.resolve(__dirname, '../shared/');
 
 urls.forEach(function(value) {
+    console.log('Loading '+value);
     var source = fs.readFileSync(path.resolve(sharedPath, value));
     vm.runInContext(source, sandbox, value);
 });

@@ -1,4 +1,14 @@
 [
-"game/core.js",
-"game/init.js"
+  "game/core.js",
+  "game/health.js",
+  "game/power.js",
+  "game/spawner.js",
+  "game/move.js",
+  "game/init.js",
+  "game/fly.js",
+  "game/magic.js",
+  "game/team/earth.js",
+  "game/team/pegasus.js",
+  "game/team/unicorn.js",
+  "game/team/debug.js"
 ]
