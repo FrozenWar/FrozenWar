@@ -49,7 +49,7 @@ BitSet.prototype._reallocate = function(bitSize) {
 
 /**
  * Returns BitSet's allocated size in bits.
- * @returns {Number} - allocated size in bits.
+ * @returns {Number} allocated size in bits.
  */
 BitSet.prototype.size = function() {
   return this._words.byteLength * BITS_PER_BYTE;
@@ -57,7 +57,7 @@ BitSet.prototype.size = function() {
 
 /**
  * Sets specified bit to false.
- * @param pos {Number} - A bit position to set to false.
+ * @param pos {Number} - The bit position to set to false.
  * @see {@link BitSet#set}
  */
 BitSet.prototype.clear = function(pos) {
@@ -65,19 +65,28 @@ BitSet.prototype.clear = function(pos) {
 }
 
 /**
- * Sets specified bits to false.
- * @param from {Number} - A start bit position.
- * @param to {Number} - A end bit position.
+ * Sets specified range of bits to false.
+ * @param from {Number} - The start bit position.
+ * @param to {Number} - The end bit position.
  * @see {@link BitSet#setRange}
  */
 BitSet.prototype.clearRange = function(from, to) {
   this.setRange(from, to, false);
 }
 
+/**
+ * Sets all bits to false.
+ * @see {@link BitSet#setAll}
+ */
 BitSet.prototype.clearAll = function() {
   this.setAll(false);
 }
 
+/**
+ * Sets specified bit.
+ * @param pos {Number} - The bit position to set.
+ * @param set {Boolean} - The value to set.
+ */
 BitSet.prototype.set = function(pos, set) {
   pos |= 0;
   this._reallocate(pos);
@@ -90,16 +99,32 @@ BitSet.prototype.set = function(pos, set) {
   } 
 }
 
+/**
+ * Sets specified range of bits.
+ * @param from {Number} - The start bit position.
+ * @param to {Number} - The end bit position.
+ * @param set {Boolean} - The value to set.
+ */
 BitSet.prototype.setRange = function(from, to, set) {
   for(var i = from; i <= to; ++i) {
     this.set(i, set);
   }
 }
 
+
+/**
+ * Sets all bits.
+ * @param set {Boolean} - The value to set.
+ */
 BitSet.prototype.setAll = function(set) {
   this.setRange(0, this.size()-1, set);
 }
 
+/**
+ * Returns the value of specified bit.
+ * @param pos {Number} - The bit position.
+ * @returns {Boolean} Whether if the bit is set or not.
+ */
 BitSet.prototype.get = function(pos) {
   pos |= 0;
   this._reallocate(pos);
@@ -112,6 +137,12 @@ BitSet.prototype.get = function(pos) {
 
 // aka intersection
 
+/**
+ * Performs AND logical operation on two BitSet.
+ * That means it will be set to 1 if both are 1, 0 otherwise.
+ * The result will be applied to this BitSet.
+ * @param set {BitSet} - The other BitSet.
+ */
 BitSet.prototype.and = function(set) {
   if(set == null) {
     this.clearAll();
@@ -131,6 +162,12 @@ BitSet.prototype.and = function(set) {
 
 // aka union
 
+/**
+ * Performs OR logical operation on two BitSet.
+ * That means it will be set to 1 if one of them is 1, 0 if both are 0.
+ * The result will be applied to this BitSet.
+ * @param set {BitSet} - The other BitSet.
+ */
 BitSet.prototype.or = function(set) {
   if(set == null) {
     return;
@@ -151,6 +188,12 @@ BitSet.prototype.or = function(set) {
 
 // ???
 
+/**
+ * Performs XOR logical operation on two BitSet.
+ * That means it will be set to 1 if the bits are different, 0 if they're same.
+ * The result will be applied to this BitSet.
+ * @param set {BitSet} - The other BitSet.
+ */
 BitSet.prototype.xor = function(set) {
   if(set == null) {
     return;
@@ -169,6 +212,11 @@ BitSet.prototype.xor = function(set) {
   }
 }
 
+/**
+ * Performs NOT logical operation on the BitSet.
+ * That means it will be set to 1 if bit is 0, 0 otherwise.
+ * The result will be applied to this BitSet.
+ */
 BitSet.prototype.not = function() {
   for(var i = 0; i < this._words.length; ++i) {
     this._words[i] = ~this._words[i];
@@ -177,6 +225,11 @@ BitSet.prototype.not = function() {
 
 // compare functions
 
+/**
+ * Checkes whether the BitSet is filled with 0.
+ * This function will return false if the BitSet has any bit that is set to 1.
+ * @returns {Boolean} Whether if the BitSet is empty.
+ */
 BitSet.prototype.isEmpty = function() {
   for(var i = 0; i < this._words.length; ++i) {
     if(this._words[i]) return false;
@@ -184,6 +237,12 @@ BitSet.prototype.isEmpty = function() {
   return true;
 }
 
+/**
+ * Checks if two BitSet has a same bit to set to 1.
+ * This function will return true if they have matching part, false otherwise.
+ * @param set - The other BitSet.
+ * @returns {Boolean} Whether if two BitSet intersects.
+ */
 BitSet.prototype.intersects = function(set) {
   if(set == null) {
     return false;
@@ -197,6 +256,12 @@ BitSet.prototype.intersects = function(set) {
 
 // this -> set
 
+/**
+ * Checks if this BitSet contains all the bits from the other BitSet.
+ * This function will return true if , false otherwise.
+ * @param set - The other BitSet.
+ * @returns {Boolean} Whether if two BitSet intersects.
+ */
 BitSet.prototype.contains = function(set) {
   if(set == null) {
     return false;
@@ -208,6 +273,12 @@ BitSet.prototype.contains = function(set) {
   return true;
 }
 
+/**
+ * Checks if two BitSet is same.
+ * This function will return true if they are same, false otherwise.
+ * @param set - The other BitSet.
+ * @returns {Boolean} Whether if two BitSet equals.
+ */
 BitSet.prototype.equals = function(set) {
   if(set == null || !(set instanceof BitSet)) {
     return false;
@@ -228,6 +299,11 @@ BitSet.prototype.equals = function(set) {
   return true;
 }
 
+/**
+ * Changes the BitSet to String form.
+ * @param {Number} [redix=2] - The redix to use.
+ * @returns {String} The stringified BitSet.
+ */
 BitSet.prototype.toString = function(redix) {
   var map = [];
   for(var i = 0; i < this._words.length; ++i) {

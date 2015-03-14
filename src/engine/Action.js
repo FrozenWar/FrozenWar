@@ -19,7 +19,7 @@ function Action(engine, entity, player, target) {
   this.entity = entity;
   /**
    * The player associated with the action.
-   * @var {Player}
+   * @var {Entity}
    */
   this.player = player;
   /**
@@ -41,7 +41,7 @@ function Action(engine, entity, player, target) {
  * @throws Will throw an error if {@link action#run} is not implemented.
  */
 Action.prototype.run = function(engine) {
-  throw new Error('Action.run이 구현이 되지 않음');
+  throw new Error('Action.run is not implemented');
 }
 
 /**
@@ -49,7 +49,7 @@ Action.prototype.run = function(engine) {
  * @static
  * @param {Function} func - The function to use as {@link Action#run}.
  * @param {Function} [classObj=Action] - The class to extend from.
- * @returns A new class that has specified function and class.
+ * @returns {Action}  A new class that has specified function and class.
  */
 Action.scaffold = function(func, classObj) {
   classObj = classObj || Action;
