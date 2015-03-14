@@ -3,7 +3,7 @@
  * @constructor
  * @param {Engine} engine - The game engine associated with the action.
  * @param {Entity} entity - The entity associated with the action.
- * @param {Player} player - The player associated with the action.
+ * @param {Entity} player - The player who requested the action.
  * @param {Entity} target - The target entity associated with the action.
  */
 function Action(engine, entity, player, target) {
@@ -18,7 +18,10 @@ function Action(engine, entity, player, target) {
    */
   this.entity = entity;
   /**
-   * The player associated with the action.
+   * The player who requested the action.
+   * Note that a player is an entity with a player component.
+   * It defaults to {@link PlayerComponent}, 
+   * but it can be changed by {@link TurnEngine}.
    * @var {Entity}
    */
   this.player = player;

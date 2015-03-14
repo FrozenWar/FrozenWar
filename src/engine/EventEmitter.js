@@ -1,57 +1,104 @@
+/**
+ * This class allows to emit events like node.js.
+ * Basically it's equivalent to node.js EventEmitter.
+ * @constructor
+ */
 function EventEmitter() {
   this._listeners = {};
+  this._onces = {};
 }
 
-EventEmitter.prototype._registerListener = function(event, listener) {
+/**
+ * Registers a listener.
+ * @param event {String} - The name of the event.
+ * @param listener {Function} - The function to be triggered.
+ */
+EventEmitter.prototype.on = function(event, listener) {
   if(this._listeners[event] == null) {
     this._listeners[event] = [];
+  }
+  if(this._onces[event] == null) {
+    this._onces[event] = [];
   }
   this._listeners[event].push(listener);
 }
 
-EventEmitter.prototype.on = function(event, listener) {
-  this._registerListener(event, {exec: listener});
-}
-
+/**
+ * Registers a one-time listener.
+ * The listener will be removed after being triggered once.
+ * @param event {String} - The name of the event.
+ * @param listener {Function} - The function to be triggered.
+ */
 EventEmitter.prototype.once = function(event, listener) {
-  this._registerListener(event, {exec: listener, once: true});
+  this.on(event, listener);
+  this._onces[event].push(listener);
 }
 
+/**
+ * Removes the listener.
+ * @param event {String} - The name of the event.
+ * @param listener {Function} - The function to be removed.
+ */
 EventEmitter.prototype.removeListener = function(event, listener) {
   if(this._listeners[event] == null) return;
   var idx = this._listeners[event].indexOf(listener);
   if(idx == -1) return;
   this._listeners[event].splice(idx, 1);
+  if(this._onces[event] == null) return;
+  var idx = this._onces[event].indexOf(listener);
+  if(idx == -1) return;
+  this._onces[event].splice(idx, 1);
 }
 
+/**
+ * Removes all the listener with specified event type.
+ * If event parameter is not set, it will remove all the listener of all types.
+ * @param [event] {String} - The name of the event.
+ */
 EventEmitter.prototype.removeAllListeners = function(event) {
   if(event) {
     this._listeners[event] = [];
+    this._onces[event] = [];
   } else {
     this._listeners = {};
+    this._onces = {};
   }
 }
 
+/**
+ * Returns the array of listeners with specified event type.
+ * @param event {String} - The name of the event.
+ * @returns {Array} An array holding event listeners.
+ */
 EventEmitter.prototype.listeners = function(event) {
   var array = this._listeners[event];
   if(!array) return [];
-  return array.map(function(value) {
-    return value.exec;
-  });
+  return array;
 }
 
+/**
+ * Emits the event.
+ * This will trigger all the listener with that event type.
+ * You can supply listener function's arguments by appending
+ * arguments after the 'event' parameter.
+ * @param event {String} - The name of the event.
+ * @param args... - Arguments to supply to listeners.
+ */
 EventEmitter.prototype.emit = function(event) {
   var args = [];
   for(var i = 1; i < arguments.length; ++i) {
     args.push(arguments[i]);
   }
   var array = this._listeners[event];
+  var onceArray = this._onces[event];
   if(!array) return;
   for(var i = 0; i < array.length; ++i) {
     var entry = array[i];
-    entry.exec.apply(this, args);
-    if(entry.once) {
+    entry.apply(this, args);
+    var onceIdx = onceArray.indexOf(entry);
+    if(onceIdx != -1) {
       array.splice(i, 1);
+      onceArray.splice(onceIdx, 1);
       i --;
     }
   }

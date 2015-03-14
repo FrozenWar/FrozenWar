@@ -22,14 +22,33 @@ var ComponentGroup = require('./ComponentGroup.js');
  */
  
 /**
- * turnNext
- * gameInit
- * sequenceNext
+ * Represents an turn based game engine.
+ * It's like a normal ECS with Action and Turn.
+ * @constructor
+ * @extends Engine
+ * @param {Boolean} [isServer=false] - Whether if it's a server or not
+ * @param {Function} [playerComponent=PlayerComponent] - Default player component
+ * @see Action
+ * @see Turn
  */
 function TurnEngine(isServer, playerComponent) {
   Engine.call(this);
+  /**
+   * A boolean contains whether if it's a server or not.
+   * @var {Boolean}
+   */
   this.isServer = isServer || false;
+  /**
+   * An array holding all the {@link Turn} used in the game.
+   * @var {Array}
+   * @see Turn
+   */
   this.turns = [];
+  /**
+   * An arraying holding all the player {@link Entity} in the game.
+   * @var {Array}
+   * @see Entity
+   */
   this.players = this.getEntitiesFor(ComponentGroup.createBuilder(this)
     .contain(playerComponent || PlayerComponent).build());
 }
@@ -37,6 +56,11 @@ function TurnEngine(isServer, playerComponent) {
 TurnEngine.prototype = Object.create(Engine.prototype);
 TurnEngine.prototype.constructor = TurnEngine;
 
+/**
+ * Returns current Turn object.
+ * It'll call {@link TurnEngine#nextTurn} if the game hasn't started yet.
+ * @returns {Turn} The current Turn
+ */
 TurnEngine.prototype.getTurn = function() {
   if(this.turns.length == 0) {
     return this.nextTurn();
@@ -44,16 +68,42 @@ TurnEngine.prototype.getTurn = function() {
   return this.turns[this.turns.length-1];
 }
 
+/**
+ * Finishes the current Turn and starts next Turn.
+ * @returns {Turn} The current Turn
+ * @throws If there are no players in the game
+ * @fires TurnEngine#gameInit
+ * @fires TurnEngine#sequenceNext
+ * @fires TurnEngine#turnNext
+ */
 TurnEngine.prototype.nextTurn = function() {
   this.sortSystems();
   if(this.turns.length == 0) {
     if(this.players[0] == null) {
-      throw new Error('게임에 적어도 1명 이상의 플레이어가 등록되어 있어야 합니다');
+      throw new Error('There should be at least one player in the game');
     }
     var turn = new Turn(0, 0, 0, this.players[0]);
     this.turns.push(turn);
+    /**
+     * This event is fired when the game starts.
+     *
+     * @event TurnEngine#gameInit
+     * @type {Turn}
+     */
     this.emit('gameInit', turn);
+    /**
+     * This event is fired when the sequence changes.
+     *
+     * @event TurnEngine#sequenceNext
+     * @type {Turn}
+     */
     this.emit('sequenceNext', turn);
+    /**
+     * This event is fired when the turn changes.
+     *
+     * @event TurnEngine#turnNext
+     * @type {Turn}
+     */
     this.emit('turnNext', turn);
     this.systems.forEach(function(system) {
       if(system.onInit) {
@@ -100,20 +150,32 @@ TurnEngine.prototype.nextTurn = function() {
   return turn;
 }
 
+/**
+ * Runs the Action.
+ * Action shouldn't have run yet if {@link TurnEngine#isServer} is true,
+ * but it should have run on server and have {@link Action#result} if not.
+ * @param action {Action} - The Action to run.
+ * @fires TurnEngine#action
+ */
 TurnEngine.prototype.runAction = function(action) {
-  // TODO action을 안만듬;
   if(this.isServer) {
     if(action.result) {
-      throw new Error('Action이 이미 실행되었습니다');
+      throw new Error('Action has already run');
     }
   } else {
     if(!action.result) {
-      throw new Error('Action을 서버측에서 실행하지 않았습니다');
+      throw new Error('Action hasn\'t run on server yet');
     }
   }
   this.getTurn().addAction(action);
   action.run(engine);
-  this.emit('action', turn);
+  /**
+   * This event is fired when the action executes.
+   * @event TurnEngine#action
+   * @property {Turn} 0 - The current Turn.
+   * @property {Action} 1 - The Action object.
+   */
+  this.emit('action', turn, action);
   this.systems.forEach(function(system) {
     if(system.onAction) {
       system.onAction(turn, action);
