@@ -255,6 +255,15 @@ Engine.prototype.getEntitiesFor = function(componentGroup) {
 }
 
 /**
+ * Searches ComponentGroup by its array.
+ * @param entities {Array} An array of ComponentGroup
+ * @returns {ComponentGroup} The ComponentGroup linked with the array
+ */
+Engine.prototype.getComponentGroup = function(entities) {
+  return this._componentGroups[this._componentGroupEntities.indexOf(entities)];
+}
+
+/**
  * Adds the System to the Engine.
  * The System will be triggered when the {@link Engine#update} is called.
  * This will trigger {@link System#onAddedToEngine}.
