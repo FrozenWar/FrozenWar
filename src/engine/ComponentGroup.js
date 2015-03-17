@@ -116,7 +116,7 @@ ComponentGroup.Builder.prototype.reset = function() {
 }
 
 /**
- * Sets contain codition of the object.
+ * Sets contain condition of the object.
  * @param args... {Function} - The list of component constructors.
  * @returns {ComponentGroup.Builder} The Builder itself to make it chainable.
  */
@@ -126,7 +126,7 @@ ComponentGroup.Builder.prototype.contain = function(args) {
 }
 
 /**
- * Sets intersect codition of the object.
+ * Sets intersect condition of the object.
  * @param args... {Function} - The list of component constructors.
  * @returns {ComponentGroup.Builder} The Builder itself to make it chainable.
  */
@@ -136,7 +136,7 @@ ComponentGroup.Builder.prototype.intersect = function(args) {
 }
 
 /**
- * Sets exclude codition of the object.
+ * Sets exclude condition of the object.
  * @param args... {Function} - The list of component constructors.
  * @returns {ComponentGroup.Builder} The Builder itself to make it chainable.
  */
