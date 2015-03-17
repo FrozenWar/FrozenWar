@@ -156,6 +156,7 @@ TurnEngine.prototype.nextTurn = function() {
  * but it should have run on server and have {@link Action#result} if not.
  * @param action {Action} - The Action to run.
  * @fires TurnEngine#action
+ * @fires TurnEngine#preAction
  */
 TurnEngine.prototype.runAction = function(action) {
   if(this.isServer) {
@@ -167,6 +168,18 @@ TurnEngine.prototype.runAction = function(action) {
       throw new Error('Action hasn\'t run on server yet');
     }
   }
+  /**
+   * This event is fired before the action executes.
+   * @event TurnEngine#preAction
+   * @property {Turn} 0 - The current Turn.
+   * @property {Action} 1 - The Action object.
+   */
+  this.emit('preAction', turn, action);
+  this.systems.forEach(function(system) {
+    if(system.onPreAction) {
+      system.onPreAction(turn, action);
+    }
+  });
   this.getTurn().addAction(action);
   action.run(engine);
   /**

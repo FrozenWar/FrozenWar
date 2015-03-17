@@ -39,6 +39,15 @@ TurnSystem.prototype.onSequence = function(turn) {
 }
 
 /**
+ * Called when before action runs.
+ * @param turn {Turn} - The current Turn.
+ * @param action {Action} - The action about to run.
+ */
+TurnSystem.prototype.onPreAction = function(turn, action) {
+  
+}
+
+/**
  * Called when the action runs.
  * @param turn {Turn} - The current Turn.
  * @param action {Action} - The action that has run.
