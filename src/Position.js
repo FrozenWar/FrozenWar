@@ -10,7 +10,7 @@ var ComponentGroup = require('./engine/ComponentGroup.js');
  * @param [y] {Number} - The Z value of the position
  * @see http://www.redblobgames.com/grids/hexagons/
  */
-var PositionComponent = function(x, y) {
+function PositionComponent(x, y) {
   this.x = x || 0;
   this.y = y || 0;
 }
@@ -36,6 +36,8 @@ PositionComponent.prototype.distance = function(pos) {
     Math.abs(pos.y - this.y));
 }
 
+var Point = PositionComponent;
+
 /**
  * Indexes Entity into 2 dimensional array.
  * This allows other System to find an Entity in specific location quickly.
@@ -49,7 +51,7 @@ PositionComponent.prototype.distance = function(pos) {
  * @param width {Number} - The width of the map
  * @param height {Number} - The height of the map
  */
-var PositionSystem = function(width, height) {
+function PositionSystem(width, height) {
   this.engine = null;
   this.entities = null;
   this.width = width;
@@ -165,5 +167,6 @@ PositionSystem.prototype.onAction = function(turn, action) {
 
 if(typeof module != 'undefined') {
   module.exports.PositionComponent = PositionComponent;
+  module.exports.Point = Point;
   module.exports.PositionSystem = PositionSystem;
 }
