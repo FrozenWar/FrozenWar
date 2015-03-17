@@ -4,9 +4,9 @@
  * @param {Engine} engine - The game engine associated with the action.
  * @param {Entity} entity - The entity associated with the action.
  * @param {Entity} player - The player who requested the action.
- * @param {Entity} target - The target entity associated with the action.
+ * @param {Object} options - The arguments associated with the action.
  */
-function Action(engine, entity, player, target) {
+function Action(engine, entity, player, options) {
   /**
    * The game engine associated with the action.
    * @var {Engine}
@@ -26,10 +26,10 @@ function Action(engine, entity, player, target) {
    */
   this.player = player;
   /**
-   * The target entity associated with the action.
-   * @var {Entity}
+   * The arguments associated with the action.
+   * @var {Object}
    */
-  this.target = target;
+  this.options = options;
   /**
    * The result of the action.
    * It should be null if it hasn't run yet.
@@ -51,13 +51,17 @@ Action.prototype.run = function(engine) {
  * Creates a new Action class that has given function as {@link Action#run}.
  * @static
  * @param {Function} func - The function to use as {@link Action#run}.
+ * @param {Function} constructor - The function to use as constructor.
  * @param {Function} [classObj=Action] - The class to extend from.
  * @returns {Action}  A new class that has specified function and class.
  */
-Action.scaffold = function(func, classObj) {
+Action.scaffold = function(func, constructor, classObj) {
   classObj = classObj || Action;
-  var newClass = function(engine, entity, player) {
-    classObj.call(this, engine, entity, player);
+  var newClass = function(engine, entity, player, options) {
+    classObj.call(this, engine, entity, player, options);
+    if(constructor) {
+      constructor.call(this, engine, entity, player, options);
+    }
   }
   newClass.prototype = Object.create(classObj.prototype);
   newClass.prototype.constructor = classObj;
