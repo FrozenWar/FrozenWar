@@ -1,6 +1,3 @@
-var BitSet = require('./BitSet.js');
-var EventEmitter = require('./EventEmitter.js');
-
 var DEFAULT_SYSTEM_PRIORITY = 1000;
 
 /**
@@ -16,7 +13,7 @@ var DEFAULT_SYSTEM_PRIORITY = 1000;
  * @see ComponentGroup
  */
 function Engine() {
-  EventEmitter.call(this);
+  Package.EventEmitter.call(this);
   this._entities = {};
   this._entitiesArray = [];
   this._entityPos = 0;
@@ -36,7 +33,7 @@ function Engine() {
   this._systemsSortRequired = false;
 }
 
-Engine.prototype = Object.create(EventEmitter.prototype);
+Engine.prototype = Object.create(Package.EventEmitter.prototype);
 Engine.prototype.constructor = Engine;
 
 /**
@@ -74,7 +71,7 @@ Engine.prototype.getComponentBit = function(component) {
  * @return {BitSet} A BitSet holding combination of Components.
  */
 Engine.prototype.getComponentsBitSet = function(components) {
-  var bits = new BitSet();
+  var bits = new Package.BitSet();
   for(var i = 0; i < components.length; ++i) {
     bits.set(this.getComponentBit(components[i]), true);
   }
@@ -346,6 +343,4 @@ Engine.prototype.update = function() {
   })
 }
 
-if(typeof module != 'undefined') {
-  module.exports = Engine;
-}
+Package.Engine = Engine;

@@ -44,6 +44,4 @@ Turn.prototype.addAction = function(action) {
   this.actions.push(action);
 }
 
-if(typeof module != 'undefined') {
-  module.exports = Turn;
-}
+Package.Turn = Turn;

@@ -1,5 +1,3 @@
-var Action = require('./engine/Action.js');
-
 /**
  * Stores general information about the Entity.
  * It stores name, and type and tribe information.
@@ -88,7 +86,7 @@ OwnerSystem.prototype.onPreAction = function(turn, action) {
  * @param entity {Entity} - The entity to move.
  * @param player {Entity} - The player who initiated this action.
  */
-var TransferOwnershipAction = Action.scaffold(function(engine) {
+var TransferOwnershipAction = Package.Action.scaffold(function(engine) {
   if(!this.entity.has(OwnerComponent)) {
     throw new Error('Entity does not have OwnerComponent');
   }
@@ -98,3 +96,8 @@ var TransferOwnershipAction = Action.scaffold(function(engine) {
   this.entity.get(OwnerComponent).id = this.target.id;
   this.result = true;
 });
+
+Package.InfoComponent = InfoComponent;
+Package.OwnerComponent = OwnerComponent;
+Package.OwnerSystem = OwnerSystem;
+Package.TransferOwnershipAction = TransferOwnershipAction;

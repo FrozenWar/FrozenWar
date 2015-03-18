@@ -104,6 +104,4 @@ EventEmitter.prototype.emit = function(event) {
   }
 }
 
-if(typeof module != 'undefined') {
-  module.exports = EventEmitter;
-}
+Package.EventEmitter = EventEmitter;

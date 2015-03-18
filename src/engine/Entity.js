@@ -1,6 +1,3 @@
-var BitSet = require('./BitSet.js');
-var EventEmitter = require('./EventEmitter.js');
-
 /**
  * Represents a Entity.
  * Entity is a simple object that holds {@link Component}.
@@ -9,7 +6,7 @@ var EventEmitter = require('./EventEmitter.js');
  * @param engine {Engine} - The Engine associated with this object.
  */
 function Entity(engine) {
-  EventEmitter.call(this);
+  Package.EventEmitter.call(this);
   /**
    * The ID of this object.
    * This will be given by Engine, and it shouldn't be edited.
@@ -45,7 +42,7 @@ function Entity(engine) {
   this.componentsArray = [];
 }
 
-Entity.prototype = Object.create(EventEmitter.prototype);
+Entity.prototype = Object.create(Package.EventEmitter.prototype);
 Entity.prototype.constructor = Entity;
 
 /**
@@ -129,6 +126,4 @@ Entity.prototype.has = function(component) {
   return this.componentBits.get(bitPos);
 }
 
-if(typeof module != 'undefined') {
-  module.exports = Entity;
-}
+Package.Entity = Entity;

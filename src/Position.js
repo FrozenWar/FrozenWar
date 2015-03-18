@@ -1,5 +1,3 @@
-var ComponentGroup = require('./engine/ComponentGroup.js');
-
 /**
  * Represents a position of an Entity.
  * This game uses hexagonal grids with axial coordinates for position system.
@@ -116,7 +114,7 @@ PositionSystem.prototype._insertEntity = function(entity) {
 
 PositionSystem.prototype.onAddedToEngine = function(engine) {
   this.engine = engine;
-  this.entities = engine.getEntitiesFor(ComponentGroup.createBuilder(engine).
+  this.entities = engine.getEntitiesFor(Package.ComponentGroup.createBuilder(engine).
     contain(PositionComponent).build());
   this.entities.forEach(function(entity) {
     this._insertEntity(entity);
@@ -165,8 +163,6 @@ PositionSystem.prototype.onAction = function(turn, action) {
   });
 }
 
-if(typeof module != 'undefined') {
-  module.exports.PositionComponent = PositionComponent;
-  module.exports.Point = Point;
-  module.exports.PositionSystem = PositionSystem;
-}
+Package.PositionComponent = PositionComponent;
+Package.Point = Point;
+Package.PositionSystem = PositionSystem;

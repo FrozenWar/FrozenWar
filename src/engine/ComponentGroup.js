@@ -1,5 +1,3 @@
-var BitSet = require('./BitSet.js');
-var EventEmitter = require('./EventEmitter.js');
 
 /**
  * Represents the group of components.
@@ -17,7 +15,7 @@ var EventEmitter = require('./EventEmitter.js');
  * @see Component
  */
 function ComponentGroup(contain, intersect, exclude) {
-  EventEmitter.call(this);
+  Package.EventEmitter.call(this);
   /**
    * The ID of this object.
    * This will be given by Engine, and it shouldn't be edited.
@@ -51,7 +49,7 @@ function ComponentGroup(contain, intersect, exclude) {
   this.exclude = exclude;
 }
 
-ComponentGroup.prototype = Object.create(EventEmitter.prototype);
+ComponentGroup.prototype = Object.create(Package.EventEmitter.prototype);
 ComponentGroup.prototype.constructor = ComponentGroup;
 
 /**
@@ -171,6 +169,4 @@ ComponentGroup.Builder.prototype.build = function() {
  * @see Engine
  */
 
-if(typeof module != 'undefined') {
-  module.exports = ComponentGroup;
-}
+Package.ComponentGroup = ComponentGroup;

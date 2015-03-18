@@ -3,10 +3,8 @@
  * Basically this class doesn't do anything - It's just a empty class.
  * @constructor
  */
-var Component = function() {
+function Component() {
   // Empty
 }
 
-if(typeof module != 'undefined') {
-  module.exports = Component;
-}
+Package.Component = Component;

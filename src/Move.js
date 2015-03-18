@@ -1,7 +1,3 @@
-var Action = require('./engine/Action.js');
-var PositionComponent = require('./Position.js').PositionComponent;
-var ComponentGroup = require('./engine/ComponentGroup.js');
-
 /**
  * Stores how much an Entity can move.
  * @constructor
@@ -56,7 +52,7 @@ function MoveHealSystem() {
 
 MoveHealSystem.prototype.onAddedToEngine = function(engine) {
   this.engine = engine;
-  this.entities = engine.getEntitiesFor(ComponentGroup.createBuilder(engine)
+  this.entities = engine.getEntitiesFor(Package.ComponentGroup.createBuilder(engine)
     .contain(MoveComponent).build());
 }
 
@@ -77,11 +73,11 @@ MoveHealSystem.prototype.onSequence = function(turn) {
  * @throws if Entity is out of distance limit
  * @throws if Entity does not have PositionComponent
  */
-var MoveAction = Action.scaffold(function(engine) {
-  if(!this.entity.has(PositionComponent)) {
+var MoveAction = Package.Action.scaffold(function(engine) {
+  if(!this.entity.has(Package.PositionComponent)) {
     throw new Error('Entity does not have PositionComponent');
   }
-  var from = this.entity.get(PositionComponent);
+  var from = this.entity.get(Package.PositionComponent);
   var moveComp = this.entity.get(MoveComponent);
   // TODO use pathfinding algorithm
   var cost = from.distance(this.options);
@@ -98,5 +94,9 @@ var MoveAction = Action.scaffold(function(engine) {
 }, function(engine, entity, player, options) {
   if(options == null) throw new Error('Options should be a Point object');
   // TODO position validation
-  this.options = new PositionComponent(options.x, options.y);
+  this.options = new Package.PositionComponent(options.x, options.y);
 });
+
+Package.MoveComponent = MoveComponent;
+Package.MoveHealSystem = MoveHealSystem;
+Package.MoveAction = MoveAction;

@@ -1,5 +1,3 @@
-var Component = require('./Component.js');
-
 /**
  * Represents a player in the game.
  * This is basic implementation, You can change the player component from
@@ -20,12 +18,6 @@ function PlayerComponent(id, name) {
    * @var {String}
    */
   this.name = name;
-  Component.call(this);
 }
 
-PlayerComponent.prototype = Object.create(Component.prototype);
-PlayerComponent.prototype.constructor = PlayerComponent;
-
-if(typeof module != 'undefined') {
-  module.exports = PlayerComponent;
-}
+Package.PlayerComponent = PlayerComponent;

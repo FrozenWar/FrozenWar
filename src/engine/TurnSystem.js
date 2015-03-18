@@ -1,5 +1,3 @@
-var System = require('./System.js');
-
 /**
  * Represents a System for a turn based game.
  * TurnSystem manages TurnEngine's Entity by its own method.
@@ -8,10 +6,10 @@ var System = require('./System.js');
  * @see Entity
  */
 function TurnSystem() {
-  System.call(this);
+  Package.System.call(this);
 }
 
-TurnSystem.prototype = Object.create(System.prototype);
+TurnSystem.prototype = Object.create(Package.System.prototype);
 TurnSystem.prototype.constructor = TurnSystem;
 
 /**
@@ -56,6 +54,4 @@ TurnSystem.prototype.onAction = function(turn, action) {
   
 }
 
-if(typeof module != 'undefined') {
-  module.exports = TurnSystem;
-}
+Package.TurnSystem = TurnSystem;
