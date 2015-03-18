@@ -13,6 +13,6 @@
   "dependencies": {
     "express": "4.x",
     "serve-static": "*",
-    "socket.io": "*"
+    "uglify-js": "latest"
   }
 }
