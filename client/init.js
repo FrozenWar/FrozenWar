@@ -12,5 +12,4 @@ window.onload = function() {
   
   // 그냥 꺼내옴
   engine = gameLoader.engine;
-  updateTileMap();
 }

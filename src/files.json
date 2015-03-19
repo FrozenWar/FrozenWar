@@ -16,7 +16,16 @@
   "engine/TurnSystem.js",
   "engine/TurnEngine.js",
   
+  "engine/PlayerComponent.js",
   "Position.js",
   "Info.js",
-  "Move.js"
+  "Move.js",
+  "Spawn.js",
+  
+  "Init.js",
+  
+  "EntityTemplate.js",
+  "EntityBuilder.js",
+  
+  "GameLoader.js"
 ]

@@ -56,8 +56,15 @@ var Point = PositionComponent;
 function PositionSystem(width, height) {
   this.engine = null;
   this.entities = null;
-  this.width = width;
-  this.height = height;
+  var self = this;
+  this._onEntityAdded = function(entity) {
+    self.onEntityAdded(entity);
+  }
+  this._onEntityRemoved = function(entity) {
+    self.onEntityRemoved(entity);
+  }
+  this.width = width || 20;
+  this.height = height || 20;
   this.clear();
 }
 
@@ -124,14 +131,14 @@ PositionSystem.prototype.onAddedToEngine = function(engine) {
     this._insertEntity(entity);
   });
   var posGroup = engine.getComponentGroup(this.entities);
-  posGroup.on('entityAdded', this.onEntityAdded);
-  posGroup.on('entityRemoved', this.onEntityRemoved);
+  posGroup.on('entityAdded', this._onEntityAdded);
+  posGroup.on('entityRemoved', this._onEntityRemoved);
 }
 
 PositionSystem.prototype.onRemovedFromEngine = function(engine) {
   var posGroup = engine.getComponentGroup(this.entities);
-  posGroup.removeListener('entityAdded', this.onEntityAdded);
-  posGroup.removeListener('entityRemoved', this.onEntityRemoved);
+  posGroup.removeListener('entityAdded', this._onEntityAdded);
+  posGroup.removeListener('entityRemoved', this._onEntityRemoved);
   this.engine = null;
   this.entities = null;
   this.clear();
@@ -157,10 +164,11 @@ PositionSystem.prototype.updateEntity = function(entity) {
 
 // TODO Used to check errors, should be removed in production state
 PositionSystem.prototype.onAction = function(turn, action) {
+  var self = this;
   this.entities.forEach(function(entity) {
-    var tile = this.reverseMap[entity];
+    var tile = self.reverseMap[entity];
     var posComp = entity.get(PositionComponent);
-    var tile2 = this.get(posComp.x, posComp.y);
+    var tile2 = self.get(posComp.x, posComp.y);
     if(tile != tile2) {
       throw new Error('Entity did not notified its position to PositionSystem');
     }

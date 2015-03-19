@@ -161,6 +161,7 @@ TurnEngine.prototype.runAction = function(action) {
       throw new Error('Action hasn\'t run on server yet');
     }
   }
+  var turn = this.getTurn();
   /**
    * This event is fired before the action executes.
    * @event TurnEngine#preAction
@@ -173,7 +174,7 @@ TurnEngine.prototype.runAction = function(action) {
       system.onPreAction(turn, action);
     }
   });
-  this.getTurn().addAction(action);
+  turn.addAction(action);
   action.run(engine);
   /**
    * This event is fired when the action executes.
