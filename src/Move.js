@@ -2,9 +2,9 @@
  * Stores how much an Entity can move.
  * @constructor
  * @extends Component
- * @param walk {Number} - Max distance of Entity can move in a turn.
+ * @param step {Number} - Max distance of Entity can move in a turn.
  */
-function MoveComponent(walk) {
+function MoveComponent(step) {
   /**
    * Stores maximum distance of the Entity can move in a turn.
    * @var {Number}
@@ -97,6 +97,6 @@ var MoveAction = Package.Action.scaffold(function(engine) {
   this.options = new Package.PositionComponent(options.x, options.y);
 });
 
-Package.MoveComponent = MoveComponent;
-Package.MoveHealSystem = MoveHealSystem;
-Package.MoveAction = MoveAction;
+Package.components.MoveComponent = MoveComponent;
+Package.systems.MoveHealSystem = MoveHealSystem;
+Package.actions.MoveAction = MoveAction;

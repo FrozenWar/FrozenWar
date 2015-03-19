@@ -43,7 +43,7 @@ function TurnEngine(isServer, playerComponent) {
    * @see Entity
    */
   this.players = this.getEntitiesFor(Package.ComponentGroup.createBuilder(this)
-    .contain(playerComponent || Package.PlayerComponent).build());
+    .contain(playerComponent || Package.components.PlayerComponent).build());
 }
 
 TurnEngine.prototype = Object.create(Package.Engine.prototype);

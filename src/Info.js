@@ -97,7 +97,7 @@ var TransferOwnershipAction = Package.Action.scaffold(function(engine) {
   this.result = true;
 });
 
-Package.InfoComponent = InfoComponent;
-Package.OwnerComponent = OwnerComponent;
-Package.OwnerSystem = OwnerSystem;
-Package.TransferOwnershipAction = TransferOwnershipAction;
+Package.components.InfoComponent = InfoComponent;
+Package.components.OwnerComponent = OwnerComponent;
+Package.systems.OwnerSystem = OwnerSystem;
+Package.actions.TransferOwnershipAction = TransferOwnershipAction;

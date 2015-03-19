@@ -9,8 +9,8 @@
  * @see http://www.redblobgames.com/grids/hexagons/
  */
 function PositionComponent(x, y) {
-  this.x = x || 0;
-  this.y = y || 0;
+  this.x = x || 20;
+  this.y = y || 20;
 }
 
 /**
@@ -163,6 +163,6 @@ PositionSystem.prototype.onAction = function(turn, action) {
   });
 }
 
-Package.PositionComponent = PositionComponent;
+Package.components.PositionComponent = PositionComponent;
 Package.Point = Point;
-Package.PositionSystem = PositionSystem;
+Package.systems.PositionSystem = PositionSystem;

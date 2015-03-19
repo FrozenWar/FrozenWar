@@ -20,4 +20,4 @@ function PlayerComponent(id, name) {
   this.name = name;
 }
 
-Package.PlayerComponent = PlayerComponent;
+Package.components.PlayerComponent = PlayerComponent;

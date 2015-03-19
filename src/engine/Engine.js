@@ -268,7 +268,7 @@ Engine.prototype.getComponentGroup = function(entities) {
  */
 Engine.prototype.addSystem = function(system) {
   if(this.systems.indexOf(system) != -1) return;
-  systemTable[system.constructor] = system;
+  this._systemTable[system.constructor] = system;
   system._id = this._systemPos ++;
   this.systems.push(system);
   if(typeof system.onAddedToEngine == 'function') {
@@ -287,7 +287,7 @@ Engine.prototype.addSystem = function(system) {
  * @returns {System} The system registered to the Engine
  */
 Engine.prototype.getSystem = function(system) {
-  return systemTable[system.constructor]
+  return this._systemTable[system.constructor]
 }
 
 /**
@@ -298,7 +298,7 @@ Engine.prototype.getSystem = function(system) {
 Engine.prototype.removeSystem = function(system) {
   var systemPos = this.systems.indexOf(system);
   if(systemPos == -1) return;
-  delete systemTable[system.constructor];
+  delete this._systemTable[system.constructor];
   this.systems.splice(systemPos, 1);
   if(typeof system.onRemovedFromEngine == 'function') {
     system.onRemovedFromEngine(this);
