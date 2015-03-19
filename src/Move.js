@@ -17,6 +17,10 @@ function MoveComponent(step) {
   this.step = 0;
 }
 
+MoveComponent.create = function(options) {
+  return new MoveComponent(options.step);
+}
+
 /**
  * Checks if the Entity has a distance left.
  * @returns {Boolean} Whether if the Entity can move.

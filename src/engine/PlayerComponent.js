@@ -20,4 +20,8 @@ function PlayerComponent(id, name) {
   this.name = name;
 }
 
+PlayerComponent.create = function(options) {
+  return new PlayerComponent(options.id, options.name);
+}
+
 Package.components.PlayerComponent = PlayerComponent;

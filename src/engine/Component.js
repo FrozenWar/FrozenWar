@@ -7,4 +7,8 @@ function Component() {
   // Empty
 }
 
+Component.create = function(options) {
+  return new Component();
+}
+
 Package.Component = Component;

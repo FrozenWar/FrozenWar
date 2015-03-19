@@ -25,6 +25,10 @@ function InfoComponent(type, name, tribe) {
   this.tribe = tribe;
 }
 
+InfoComponent.create = function(options) {
+  return new InfoComponent(options.type, options.name, options.tribe);
+}
+
 /**
  * Stores owner of the Entity.
  * @constructor
@@ -37,6 +41,10 @@ function OwnerComponent(id) {
    * @var {Number}
    */
   this.id = id;
+}
+
+OwnerComponent.create = function(options) {
+  return new OwnerComponent(options.id);
 }
 
 /**

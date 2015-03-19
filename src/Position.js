@@ -9,8 +9,12 @@
  * @see http://www.redblobgames.com/grids/hexagons/
  */
 function PositionComponent(x, y) {
-  this.x = x || 20;
-  this.y = y || 20;
+  this.x = x || 0;
+  this.y = y || 0;
+}
+
+PositionComponent.create = function(options) {
+  return new PositionComponent(options.x, options.y);
 }
 
 /**
