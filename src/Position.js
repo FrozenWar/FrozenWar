@@ -94,8 +94,8 @@ PositionSystem.prototype.clear = function() {
  */
 PositionSystem.prototype.get = function(x, y) {
   // Returns empty array if it's out of range.
-  if(x < 0 || x > this.width || y < 0 || y > this.height) return [];
-  return this.map[y][x];
+  if(x + (y/2 | 0) < 0 || x + (y/2 | 0) > this.width || y < 0 || y > this.height) return [];
+  return this.map[y][x + (y/2 | 0)];
 }
 
 /**
@@ -104,7 +104,7 @@ PositionSystem.prototype.get = function(x, y) {
  * @private
  */
 PositionSystem.prototype._removeEntity = function(entity) {
-  var tile = this.reverseMap[entity];
+  var tile = this.reverseMap[entity.id];
   if(!tile) return;
   tile.splice(tile.indexOf(entity), 1);
 }
@@ -120,7 +120,7 @@ PositionSystem.prototype._insertEntity = function(entity) {
   if(!posComp) throw new Error('Entity does not have PositionComponent');
   var tile = this.get(posComp.x, posComp.y);
   tile.push(entity);
-  this.reverseMap[entity] = tile;
+  this.reverseMap[entity.id] = tile;
 }
 
 PositionSystem.prototype.onAddedToEngine = function(engine) {
@@ -166,10 +166,12 @@ PositionSystem.prototype.updateEntity = function(entity) {
 PositionSystem.prototype.onAction = function(turn, action) {
   var self = this;
   this.entities.forEach(function(entity) {
-    var tile = self.reverseMap[entity];
+    var tile = self.reverseMap[entity.id];
     var posComp = entity.get(PositionComponent);
     var tile2 = self.get(posComp.x, posComp.y);
     if(tile != tile2) {
+      console.log(posComp.x, posComp.y);
+      console.log('reverse', tile, 'current', tile2);
       throw new Error('Entity did not notified its position to PositionSystem');
     }
   });

@@ -6,6 +6,7 @@
 function EventEmitter() {
   this._listeners = {};
   this._onces = {};
+  this._thisObjs = {};
 }
 
 /**
@@ -13,14 +14,18 @@ function EventEmitter() {
  * @param event {String} - The name of the event.
  * @param listener {Function} - The function to be triggered.
  */
-EventEmitter.prototype.on = function(event, listener) {
+EventEmitter.prototype.on = function(event, listener, thisObj) {
   if(this._listeners[event] == null) {
     this._listeners[event] = [];
   }
   if(this._onces[event] == null) {
     this._onces[event] = [];
   }
+  if(this._thisObjs[event] == null) {
+    this._thisObjs[event] = [];
+  }
   this._listeners[event].push(listener);
+  this._thisObjs[event].push(thisObj);
 }
 
 /**
@@ -29,8 +34,8 @@ EventEmitter.prototype.on = function(event, listener) {
  * @param event {String} - The name of the event.
  * @param listener {Function} - The function to be triggered.
  */
-EventEmitter.prototype.once = function(event, listener) {
-  this.on(event, listener);
+EventEmitter.prototype.once = function(event, listener, thisObj) {
+  this.on(event, listener, thisObj);
   this._onces[event].push(listener);
 }
 
@@ -44,6 +49,7 @@ EventEmitter.prototype.removeListener = function(event, listener) {
   var idx = this._listeners[event].indexOf(listener);
   if(idx == -1) return;
   this._listeners[event].splice(idx, 1);
+  this._thisObjs[event].splice(idx, 1);
   if(this._onces[event] == null) return;
   var idx = this._onces[event].indexOf(listener);
   if(idx == -1) return;
@@ -59,9 +65,11 @@ EventEmitter.prototype.removeAllListeners = function(event) {
   if(event) {
     this._listeners[event] = [];
     this._onces[event] = [];
+    this._thisObjs[event] = [];
   } else {
     this._listeners = {};
     this._onces = {};
+    this._thisObjs = {};
   }
 }
 
@@ -91,13 +99,15 @@ EventEmitter.prototype.emit = function(event) {
   }
   var array = this._listeners[event];
   var onceArray = this._onces[event];
+  var thisArray = this._thisObjs[event];
   if(!array) return;
   for(var i = 0; i < array.length; ++i) {
     var entry = array[i];
-    entry.apply(this, args);
+    entry.apply(thisArray[i], args);
     var onceIdx = onceArray.indexOf(entry);
     if(onceIdx != -1) {
       array.splice(i, 1);
+      thisArray.splice(i, 1);
       onceArray.splice(onceIdx, 1);
       i --;
     }

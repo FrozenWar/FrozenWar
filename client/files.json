@@ -1,4 +1,5 @@
 [
   "init.js",
-  "Logger.js"
+  "Logger.js",
+  "RendererImpl.js"
 ]

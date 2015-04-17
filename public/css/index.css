@@ -1,0 +1,161 @@
+body {
+  font-family: 나눔고딕, NanumGothic, Malgun Gothic, 맑은 고딕, Segoe UI, sans-serif;
+}
+
+.hidden {
+  display: none;
+}
+
+.scene {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.colorbox {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: middle;
+  border: #bbb 1px solid;
+}
+
+.dropdown-menu-small {
+  min-width: 36pt;
+}
+
+.btn-large {
+  width: 140pt;
+  text-align: right;
+}
+
+.btn-medium {
+  width: 70pt;
+}
+
+.dropdown-right {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-quarter {
+  flex: 3 1;
+}
+
+.flex-2 {
+  flex: 2 1;
+}
+
+.flex-half {
+  flex: 6 1;
+}
+
+.flex-full {
+  flex: 12 1;
+}
+
+.flex-min {
+  flex: 0 0 auto;
+}
+
+.user-panel {
+}
+
+.game-bottom-panel {
+  max-height: 180pt;
+}
+
+.chat-panel {
+  height: 120pt;
+}
+
+.logbox {
+  overflow-y: scroll;
+  padding: 3pt;
+}
+
+.logbox p {
+  margin: 0;
+  padding: 2pt;
+  border-bottom: 1pt #ccc solid;
+  white-space: pre-line;
+}
+
+.logbox p:last-child {
+  border-bottom: 0;
+}
+
+.logbox p.logTitle {
+  font-size: 14pt;
+}
+
+.logbox p.verbose {
+  color: #0042ad;
+}
+
+.logbox p.info {
+  color: #06ad00;
+}
+
+.logbox p.warn {
+  color: #ad4b00;
+}
+
+.logbox p.error {
+  color: #ad0000;
+}
+
+.logbox p.good {
+  color: #00ad06;
+}
+
+.logbox p.bad {
+  color: #ad0000;
+}
+
+.input input {
+  padding: 3pt;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  margin: 0;
+  background: #eee;
+  font-family: 나눔고딕, NanumGothic, Malgun Gothic, 맑은 고딕, Segoe UI, sans-serif;
+  font-size: 10pt;
+  
+}
+
+.nomargin {
+  margin: 0;
+}
+
+#canvas-viewport {
+  background: #666;
+  display: block;
+}
+
+.canvas {
+  position: relative;
+  z-index: 1;
+}

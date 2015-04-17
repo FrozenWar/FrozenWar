@@ -108,8 +108,8 @@ Engine.prototype.addEntity = function(entity) {
    */
   this.emit('entityAdded', entity);
   this.updateComponentGroup(entity);
-  entity.on('componentAdded', this.updateComponentGroup);
-  entity.on('componentRemoved', this.updateComponentGroup);
+  entity.on('componentAdded', this.updateComponentGroup, this);
+  entity.on('componentRemoved', this.updateComponentGroup, this);
 }
 
 /**
@@ -287,7 +287,7 @@ Engine.prototype.addSystem = function(system) {
  * @returns {System} The system registered to the Engine
  */
 Engine.prototype.getSystem = function(system) {
-  return this._systemTable[system.constructor]
+  return this._systemTable[system];
 }
 
 /**

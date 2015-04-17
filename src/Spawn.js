@@ -13,6 +13,8 @@ var SpawnAction = Package.Action.scaffold(function(engine) {
   }
   engine.addEntity(entity);
   this.result = entity.id;
+  //engine.getSystem(Package.PositionSystem).addEntity(entity);
 });
 
 Package.actions.SpawnAction = SpawnAction;
+ 

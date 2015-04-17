@@ -78,11 +78,11 @@ MoveHealSystem.prototype.onSequence = function(turn) {
  * @throws if Entity does not have PositionComponent
  */
 var MoveAction = Package.Action.scaffold(function(engine) {
-  if(!this.entity.has(Package.PositionComponent)) {
+  if(!this.entity.has(Package.components.PositionComponent)) {
     throw new Error('Entity does not have PositionComponent');
   }
-  var from = this.entity.get(Package.PositionComponent);
-  var moveComp = this.entity.get(MoveComponent);
+  var from = this.entity.get(Package.components.PositionComponent);
+  var moveComp = this.entity.get(Package.components.MoveComponent);
   // TODO use pathfinding algorithm
   var cost = from.distance(this.options);
   if(cost > moveComp.step) {
@@ -95,10 +95,11 @@ var MoveAction = Package.Action.scaffold(function(engine) {
   moveComp.step -= cost;
   from.x = this.options.x;
   from.y = this.options.y;
+  engine.getSystem(Package.systems.PositionSystem).updateEntity(this.entity);
 }, function(engine, entity, player, options) {
   if(options == null) throw new Error('Options should be a Point object');
   // TODO position validation
-  this.options = new Package.PositionComponent(options.x, options.y);
+  this.options = new Package.components.PositionComponent(options.x, options.y);
 });
 
 Package.components.MoveComponent = MoveComponent;

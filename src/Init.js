@@ -8,9 +8,11 @@ InitSystem.prototype.onAddedToEngine = function(engine) {
   this.engine = engine;
 }
 
-InitSystem.prototype.onInit = function(turn) {
+InitSystem.prototype.onTurn = function(turn) {
+  var y = Math.random()*10|0;
+  var x = (Math.random()*10|0) - (y/2|0);
   this.engine.runAction(new Package.actions.SpawnAction(this.engine, null, null,
-    {type: "TestEntity", x: 5, y: 5}));
+    {type: "TestEntity", x: x, y: y}));
 }
 
 Package.systems.InitSystem = InitSystem;
