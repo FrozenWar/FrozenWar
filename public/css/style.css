@@ -40,39 +40,58 @@ div#game.layer{
 	z-index: 1;
 }
 
-div.componenet{
-	position:absolute;
-	color: #e5e5e5;
-	font-family: sans-serif;
+/*
+	scene
+*/
+
+div.scene{
+	width: inherit;
+	height: inherit;
+	display: none;
+	overflow: hidden;
+}
+div.scene.current{
+	display: block;
 }
 
 /*
-	Title
+	component
+*/
+div.scene
+	div.componenet{
+		position:absolute;
+		color: #e5e5e5;
+		font-family: sans-serif;
+	}
+
+/*
+	title-component
 */
 
-div#title {
+div#title-component {
 	width: 100%;
 	height: 30px;
 	background-color:#3f4745;
-
 }
-div.menu {
-	position: absolute;
-	height: 30px;
-	line-height: 30px;
-	font-size: 18px;
-	color: #e5e5e5;
-	text-align: center;
-}
-div#time {
-	width:200px;
-	left: calc(50% - 100px); // 임시
-}
+div#title-component
+	div.menu {
+		position: absolute;
+		height: 30px;
+		line-height: 30px;
+		font-size: 18px;
+		color: #e5e5e5;
+		text-align: center;
+	}
+div#title-component
+	div#time {
+		width:200px;
+		left: calc(50% - 100px); // 임시
+	}
 
 /*
-	Selection
+	selection-component
 */
-div#selection{
+div#selection-component{
 	width: 347.220px;
 	height: 125px;
 	background-color:#3f4745;
