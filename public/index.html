@@ -24,11 +24,12 @@
 			</div>
 			<div id="game-scene" class="scene current">
 				<!-- 상단바 -->
-				<div id="title-component" class="componenet">
-					<div id="time" class="menu">{{time}}</div>
+				<div id="title-component" class="component">
+					<!-- menu -->
+					<div id="time-menu" class="menu">{{time}}</div>
 				</div>
-				<!-- 선택창 -->
-				<div id="selection-component" class="componenet">
+				<!-- 선택창 (왼쪽 아래) -->
+				<div id="selection-component" class="component">
 					<!-- profile -->
 					<div id="profile">
 						<div id="profile-image">{{profile-picture}}</div>
@@ -37,13 +38,18 @@
 							<div id="infomation-body">{{infomation-body}}</div>
 						</div>
 					</div>
-					<!-- action -->
-					<div id="action">
-						<div class="action">
-							<span class="action-icon">{{action-icon}}</span>
-							<span class="action-description">{{action-desc}}</span>
-						</div>
+				</div>
+				<!-- order (선택창 위에)-->
+				<div id="order-component" class="component">
+					<!-- repeat order -->
+					<div class="order">
+						<div class="order-icon">{{order-icon}}</div>
+						<div class="order-description">{{order-desc}}</div>
 					</div>
+				</div>
+				<!-- 할일목록 (오른쪽 아래) -->
+				<div id="todo-component" class="component">
+					<div class="image next">todo</div>
 				</div>
 			</div>
 		</div>
