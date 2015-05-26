@@ -1,0 +1,186 @@
+*{
+	padding:0px;
+	margin:0px;
+}
+/* 기조색 */
+@mixin base-color{
+	background-color: #3f4745;
+	color: #e5e5e5;
+}
+/* 주조색 */
+@mixin dominant-color{
+	background-color: #f4f4f4;
+	color:#3c3c3c;
+}
+/* 강조색 */
+@mixin accent-color{
+	/* yet */
+}
+
+body{
+	@include dominant-color;
+}
+
+
+/*
+	Stage
+*/
+
+div#stage{
+	width: 1280px;
+	height: 720px;
+	width: 100%; /* 임시 */;
+	position: relative;
+	border: 1px solid black; /* 임시 */;
+	font-family: sans-serif;
+}
+
+/*
+	Layer
+*/
+
+div#stage {
+	.layer{
+		width:inherit;
+		height: inherit;
+		position: absolute;
+	}
+
+	div#ui-layer.layer {
+		z-index: 2;
+	}
+
+	div#game-layer.layer{
+		z-index: 1;
+	}
+}
+
+/*
+	scene
+*/
+
+div.scene{
+	width: inherit;
+	height: inherit;
+	display: none;
+	overflow: hidden;
+}
+div.scene.current{
+	display: block;
+}
+
+/*
+	component
+*/
+div.scene {
+	div.component{
+		position:absolute;
+		@include base-color;
+		font-family: sans-serif;
+	}
+}
+
+/*
+	title-component
+*/
+
+div#title-component {
+	width: 100%;
+	height: 30px;
+
+	div.menu {
+		position: absolute;
+		height: 30px;
+		line-height: 30px;
+		font-size: 18px;
+		text-align: center;
+	}
+
+	div#time-menu {
+		width:120px;
+		left: 50%;
+		margin-left: -60px;
+	}
+}
+
+/*
+	selection-component
+*/
+div#selection-component{
+	width: 347.220px;
+	height: 125px;
+	bottom: 0px;
+	left:0px;
+
+	div#profile{
+		width: inherit;
+		height: inherit;
+		clear: both;
+	}
+
+	div#profile-image{
+		height:125px;
+		width:125px;
+		background-color:#000;
+		float: left;
+	}
+
+	div#profile-information{
+		width: 222.22px;
+		height: 125px;
+		float: left;
+	}
+
+	div#infomation-head{
+		font-weight: 700;
+	}
+}
+/*
+	order-component
+*/
+
+div#order-component{
+	width: 347.220px;
+	height:auto;
+	overflow: hidden;
+	bottom: 125px;
+	left:0px;
+
+	div.order{
+		width: 30px;
+		height:30px;
+		line-height: 30px;
+		clear: both;
+	}
+
+	div.order-icon{
+		width: 30px;
+		height: 30px;
+		background-color:#000;
+		float: left;
+	}
+
+	div.order-description{
+		display: none;
+	}
+}
+
+/*
+	todo-component
+*/
+
+div#todo-component{
+	width: 125px;
+	height: 125px;
+	right: 0px;
+	bottom: 0px;
+	background: none;
+
+	div.image.next {
+		width: inherit;
+		height: inherit;
+		background-image: url('../assets/next.svg');
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+}
