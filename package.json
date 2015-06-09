@@ -6,11 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": ["yoo2001818", "tnRaro"],
+  "author": [
+    "yoo2001818",
+    "tnRaro"
+  ],
   "license": "MIT",
-  "repository": {
-  },
+  "repository": {},
   "dependencies": {
+    "ecstasy": "0.0.5",
     "express": "4.x",
     "serve-static": "*",
     "uglify-js": "latest"
