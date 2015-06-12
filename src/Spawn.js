@@ -1,14 +1,18 @@
-var SpawnAction = Package.Action.scaffold(function(engine) {
+var Action = require('ecstasy').Action;
+var EntityBuilder = require('ecstasy').EntityBuilder;
+var Template = require('./EntityTemplate');
+
+var SpawnAction = Action.scaffold(function(engine) {
   if(this.player != null) throw new Error('Players cannot run this action');
-  var template = Package.EntityBuilder.getEntityTemplate(this.options.type);
-  var entity = Package.EntityBuilder.buildEntity(engine, template);
-  if(entity.has(Package.components.OwnerComponent)) {
-    entity.get(Package.components.OwnerComponent).id = this.options.player;
+  var template = EntityBuilder.getEntityTemplate(this.options.type, Template);
+  var entity = EntityBuilder.buildEntity(engine, template);
+  if(entity.c('owner')) {
+    entity.c('owner').id = this.options.player;
   }
-  if(entity.has(Package.components.PositionComponent)) {
+  if(entity.c('position')) {
     if(this.options.x != null && this.options.y != null) {
-      entity.get(Package.components.PositionComponent).x = this.options.x;
-      entity.get(Package.components.PositionComponent).y = this.options.y;
+      entity.c('position').x = this.options.x;
+      entity.c('position').y = this.options.y;
     }
   }
   engine.addEntity(entity);
@@ -16,5 +20,6 @@ var SpawnAction = Package.Action.scaffold(function(engine) {
   //engine.getSystem(Package.PositionSystem).addEntity(entity);
 });
 
-Package.actions.SpawnAction = SpawnAction;
- 
+module.exports = function(engine) {
+  engine.a('spawn', SpawnAction);
+}
