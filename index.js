@@ -1,35 +1,28 @@
-var fs = require('fs');
 var express = require('express');
 var serveStatic = require('serve-static');
+var morgan = require('morgan');
 
 var port = 8000;
 
-var loader = require('./loader.js');
-
-console.log('Processing game code');
-var gameLibCode = loader.parse();
-/*if(process.env.NODE_ENV != 'production') {
-  console.log('Saving copy of game code');
-  fs.writeFileSync('game_lib.js', gameLibCode);
-}*/
-console.log('Loading game code');
-var Package = loader.load(gameLibCode);
-
-console.log('Processing client side code');
-var clientCode = loader.parseClient();
-
-console.log('Starting web server at port', port);
-
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
-app.all('/js/game_lib.js', function(req, res, next) {
-  res.type('js').end(gameLibCode);
+var grunt = require('./lib/grunt.js');
+
+console.log('Running grunt tasks before starting the server');
+grunt(function(code) {
+  if(code != 0) {
+    console.log('Failed to run grunt, exiting');
+    process.exit(code);
+  }
+  console.log('Starting web server at port', port);
+  
+  app.use(morgan('short'));
+  app.use(new serveStatic('./build'));
+  
+  server.listen(port);
+  
+  console.log('Initializing game server');
+  require('./src/Server')(io);
 });
-
-app.all('/js/client.js', function(req, res, next) {
-  res.type('js').end(clientCode);
-});
-
-app.use(new serveStatic('./public'));
-
-app.listen(port);
