@@ -1,4 +1,7 @@
 {
+  "ecmaFeatures": {
+    "modules": true
+  },
   "rules": {
     "quotes": [2, "single"],
     "camelcase": [2,
