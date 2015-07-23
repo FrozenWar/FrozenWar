@@ -1,4 +1,4 @@
 FrozenWar
 =========
 
-A turn based strategy game based on My Little Pony - Friendship is Magic.
+A turn based strategy game based on Equestria's founding story.
