@@ -19,6 +19,9 @@ module.exports = {
       title: 'FrozenWar'
     })
   ],
+  node: {
+    fs: 'empty'
+  },
   module: {
     loaders: [
       {
