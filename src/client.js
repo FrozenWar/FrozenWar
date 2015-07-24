@@ -12,4 +12,5 @@ document.body.innerHTML = indexHtml;
 import buildEngine from './game/init.js';
 console.log(buildEngine(false));
 
-import './client/renderer.js';
+import {init as rendererInit} from './client/renderer/';
+document.addEventListener('load', rendererInit);
