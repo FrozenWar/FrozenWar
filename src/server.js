@@ -18,3 +18,6 @@ server.listen(8000, () => {
 io.on('connection', (socket) => {
   socket.emit('news', 'Hello, world!');
 });
+
+import buildEngine from './game/init.js';
+console.log(buildEngine(true));
