@@ -6,11 +6,11 @@ socket.on('connect', () => {
   console.log('connected!');
 }); */
 
-import indexHtml from './assets/test.html';
-document.body.innerHTML = indexHtml;
+// import indexHtml from './assets/test.html';
+// document.body.innerHTML = indexHtml;
 
 import buildEngine from './game/init.js';
 console.log(buildEngine(false));
 
 import {init as rendererInit} from './client/renderer/';
-document.addEventListener('load', rendererInit);
+window.addEventListener('load', rendererInit);
