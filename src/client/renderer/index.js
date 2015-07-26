@@ -11,7 +11,7 @@ stage.addChild(container);
 
 let hexagon = DebugTile.hexagon;
 
-let viewport = new Viewport(null, hexagon, 400, 300);
+let viewport = new Viewport(null, hexagon, 800, 600);
 container.addChild(viewport.container);
 viewport.container.interactive = true;
 

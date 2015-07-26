@@ -39,8 +39,8 @@ export default class Viewport {
     let tileY = Math.floor(this.posY / stepHeight) - 1;
     let tileWidth = this.getRenderWidth(this.width) + 1;
     let tileHeight = this.getRenderHeight(this.height) + 1;
-    let endX = postX / stepWidth | 0;
-    let endY = postY / stepHeight | 0;
+    let endX = Math.floor(postX / stepWidth) - 1;
+    let endY = Math.floor(postY / stepHeight) - 1;
     for (let y = 0; y <= tileHeight; ++y) {
       let realY = tileY + y;
       if (this.renderMap[realY] == null) continue;
