@@ -1,6 +1,10 @@
 {
+  "plugins": [
+    "react"
+  ],
   "ecmaFeatures": {
-    "modules": true
+    "modules": true,
+    "jsx": true
   },
   "rules": {
     "quotes": [2, "single"],
