@@ -113,6 +113,9 @@ export default class Viewport {
             let unitTile = new UnitTile(entity.c('info').name);
             let entitySprite = new PIXI.Sprite(unitTile.getTexture(
               this.renderer));
+            entitySprite.anchor.set(0.5);
+            entitySprite.position.x = this.hexagon.width / 2;
+            entitySprite.position.y = this.hexagon.height / 2;
             sprite.addChild(entitySprite);
           });
           renderRow[realX] = sprite;

@@ -52,7 +52,9 @@ export class UnitTile extends Tile {
     if (this.TEXTURE) return this.TEXTURE;
     let graphics = new PIXI.Container();
     // Currently do nothing but spawn text.
-    let font = new PIXI.Text(this.unitName);
+    let font = new PIXI.Text(this.unitName, {
+      font: '14pt NanumGothic, 나눔고딕, 맑은 고딕, MalgunGothic, sans-serif'
+    });
     graphics.addChild(font);
     let texture = graphics.generateTexture(renderer);
     this.TEXTURE = texture;
