@@ -86,8 +86,8 @@ export class PositionSystem extends System {
    */
   get(x, y) {
     // Return null if it's out of range.
-    if (x + (y / 2 | 0) < 0 || x + (y / 2 | 0) > this.width) return null;
-    if (y < 0 || y > this.height) return null;
+    if (x + (y / 2 | 0) < 0 || x + (y / 2 | 0) >= this.width) return null;
+    if (y < 0 || y >= this.height) return null;
     return this.map[y][x + (y / 2 | 0)];
   }
   /**
