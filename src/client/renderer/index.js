@@ -11,9 +11,7 @@ stage.addChild(container);
 
 let hexagon = DebugTile.hexagon;
 
-let viewport = new Viewport(null, hexagon, 800, 600);
-container.addChild(viewport.container);
-viewport.container.interactive = true;
+let viewport;
 
 function onDragStart(event) {
   this.data = event.data;
@@ -36,25 +34,27 @@ function onDragMove() {
   viewport.moveCamera(-diffX, -diffY);
 }
 
-viewport.container
-  // events for drag start
-  .on('mousedown', onDragStart)
-  .on('touchstart', onDragStart)
-  // events for drag end
-  .on('mouseup', onDragEnd)
-  .on('mouseupoutside', onDragEnd)
-  .on('touchend', onDragEnd)
-  .on('touchendoutside', onDragEnd)
-  // events for drag move
-  .on('mousemove', onDragMove)
-  .on('touchmove', onDragMove);
-
 export function render() {
   renderer.render(stage);
   requestAnimationFrame(render);
 }
 
-export function init(view) {
+// TODO make them to separate class?
+export function init(engine, view) {
+  viewport = new Viewport(engine, hexagon, 800, 600);
+  container.addChild(viewport.container);
+  stage
+    // events for drag start
+    .on('mousedown', onDragStart)
+    .on('touchstart', onDragStart)
+    // events for drag end
+    .on('mouseup', onDragEnd)
+    .on('mouseupoutside', onDragEnd)
+    .on('touchend', onDragEnd)
+    .on('touchendoutside', onDragEnd)
+    // events for drag move
+    .on('mousemove', onDragMove)
+    .on('touchmove', onDragMove);
   /*eslint-disable */
   renderer = new PIXI.autoDetectRenderer(800, 600, {
     view: view

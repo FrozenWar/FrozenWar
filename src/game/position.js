@@ -85,9 +85,9 @@ export class PositionSystem extends System {
    * @returns {Array} An array holding list of Entity in specific location
    */
   get(x, y) {
-    // Return empty array if it's out of range.
-    if (x + (y / 2 | 0) < 0 || x + (y / 2 | 0) > this.width) return [];
-    if (y < 0 || y > this.height) return [];
+    // Return null if it's out of range.
+    if (x + (y / 2 | 0) < 0 || x + (y / 2 | 0) > this.width) return null;
+    if (y < 0 || y > this.height) return null;
     return this.map[y][x + (y / 2 | 0)];
   }
   /**
@@ -108,6 +108,9 @@ export class PositionSystem extends System {
     var posComp = entity.get('pos');
     if (!posComp) throw new Error('Entity does not have PositionComponent');
     var tile = this.get(posComp.x, posComp.y);
+    if (tile == null) {
+      throw new Error('Entity out of bounds');
+    }
     tile.push(entity);
     this.reverseMap[entity.id] = tile;
   }

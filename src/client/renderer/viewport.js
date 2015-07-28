@@ -3,8 +3,8 @@ import PIXI from 'pixi.js';
 import {DebugTile} from './tile.js';
 
 export default class Viewport {
-  constructor(tilemap, hexagon, width, height) {
-    this.tilemap = tilemap;
+  constructor(engine, hexagon, width, height) {
+    this.engine = engine;
     this.width = width;
     this.height = height;
     this.hexagon = hexagon;
@@ -61,6 +61,19 @@ export default class Viewport {
     this.setCamera(this.posX + deltaX, this.posY + deltaY);
   }
   setCamera(posX, posY) {
+    let tileWidth = this.getRenderWidth(this.width) + 1;
+    let tileHeight = this.getRenderHeight(this.height) + 1;
+    let tilemap = this.engine.s('pos');
+    // Determine the size of the tile map.
+    let mapWidth = this.hexagon.width * tilemap.width +
+      this.hexagon.sideX + 2;
+    let mapHeight = (this.hexagon.height - this.hexagon.sideY - 2) *
+      tilemap.height + this.hexagon.sideY + 2;
+    // Set min/max value of position.
+    posX = Math.min(mapWidth - this.width, posX);
+    posY = Math.min(mapHeight - this.height, posY);
+    posX = Math.max(0, posX);
+    posY = Math.max(0, posY);
     this.freeCamera(posX, posY);
     this.posX = posX;
     this.posY = posY;
@@ -71,8 +84,6 @@ export default class Viewport {
     // Kinda tricky, it has to support negative numbers
     let initX = -(this.flooredModulo(this.posX, stepWidth)) - stepWidth;
     let initY = -(this.flooredModulo(this.posY, stepHeight)) - stepHeight;
-    let tileWidth = this.getRenderWidth(this.width) + 1;
-    let tileHeight = this.getRenderHeight(this.height) + 1;
     for (let y = 0; y <= tileHeight; ++y) {
       let realY = tileY + y;
       let renderY = initY + stepHeight * y;
@@ -86,6 +97,9 @@ export default class Viewport {
         let renderX = initX + this.getRenderX(x, y + tileY);
         // TODO validate
         if (renderRow[realX] == null) {
+          // Doing this to use axial coordinates
+          let tile = tilemap.get(realX - (realY / 2 | 0), realY);
+          if (tile == null) continue;
           // Create new sprite and add it to container.
           let sprite = new PIXI.Sprite(DebugTile.texture);
           this.container.addChild(sprite);

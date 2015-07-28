@@ -10,7 +10,7 @@ socket.on('connect', () => {
 // document.body.innerHTML = indexHtml;
 
 import buildEngine from './game/init.js';
-console.log(buildEngine(false));
+let engine = buildEngine(false);
 
 import {init as rendererInit} from './client/renderer/';
 
@@ -46,6 +46,6 @@ let GameView = React.createClass({
 });
 
 React.render(
-  <GameView gameName="ReactTest" onLoad={rendererInit} />,
+  <GameView gameName="ReactTest" onLoad={rendererInit.bind(null, engine)} />,
   document.body
 );
