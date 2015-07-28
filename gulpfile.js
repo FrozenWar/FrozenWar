@@ -16,11 +16,6 @@ var webpackConfiguration = {
     filename: 'bundle.js'
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
     new HtmlWebpackPlugin({
       title: 'FrozenWar'
     })
