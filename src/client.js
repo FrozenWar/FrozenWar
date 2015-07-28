@@ -13,4 +13,39 @@ import buildEngine from './game/init.js';
 console.log(buildEngine(false));
 
 import {init as rendererInit} from './client/renderer/';
-window.addEventListener('load', rendererInit);
+
+// React test code
+
+import React from 'react';
+
+let CanvasBox = React.createClass({
+  render: function() {
+    return (
+      <canvas>
+        Does not support canvas
+      </canvas>
+    );
+  },
+  shouldComponentUpdate: function() {
+    return false;
+  },
+  componentDidMount: function() {
+    this.props.onLoad(React.findDOMNode(this));
+  }
+});
+
+let GameView = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <p>{this.props.gameName}</p>
+        <CanvasBox onLoad={this.props.onLoad}/>
+      </div>
+    );
+  }
+});
+
+React.render(
+  <GameView gameName="ReactTest" onLoad={rendererInit} />,
+  document.body
+);

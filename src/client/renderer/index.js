@@ -54,10 +54,11 @@ export function render() {
   requestAnimationFrame(render);
 }
 
-export function init() {
+export function init(view) {
   /*eslint-disable */
-  renderer = new PIXI.autoDetectRenderer(800, 600);
+  renderer = new PIXI.autoDetectRenderer(800, 600, {
+    view: view
+  });
   /*eslint-enable */
-  document.body.appendChild(renderer.view);
   render();
 }
