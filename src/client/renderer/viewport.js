@@ -1,10 +1,11 @@
 import PIXI from 'pixi.js';
 // For debugging
-import {DebugTile} from './tile.js';
+import {DebugTile, UnitTile} from './tile.js';
 
 export default class Viewport {
-  constructor(engine, hexagon, width, height) {
+  constructor(engine, renderer, hexagon, width, height) {
     this.engine = engine;
+    this.renderer = renderer;
     this.width = width;
     this.height = height;
     this.hexagon = hexagon;
@@ -77,6 +78,7 @@ export default class Viewport {
     this.freeCamera(posX, posY);
     this.posX = posX;
     this.posY = posY;
+    let reindexRequired = false;
     let stepWidth = this.hexagon.width;
     let stepHeight = this.hexagon.height - this.hexagon.sideY - 2;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
@@ -101,11 +103,20 @@ export default class Viewport {
           let tile = tilemap.get(realX - (realY / 2 | 0), realY);
           if (tile == null) continue;
           // Create new sprite and add it to container.
-          let sprite = new PIXI.Sprite(DebugTile.texture);
+          let sprite = new PIXI.Sprite(DebugTile.getTexture(
+            this.renderer));
           this.container.addChild(sprite);
           sprite.position.x = renderX;
           sprite.position.y = renderY;
+          // Additionally, iterate through tile array
+          tile.forEach(entity => {
+            let unitTile = new UnitTile(entity.c('info').name);
+            let entitySprite = new PIXI.Sprite(unitTile.getTexture(
+              this.renderer));
+            sprite.addChild(entitySprite);
+          });
           renderRow[realX] = sprite;
+          reindexRequired = true;
         } else {
           // Update position only
           let sprite = renderRow[realX];
@@ -113,6 +124,13 @@ export default class Viewport {
           sprite.position.y = renderY;
         }
       }
+    }
+    if (reindexRequired) {
+      this.container.children.sort((a, b) => {
+        let lengthDiff = a.children.length - b.children.length;
+        if (lengthDiff !== 0) return lengthDiff;
+        return a.position.y - b.position.y;
+      });
     }
   }
 }

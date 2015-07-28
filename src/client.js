@@ -10,7 +10,16 @@ socket.on('connect', () => {
 // document.body.innerHTML = indexHtml;
 
 import buildEngine from './game/init.js';
-let engine = buildEngine(false);
+let engine = buildEngine(true);
+engine.e()
+  .c('player', {
+    name: 'test'
+  });
+engine.aa('spawn', null, null, {
+  type: 'TestEntity',
+  x: 4,
+  y: 4
+});
 
 import {init as rendererInit} from './client/renderer/';
 

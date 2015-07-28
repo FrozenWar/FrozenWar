@@ -144,9 +144,9 @@ export class PositionSystem extends System {
   // TODO Used to check errors, should be removed in production state
   action() {
     this.entities.forEach(entity => {
-      var tile = self.reverseMap[entity.id];
+      var tile = this.reverseMap[entity.id];
       var posComp = entity.get('pos');
-      var tile2 = self.get(posComp.x, posComp.y);
+      var tile2 = this.get(posComp.x, posComp.y);
       if (tile !== tile2) {
         console.log(posComp.x, posComp.y);
         console.log('reverse', tile, 'current', tile2);

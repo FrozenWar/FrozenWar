@@ -9,10 +9,10 @@ export class SpawnAction extends Action {
     if (entity.c('owner')) {
       entity.c('owner').id = this.options.player;
     }
-    if (entity.c('position')) {
+    if (entity.c('pos')) {
       if (this.options.x != null && this.options.y != null) {
-        entity.c('position').x = this.options.x;
-        entity.c('position').y = this.options.y;
+        entity.c('pos').x = this.options.x;
+        entity.c('pos').y = this.options.y;
       }
     }
     engine.addEntity(entity);

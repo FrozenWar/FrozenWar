@@ -8,6 +8,7 @@ let hexagon = new Hexagon(80);
  */
 export default class Tile {
   constructor(x, y) {
+    // TODO not sure this is necessary.
     this.x = x;
     this.y = y;
   }
@@ -20,10 +21,10 @@ export default class Tile {
 }
 
 export class DebugTile extends Tile {
-  get texture() {
-    return DebugTile.texture;
+  getTexture(renderer) {
+    return DebugTile.getTexture(renderer);
   }
-  static get texture() {
+  static getTexture(renderer) {
     if (DebugTile.TEXTURE) return DebugTile.TEXTURE;
     let graphics = new PIXI.Graphics();
     graphics.lineStyle(2, 0x999999, 1);
@@ -36,8 +37,25 @@ export class DebugTile extends Tile {
     graphics.lineTo(hexagon.rightTopX, hexagon.rightTopY);
     graphics.lineTo(hexagon.topX, hexagon.topY);
     graphics.endFill();
-    let texture = graphics.generateTexture();
+    let texture = graphics.generateTexture(renderer);
     DebugTile.TEXTURE = texture;
+    return texture;
+  }
+}
+
+export class UnitTile extends Tile {
+  constructor(unitName) {
+    super(0, 0);
+    this.unitName = unitName;
+  }
+  getTexture(renderer) {
+    if (this.TEXTURE) return this.TEXTURE;
+    let graphics = new PIXI.Container();
+    // Currently do nothing but spawn text.
+    let font = new PIXI.Text(this.unitName);
+    graphics.addChild(font);
+    let texture = graphics.generateTexture(renderer);
+    this.TEXTURE = texture;
     return texture;
   }
 }

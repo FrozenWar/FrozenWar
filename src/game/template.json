@@ -5,7 +5,7 @@
       "type": "unit",
       "name": "Unknown"
     },
-    "position": {}
+    "pos": {}
   },
   "TestEntity": {
     "prototype": "BaseEntity",

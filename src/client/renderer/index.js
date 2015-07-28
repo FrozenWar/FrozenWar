@@ -41,8 +41,6 @@ export function render() {
 
 // TODO make them to separate class?
 export function init(engine, view) {
-  viewport = new Viewport(engine, hexagon, 800, 600);
-  container.addChild(viewport.container);
   stage
     // events for drag start
     .on('mousedown', onDragStart)
@@ -60,5 +58,7 @@ export function init(engine, view) {
     view: view
   });
   /*eslint-enable */
+  viewport = new Viewport(engine, renderer, hexagon, 800, 600);
+  container.addChild(viewport.container);
   render();
 }
