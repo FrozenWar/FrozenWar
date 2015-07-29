@@ -14,6 +14,7 @@ export default class Viewport {
     // We're using object to avoid making 'empty' reference
     this.renderMap = {};
     this.container = new PIXI.Container();
+    this.mouseMoveTile = {};
     this.setCamera(0, 0);
   }
   getRenderX(x, y) {
@@ -136,43 +137,66 @@ export default class Viewport {
       });
     }
   }
-  handleClick(x, y) {
+  handleMouseMove(x, y) {
+    // if hell?
+    if (this.mouseMoveTile) {
+      let renderRow = this.renderMap[this.mouseMoveTile.y];
+      if(renderRow) {
+        let sprite = renderRow[this.mouseMoveTile.x];
+        if(sprite) {
+          sprite.tint = 0xFFFFFF;
+        }
+      }
+    }
+    this.mouseMoveTile = this.getMousePos(x, y);
+    let renderRow = this.renderMap[this.mouseMoveTile.y];
+    if(renderRow) {
+      let sprite = renderRow[this.mouseMoveTile.x];
+      if(sprite) {
+        sprite.tint = 0xDDDDFF;
+      }
+    }
+  }
+  getMousePos(x, y) {
     // Directly copied from old code
     // Translate x, y
     let mPosX = x + this.posX;
     let mPosY = y + this.posY;
     let hexagon = this.hexagon;
     let posX = mPosX / hexagon.width | 0;
-    let posY = mPosY / (hexagon.height-hexagon.sideY-2) | 0;
+    let posY = mPosY / (hexagon.height - hexagon.sideY - 2) | 0;
     let pixelX = mPosX % hexagon.width;
-    let pixelY = mPosY % (hexagon.height-hexagon.sideY-2);
+    let pixelY = mPosY % (hexagon.height - hexagon.sideY - 2);
     let tilePosX = 0;
     let tilePosY = 0;
-    if((posY&1) == 0) {
+    if ((posY & 1) == 0) {
       tilePosY = posY;
       tilePosX = posX;
-      if(pixelX < (hexagon.sideX - (hexagon.sideX/hexagon.sideY * pixelY))) {
+      if (pixelX < (hexagon.sideX - (hexagon.sideX / hexagon.sideY * pixelY))) {
         tilePosY -= 1;
         tilePosX -= 1;
       }
-      if(pixelX > (hexagon.sideX + (hexagon.sideX/hexagon.sideY * pixelY))) {
+      if (pixelX > (hexagon.sideX + (hexagon.sideX / hexagon.sideY * pixelY))) {
         tilePosY -= 1;
       }
     } else {
       tilePosY = posY;
       tilePosX = posX;
-      if(pixelX < hexagon.sideX) {
-        if(pixelX > (hexagon.sideX / hexagon.sideY * pixelY)) {
+      if (pixelX < hexagon.sideX) {
+        if (pixelX > (hexagon.sideX / hexagon.sideY * pixelY)) {
           tilePosY -= 1;
         } else {
           tilePosX -= 1;
         }
       } else {
-        if(pixelX < (hexagon.width - hexagon.sideX / hexagon.sideY * pixelY)) {
+        if (pixelX < (hexagon.width - hexagon.sideX / hexagon.sideY * pixelY)) {
           tilePosY -= 1;
         }
       }
     }
-    this.renderMap[tilePosY][tilePosX].tint = 0xff0000;
+    return {
+      x: tilePosX,
+      y: tilePosY
+    }
   }
 }

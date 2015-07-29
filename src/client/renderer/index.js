@@ -26,7 +26,7 @@ function onDragEnd() {
 }
 
 function onDragMove(event) {
-  viewport.handleClick(event.data.global.x, event.data.global.y);
+  viewport.handleMouseMove(event.data.global.x, event.data.global.y);
   if (!this.dragging) return;
   let diffX = this.data.global.x - this.prevX;
   let diffY = this.data.global.y - this.prevY;
