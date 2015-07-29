@@ -21,13 +21,13 @@ export default class Viewport {
     return x * this.hexagon.width + (this.hexagon.width / 2 * (y & 1));
   }
   getRenderY(x, y) {
-    return y * (this.hexagon.height - this.hexagon.sideY - 2);
+    return y * (this.hexagon.height - this.hexagon.sideY);
   }
   getRenderWidth(width) {
-    return Math.ceil((width - this.hexagon.sideX - 2) / this.hexagon.width);
+    return Math.ceil((width - this.hexagon.sideX) / this.hexagon.width);
   }
   getRenderHeight(height) {
-    return Math.ceil((height - this.hexagon.sideY - 2) / (this.hexagon.height -
+    return Math.ceil((height - this.hexagon.sideY) / (this.hexagon.height -
       this.hexagon.sideY - 2));
   }
   flooredModulo(x, y) {
@@ -36,7 +36,7 @@ export default class Viewport {
   }
   freeCamera(postX, postY) {
     let stepWidth = this.hexagon.width;
-    let stepHeight = this.hexagon.height - this.hexagon.sideY - 2;
+    let stepHeight = this.hexagon.height - this.hexagon.sideY;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
     let tileY = Math.floor(this.posY / stepHeight) - 1;
     let tileWidth = this.getRenderWidth(this.width) + 1;
@@ -68,9 +68,9 @@ export default class Viewport {
     let tilemap = this.engine.s('pos');
     // Determine the size of the tile map.
     let mapWidth = this.hexagon.width * tilemap.width +
-      this.hexagon.sideX + 2;
-    let mapHeight = (this.hexagon.height - this.hexagon.sideY - 2) *
-      tilemap.height + this.hexagon.sideY + 2;
+      this.hexagon.sideX;
+    let mapHeight = (this.hexagon.height - this.hexagon.sideY) *
+      tilemap.height + this.hexagon.sideY;
     // Set min/max value of position.
     posX = Math.min(mapWidth - this.width, posX);
     posY = Math.min(mapHeight - this.height, posY);
@@ -81,7 +81,7 @@ export default class Viewport {
     this.posY = posY;
     let reindexRequired = false;
     let stepWidth = this.hexagon.width;
-    let stepHeight = this.hexagon.height - this.hexagon.sideY - 2;
+    let stepHeight = this.hexagon.height - this.hexagon.sideY;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
     let tileY = Math.floor(this.posY / stepHeight) - 1;
     // Kinda tricky, it has to support negative numbers
@@ -141,18 +141,18 @@ export default class Viewport {
     // if hell?
     if (this.mouseMoveTile) {
       let renderRow = this.renderMap[this.mouseMoveTile.y];
-      if(renderRow) {
+      if (renderRow) {
         let sprite = renderRow[this.mouseMoveTile.x];
-        if(sprite) {
+        if (sprite) {
           sprite.tint = 0xFFFFFF;
         }
       }
     }
     this.mouseMoveTile = this.getMousePos(x, y);
     let renderRow = this.renderMap[this.mouseMoveTile.y];
-    if(renderRow) {
+    if (renderRow) {
       let sprite = renderRow[this.mouseMoveTile.x];
-      if(sprite) {
+      if (sprite) {
         sprite.tint = 0xDDDDFF;
       }
     }
@@ -164,12 +164,12 @@ export default class Viewport {
     let mPosY = y + this.posY;
     let hexagon = this.hexagon;
     let posX = mPosX / hexagon.width | 0;
-    let posY = mPosY / (hexagon.height - hexagon.sideY - 2) | 0;
+    let posY = mPosY / (hexagon.height - hexagon.sideY) | 0;
     let pixelX = mPosX % hexagon.width;
-    let pixelY = mPosY % (hexagon.height - hexagon.sideY - 2);
+    let pixelY = mPosY % (hexagon.height - hexagon.sideY);
     let tilePosX = 0;
     let tilePosY = 0;
-    if ((posY & 1) == 0) {
+    if ((posY & 1) === 0) {
       tilePosY = posY;
       tilePosX = posX;
       if (pixelX < (hexagon.sideX - (hexagon.sideX / hexagon.sideY * pixelY))) {
@@ -197,6 +197,6 @@ export default class Viewport {
     return {
       x: tilePosX,
       y: tilePosY
-    }
+    };
   }
 }

@@ -27,7 +27,7 @@ export class DebugTile extends Tile {
   static getTexture(renderer) {
     if (DebugTile.TEXTURE) return DebugTile.TEXTURE;
     let graphics = new PIXI.Graphics();
-    graphics.lineStyle(2, 0x999999, 1);
+    graphics.lineStyle(1, 0x999999, 1);
     graphics.beginFill(0xF0F0F0, 1);
     graphics.moveTo(hexagon.topX, hexagon.topY);
     graphics.lineTo(hexagon.leftTopX, hexagon.leftTopY);
