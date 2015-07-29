@@ -48,8 +48,8 @@ export default class Viewport {
       let renderRow = this.renderMap[realY];
       for (let x = 0; x <= tileWidth; ++x) {
         let realX = tileX + x;
-        if (realX >= endX && realX < endX + tileWidth &&
-          realY >= endY && realY < endY + tileHeight) continue;
+        if (realX >= endX && realX <= endX + tileWidth &&
+          realY >= endY && realY <= endY + tileHeight) continue;
         if (renderRow[realX] != null) {
           let sprite = renderRow[realX];
           this.container.removeChild(sprite);
@@ -135,5 +135,44 @@ export default class Viewport {
         return a.position.y - b.position.y;
       });
     }
+  }
+  handleClick(x, y) {
+    // Directly copied from old code
+    // Translate x, y
+    let mPosX = x + this.posX;
+    let mPosY = y + this.posY;
+    let hexagon = this.hexagon;
+    let posX = mPosX / hexagon.width | 0;
+    let posY = mPosY / (hexagon.height-hexagon.sideY-2) | 0;
+    let pixelX = mPosX % hexagon.width;
+    let pixelY = mPosY % (hexagon.height-hexagon.sideY-2);
+    let tilePosX = 0;
+    let tilePosY = 0;
+    if((posY&1) == 0) {
+      tilePosY = posY;
+      tilePosX = posX;
+      if(pixelX < (hexagon.sideX - (hexagon.sideX/hexagon.sideY * pixelY))) {
+        tilePosY -= 1;
+        tilePosX -= 1;
+      }
+      if(pixelX > (hexagon.sideX + (hexagon.sideX/hexagon.sideY * pixelY))) {
+        tilePosY -= 1;
+      }
+    } else {
+      tilePosY = posY;
+      tilePosX = posX;
+      if(pixelX < hexagon.sideX) {
+        if(pixelX > (hexagon.sideX / hexagon.sideY * pixelY)) {
+          tilePosY -= 1;
+        } else {
+          tilePosX -= 1;
+        }
+      } else {
+        if(pixelX < (hexagon.width - hexagon.sideX / hexagon.sideY * pixelY)) {
+          tilePosY -= 1;
+        }
+      }
+    }
+    this.renderMap[tilePosY][tilePosX].tint = 0xff0000;
   }
 }
