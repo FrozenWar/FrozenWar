@@ -81,7 +81,7 @@ export default class Viewport {
     this.posY = posY;
     let reindexRequired = false;
     let stepWidth = this.hexagon.width;
-    let stepHeight = this.hexagon.height - this.hexagon.sideY;
+    let stepHeight = this.hexagon.stepHeight;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
     let tileY = Math.floor(this.posY / stepHeight) - 1;
     // Kinda tricky, it has to support negative numbers
@@ -114,9 +114,10 @@ export default class Viewport {
             let unitTile = new UnitTile(entity.c('info').name);
             let entitySprite = new PIXI.Sprite(unitTile.getTexture(
               this.renderer));
-            entitySprite.anchor.set(0.5);
-            entitySprite.position.x = this.hexagon.width / 2;
-            entitySprite.position.y = this.hexagon.height / 2;
+            entitySprite.position.x = this.hexagon.width / 2 -
+              entitySprite.width / 2 | 0;
+            entitySprite.position.y = this.hexagon.height / 2 -
+              entitySprite.height / 2 | 0;
             sprite.addChild(entitySprite);
           });
           renderRow[realX] = sprite;

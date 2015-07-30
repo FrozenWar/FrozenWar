@@ -11,6 +11,7 @@ export default class Hexagon {
       12 * (this.height * this.height + this.width * this.width))) / -6;
     this.sideY = Math.sqrt(this.side * this.side -
       this.sideX * this.sideX);
+    this.stepHeight = this.height - this.sideY - 1 | 0;
     this.width = this.width | 0;
     this.height = this.height | 0;
     this.sideX = this.sideX | 0;

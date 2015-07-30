@@ -53,7 +53,7 @@ export class UnitTile extends Tile {
     let graphics = new PIXI.Container();
     // Currently do nothing but spawn text.
     let font = new PIXI.Text(this.unitName, {
-      font: '14pt NanumGothic, 나눔고딕, 맑은 고딕, MalgunGothic, sans-serif'
+      font: '14px NanumGothic, 나눔고딕, 맑은 고딕, MalgunGothic, sans-serif'
     });
     graphics.addChild(font);
     let texture = graphics.generateTexture(renderer);
