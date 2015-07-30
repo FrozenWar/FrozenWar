@@ -75,7 +75,7 @@ gulp.task('webpack', function(callback) {
   });
 });
 
-gulp.task('devserver', ['watch'], function() {
+gulp.task('devserver', function() {
   // Start a webpack-dev-server
   var compiler = webpack(webpackConfiguration);
 
