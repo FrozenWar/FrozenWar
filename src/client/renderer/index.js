@@ -1,5 +1,5 @@
 import PIXI from 'pixi.js';
-import {DebugTile} from './tile.js';
+import Tile from './tile.js';
 import Viewport from './viewport.js';
 
 let renderer;
@@ -9,7 +9,7 @@ stage.interactive = true;
 let container = new PIXI.Container();
 stage.addChild(container);
 
-let hexagon = DebugTile.hexagon;
+let hexagon = Tile.hexagon;
 
 let viewport;
 

@@ -1,6 +1,6 @@
 import PIXI from 'pixi.js';
 // For debugging
-import {DebugTile, UnitTile} from './tile.js';
+import Tile from './tile.js';
 
 export default class Viewport {
   constructor(engine, renderer, hexagon, width, height) {
@@ -52,8 +52,8 @@ export default class Viewport {
         if (realX >= endX && realX <= endX + tileWidth &&
           realY >= endY && realY <= endY + tileHeight) continue;
         if (renderRow[realX] != null) {
-          let sprite = renderRow[realX];
-          this.container.removeChild(sprite);
+          let tile = renderRow[realX];
+          this.container.removeChild(tile.sprite);
           delete renderRow[realX];
         }
       }
@@ -101,16 +101,16 @@ export default class Viewport {
         // TODO validate
         if (renderRow[realX] == null) {
           // Doing this to use axial coordinates
-          let tile = tilemap.get(realX - (realY / 2 | 0), realY);
-          if (tile == null) continue;
+          let entities = tilemap.get(realX - (realY / 2 | 0), realY);
+          if (entities == null) continue;
           // Create new sprite and add it to container.
-          let sprite = new PIXI.Sprite(DebugTile.getTexture(
-            this.renderer));
-          this.container.addChild(sprite);
-          sprite.position.x = renderX;
-          sprite.position.y = renderY;
+          let tile = new Tile(realX - (realY / 2 | 0), realY, entities);
+          this.container.addChild(tile.sprite);
+          tile.sprite.position.x = renderX;
+          tile.sprite.position.y = renderY;
+          tile.update(this.renderer);
           // Additionally, iterate through tile array
-          tile.forEach(entity => {
+          /*tile.forEach(entity => {
             let unitTile = new UnitTile(entity.c('info').name);
             let entitySprite = new PIXI.Sprite(unitTile.getTexture(
               this.renderer));
@@ -119,12 +119,14 @@ export default class Viewport {
             entitySprite.position.y = this.hexagon.height / 2 -
               entitySprite.height / 2 | 0;
             sprite.addChild(entitySprite);
-          });
-          renderRow[realX] = sprite;
+          });*/
+          renderRow[realX] = tile;
           reindexRequired = true;
         } else {
           // Update position only
-          let sprite = renderRow[realX];
+          let tile = renderRow[realX];
+          tile.update(this.renderer);
+          let sprite = tile.sprite;
           sprite.position.x = renderX;
           sprite.position.y = renderY;
         }
