@@ -36,7 +36,7 @@ export default class Viewport {
   }
   freeCamera(postX, postY) {
     let stepWidth = this.hexagon.width;
-    let stepHeight = this.hexagon.height - this.hexagon.sideY;
+    let stepHeight = this.hexagon.stepHeight;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
     let tileY = Math.floor(this.posY / stepHeight) - 1;
     let tileWidth = this.getRenderWidth(this.width) + 1;
