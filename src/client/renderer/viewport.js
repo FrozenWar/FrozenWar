@@ -69,7 +69,7 @@ export default class Viewport {
     // Determine the size of the tile map.
     let mapWidth = this.hexagon.width * tilemap.width +
       this.hexagon.sideX;
-    let mapHeight = (this.hexagon.height - this.hexagon.sideY) *
+    let mapHeight = (this.hexagon.stepHeight) *
       tilemap.height + this.hexagon.sideY;
     // Set min/max value of position.
     posX = Math.min(mapWidth - this.width, posX);
