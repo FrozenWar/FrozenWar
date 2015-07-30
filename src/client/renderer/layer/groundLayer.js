@@ -7,8 +7,8 @@ let textureStore = {};
 // Since only background colors are different,
 // I'm using an object to store them.
 let textureColors = {
-  'normal': 0xF0F0F0,
-  'hover': 0xD0D0FF,
+  'normal': 0xEEEEEE,
+  'hover': 0xE0E0FF,
   'selected': 0xFFFFFF
 };
 

@@ -2,9 +2,11 @@ import React from 'react';
 import PIXI from 'pixi.js';
 import Tile from '../renderer/tile.js';
 import Viewport from '../renderer/viewport.js';
+import {calcOffset} from '../utils/utils.js';
 
 import CanvasView from './canvasView.js';
 
+let TOLERANCE = 6;
 let hexagon = Tile.hexagon;
 
 export default class ViewportView extends React.Component {
@@ -32,30 +34,34 @@ export default class ViewportView extends React.Component {
       viewport.prevY = event.clientY;
       viewport.moveCamera(-diffX, -diffY);
     }
-    function onDragEnd() {
+    function onDragEnd(event) {
       document.removeEventListener('mousemove', onDragMove);
       document.removeEventListener('mouseup', onDragEnd);
+      let diff = Math.abs(event.clientX - viewport.startX) +
+        Math.abs(event.clientY - viewport.startY);
+      if (diff < TOLERANCE) {
+        let offset = calcOffset(view);
+        let canvasX = 0;
+        let canvasY = 0;
+        canvasX = event.pageX - offset.x;
+        canvasY = event.pageY - offset.y;
+        viewport.handleMouseClick(canvasX, canvasY);
+      }
     }
     function onDragStart(event) {
       viewport.prevX = event.clientX;
       viewport.prevY = event.clientY;
+      viewport.startX = event.clientX;
+      viewport.startY = event.clientY;
       document.addEventListener('mousemove', onDragMove);
       document.addEventListener('mouseup', onDragEnd);
     }
     function onMouseMove(event) {
-      // translate code....
-      let totalOffsetX = 0;
-      let totalOffsetY = 0;
+      let offset = calcOffset(this);
       let canvasX = 0;
       let canvasY = 0;
-      let currentElement = this;
-      do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-        currentElement = currentElement.offsetParent;
-      } while (currentElement);
-      canvasX = event.pageX - totalOffsetX;
-      canvasY = event.pageY - totalOffsetY;
+      canvasX = event.pageX - offset.x;
+      canvasY = event.pageY - offset.y;
       viewport.handleMouseMove(canvasX, canvasY);
     }
     view.addEventListener('mousedown', onDragStart);

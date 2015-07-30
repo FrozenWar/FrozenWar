@@ -14,7 +14,8 @@ export default class Viewport {
     // We're using object to avoid making 'empty' reference
     this.renderMap = {};
     this.container = new PIXI.Container();
-    this.mouseMoveTile = {};
+    this.selectedTile = null;
+    this.mouseMoveTile = null;
     this.setCamera(0, 0);
   }
   getRenderX(x, y) {
@@ -140,27 +141,42 @@ export default class Viewport {
       });
     }
   }
+  getTile(x, y) {
+    let renderRow = this.renderMap[y];
+    if (!renderRow) return null;
+    let tile = renderRow[x];
+    if (!tile) return null;
+    return tile;
+  }
+  handleMouseClick(x, y) {
+    let oldTile = null;
+    if (this.selectedTile) {
+      oldTile = this.selectedTile;
+      oldTile.selected = false;
+    }
+    let selected = this.getMousePos(x, y);
+    let tile = this.getTile(selected.x, selected.y);
+    this.selectedTile = tile;
+    if (tile) {
+      tile.selected = true;
+      tile.update();
+    }
+    if (oldTile) oldTile.update();
+  }
   handleMouseMove(x, y) {
-    // if hell?
+    let oldTile = null;
     if (this.mouseMoveTile) {
-      let renderRow = this.renderMap[this.mouseMoveTile.y];
-      if (renderRow) {
-        let tile = renderRow[this.mouseMoveTile.x];
-        if (tile) {
-          tile.hover = false;
-          tile.update();
-        }
-      }
+      oldTile = this.mouseMoveTile;
+      oldTile.hover = false;
     }
-    this.mouseMoveTile = this.getMousePos(x, y);
-    let renderRow = this.renderMap[this.mouseMoveTile.y];
-    if (renderRow) {
-      let tile = renderRow[this.mouseMoveTile.x];
-      if (tile) {
-        tile.hover = true;
-        tile.update();
-      }
+    let selected = this.getMousePos(x, y);
+    let tile = this.getTile(selected.x, selected.y);
+    this.mouseMoveTile = tile;
+    if (tile) {
+      tile.hover = true;
+      tile.update();
     }
+    if (oldTile) oldTile.update();
   }
   getMousePos(x, y) {
     // Directly copied from old code
