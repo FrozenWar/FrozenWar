@@ -14,7 +14,7 @@ export default class PositionLayer extends Layer {
       font: '14px NanumGothic, 나눔고딕, 맑은 고딕, MalgunGothic, sans-serif'
     });
   }
-  update(renderer) {
+  update() {
     this.x = this.tile.x;
     this.y = this.tile.y;
     this.sprite.text = this.x + ', ' + this.y;

@@ -4,8 +4,6 @@ import Viewport from './viewport.js';
 
 let renderer;
 let stage = new PIXI.Container();
-stage.interactive = true;
-
 let container = new PIXI.Container();
 stage.addChild(container);
 
@@ -13,27 +11,41 @@ let hexagon = Tile.hexagon;
 
 let viewport;
 
-function onDragStart(event) {
-  this.data = event.data;
-  this.prevX = this.data.global.x;
-  this.prevY = this.data.global.y;
-  this.dragging = true;
+function onDragMove(event) {
+  let diffX = event.clientX - viewport.prevX;
+  let diffY = event.clientY - viewport.prevY;
+  viewport.prevX = event.clientX;
+  viewport.prevY = event.clientY;
+  viewport.moveCamera(-diffX, -diffY);
 }
 
 function onDragEnd() {
-  this.dragging = false;
-  this.data = null;
+  document.removeEventListener('mousemove', onDragMove);
+  document.removeEventListener('mouseup', onDragEnd);
 }
 
-function onDragMove(event) {
-  if (this.dragging) {
-    let diffX = this.data.global.x - this.prevX;
-    let diffY = this.data.global.y - this.prevY;
-    this.prevX = this.data.global.x;
-    this.prevY = this.data.global.y;
-    viewport.moveCamera(-diffX, -diffY);
-  }
-  viewport.handleMouseMove(event.data.global.x, event.data.global.y);
+function onDragStart(event) {
+  viewport.prevX = event.clientX;
+  viewport.prevY = event.clientY;
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('mouseup', onDragEnd);
+}
+
+function onMouseMove(event) {
+  // translate code....
+  let totalOffsetX = 0;
+  let totalOffsetY = 0;
+  let canvasX = 0;
+  let canvasY = 0;
+  let currentElement = this;
+  do {
+    totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+    totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    currentElement = currentElement.offsetParent;
+  } while (currentElement);
+  canvasX = event.pageX - totalOffsetX;
+  canvasY = event.pageY - totalOffsetY;
+  viewport.handleMouseMove(canvasX, canvasY);
 }
 
 export function render() {
@@ -43,18 +55,6 @@ export function render() {
 
 // TODO make them to separate class?
 export function init(engine, view) {
-  stage
-    // events for drag start
-    .on('mousedown', onDragStart)
-    .on('touchstart', onDragStart)
-    // events for drag end
-    .on('mouseup', onDragEnd)
-    .on('mouseupoutside', onDragEnd)
-    .on('touchend', onDragEnd)
-    .on('touchendoutside', onDragEnd)
-    // events for drag move
-    .on('mousemove', onDragMove)
-    .on('touchmove', onDragMove);
   /*eslint-disable */
   renderer = new PIXI.autoDetectRenderer(800, 600, {
     view: view
@@ -62,5 +62,7 @@ export function init(engine, view) {
   /*eslint-enable */
   viewport = new Viewport(engine, renderer, hexagon, 800, 600);
   container.addChild(viewport.container);
+  view.addEventListener('mousedown', onDragStart);
+  view.addEventListener('mousemove', onMouseMove);
   render();
 }

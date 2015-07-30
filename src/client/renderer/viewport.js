@@ -145,18 +145,20 @@ export default class Viewport {
     if (this.mouseMoveTile) {
       let renderRow = this.renderMap[this.mouseMoveTile.y];
       if (renderRow) {
-        let sprite = renderRow[this.mouseMoveTile.x];
-        if (sprite) {
-          sprite.tint = 0xFFFFFF;
+        let tile = renderRow[this.mouseMoveTile.x];
+        if (tile) {
+          tile.hover = false;
+          tile.update();
         }
       }
     }
     this.mouseMoveTile = this.getMousePos(x, y);
     let renderRow = this.renderMap[this.mouseMoveTile.y];
     if (renderRow) {
-      let sprite = renderRow[this.mouseMoveTile.x];
-      if (sprite) {
-        sprite.tint = 0xDDDDFF;
+      let tile = renderRow[this.mouseMoveTile.x];
+      if (tile) {
+        tile.hover = true;
+        tile.update();
       }
     }
   }
