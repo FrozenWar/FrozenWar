@@ -165,9 +165,9 @@ export default class Viewport {
     let mPosY = y + this.posY;
     let hexagon = this.hexagon;
     let posX = mPosX / hexagon.width | 0;
-    let posY = mPosY / (hexagon.height - hexagon.sideY) | 0;
+    let posY = mPosY / hexagon.stepHeight | 0;
     let pixelX = mPosX % hexagon.width;
-    let pixelY = mPosY % (hexagon.height - hexagon.sideY);
+    let pixelY = mPosY % hexagon.stepHeight;
     let tilePosX = 0;
     let tilePosY = 0;
     if ((posY & 1) === 0) {
