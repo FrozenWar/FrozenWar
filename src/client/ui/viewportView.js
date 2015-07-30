@@ -68,7 +68,10 @@ export default class ViewportView extends React.Component {
     view.addEventListener('mousemove', onMouseMove);
   }
   animate() {
-    this.renderer.render(this.stage);
+    if (this.viewport.shouldComponentUpdate()) {
+      this.renderer.render(this.stage);
+      this.viewport.update();
+    }
     requestAnimationFrame(this.animate.bind(this));
   }
   render() {

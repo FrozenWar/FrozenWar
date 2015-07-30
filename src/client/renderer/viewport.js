@@ -14,9 +14,16 @@ export default class Viewport {
     // We're using object to avoid making 'empty' reference
     this.renderMap = {};
     this.container = new PIXI.Container();
+    this.invalidated = true;
     this.selectedTile = null;
     this.mouseMoveTile = null;
     this.setCamera(0, 0);
+  }
+  shouldComponentUpdate() {
+    return this.invalidated;
+  }
+  update() {
+    this.invalidated = false;
   }
   getRenderX(x, y) {
     return x * this.hexagon.width + (this.hexagon.width / 2 * (y & 1));
@@ -132,6 +139,7 @@ export default class Viewport {
           sprite.position.y = renderY;
         }
       }
+      this.invalidated = true;
     }
     if (reindexRequired) {
       this.container.children.sort((a, b) => {
@@ -139,6 +147,12 @@ export default class Viewport {
         if (lengthDiff !== 0) return lengthDiff;
         return a.position.y - b.position.y;
       });
+    }
+  }
+  updateTile(tile) {
+    if (tile.shouldComponentUpdate()) {
+      tile.update();
+      this.invalidated = true;
     }
   }
   getTile(x, y) {
@@ -159,9 +173,9 @@ export default class Viewport {
     this.selectedTile = tile;
     if (tile) {
       tile.selected = true;
-      tile.update();
+      this.updateTile(tile);
     }
-    if (oldTile) oldTile.update();
+    if (oldTile) this.updateTile(oldTile);
   }
   handleMouseMove(x, y) {
     let oldTile = null;
@@ -174,9 +188,9 @@ export default class Viewport {
     this.mouseMoveTile = tile;
     if (tile) {
       tile.hover = true;
-      tile.update();
+      this.updateTile(tile);
     }
-    if (oldTile) oldTile.update();
+    if (oldTile) this.updateTile(oldTile);
   }
   getMousePos(x, y) {
     // Directly copied from old code
