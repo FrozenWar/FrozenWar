@@ -26,13 +26,14 @@ function onDragEnd() {
 }
 
 function onDragMove(event) {
+  if (this.dragging) {
+    let diffX = this.data.global.x - this.prevX;
+    let diffY = this.data.global.y - this.prevY;
+    this.prevX = this.data.global.x;
+    this.prevY = this.data.global.y;
+    viewport.moveCamera(-diffX, -diffY);
+  }
   viewport.handleMouseMove(event.data.global.x, event.data.global.y);
-  if (!this.dragging) return;
-  let diffX = this.data.global.x - this.prevX;
-  let diffY = this.data.global.y - this.prevY;
-  this.prevX = this.data.global.x;
-  this.prevY = this.data.global.y;
-  viewport.moveCamera(-diffX, -diffY);
 }
 
 export function render() {
