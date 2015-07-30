@@ -1,4 +1,6 @@
 import React from 'react';
+
+import GameDebugView from './gameDebugView.js';
 import ViewportView from './viewportView.js';
 
 export default class GameView extends React.Component {
@@ -6,8 +8,8 @@ export default class GameView extends React.Component {
     super(props);
   }
   render() {
-    // Currently only viewport belongs here
     return <div className='gameView'>
+      <GameDebugView engine={this.props.engine} />
       <ViewportView engine={this.props.engine} width={800} height={600} />
     </div>;
   }
