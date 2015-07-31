@@ -1,9 +1,13 @@
 import React from 'react';
 
-import GameView from './gameView.js';
+import GameView from './game/gameView.js';
+import LoginView from './login/loginView.js';
 
 export default class App extends React.Component {
   render() {
-    return <GameView engine={this.props.engine} />;
+    return <div>
+      <LoginView />
+      <GameView engine={this.props.engine} />
+    </div>;
   }
 }

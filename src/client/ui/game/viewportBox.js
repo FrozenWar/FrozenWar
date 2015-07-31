@@ -1,15 +1,15 @@
 import React from 'react';
 import PIXI from 'pixi.js';
-import Tile from '../renderer/tile.js';
-import Viewport from '../renderer/viewport.js';
-import {calcOffset} from '../utils/utils.js';
+import Tile from '../../renderer/tile.js';
+import Viewport from '../../renderer/viewport.js';
+import {calcOffset} from '../../utils/utils.js';
 
-import CanvasView from './canvasView.js';
+import CanvasBox from './canvasBox.js';
 
 let TOLERANCE = 6;
 let hexagon = Tile.hexagon;
 
-export default class ViewportView extends React.Component {
+export default class ViewportBox extends React.Component {
   constructor(props) {
     super(props);
     this.stage = new PIXI.Container();
@@ -75,6 +75,6 @@ export default class ViewportView extends React.Component {
     requestAnimationFrame(this.animate.bind(this));
   }
   render() {
-    return <CanvasView onLoad={this.initRender.bind(this)}/>;
+    return <CanvasBox onLoad={this.initRender.bind(this)}/>;
   }
 }

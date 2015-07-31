@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class CanvasView extends React.Component {
+export default class CanvasBox extends React.Component {
   componentDidMount() {
     this.props.onLoad(React.findDOMNode(this));
   }

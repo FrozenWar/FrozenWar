@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class GameDebugView extends React.Component {
+export default class GameDebugBox extends React.Component {
   constructor(props) {
     super(props);
   }
