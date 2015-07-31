@@ -8,7 +8,7 @@ export default class LoginView extends React.Component {
     };
   }
   handleSubmit(event) {
-    alert(React.findDOMNode(this.refs.nickname).value);
+    this.props.onSubmit(React.findDOMNode(this.refs.nickname).value);
     event.preventDefault();
   }
   handleChange(event) {
