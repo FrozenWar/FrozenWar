@@ -18,7 +18,8 @@ engine.e()
 engine.aa('spawn', null, null, {
   type: 'TestEntity',
   x: 4,
-  y: 4
+  y: 4,
+  player: 0
 });
 
 import React from 'react';

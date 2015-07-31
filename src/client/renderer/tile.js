@@ -1,6 +1,7 @@
 import PIXI from 'pixi.js';
 import Hexagon from './hexagon.js';
 import GroundLayer from './layer/groundLayer.js';
+import UnitLayer from './layer/unitLayer.js';
 
 let hexagon = new Hexagon(80);
 
@@ -17,6 +18,7 @@ export default class Tile {
     this.sprite = new PIXI.Container();
     this.layers = [];
     this.addLayer(new GroundLayer(this));
+    this.addLayer(new UnitLayer(this));
   }
   addLayer(layer) {
     this.layers.push(layer);

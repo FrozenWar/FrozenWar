@@ -143,9 +143,9 @@ export default class Viewport {
     }
     if (reindexRequired) {
       this.container.children.sort((a, b) => {
-        let lengthDiff = a.children.length - b.children.length;
-        if (lengthDiff !== 0) return lengthDiff;
-        return a.position.y - b.position.y;
+        let yDiff = a.position.y - b.position.y;
+        if (yDiff !== 0) return yDiff;
+        return a.position.x - b.position.x;
       });
     }
   }
