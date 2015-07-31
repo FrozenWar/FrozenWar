@@ -9,7 +9,8 @@ let textureStore = {};
 let textureColors = {
   'normal': 0xEEEEEE,
   'hover': 0xE0E0FF,
-  'selected': 0xFFFFFF
+  'selected': 0xFFFFFF,
+  'selectedHover': 0xEFEFFF
 };
 
 function fetchTexture(renderer, name) {
@@ -41,6 +42,7 @@ export default class GroundLayer extends Layer {
     this.state = null;
   }
   getRequiredState() {
+    if (this.tile.selected && this.tile.hover) return 'selectedHover';
     if (this.tile.selected) return 'selected';
     if (this.tile.hover) return 'hover';
     return 'normal';
