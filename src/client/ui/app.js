@@ -1,5 +1,6 @@
 import React from 'react';
-import io from 'socket.io-client';
+
+import autoDetectTransport from '../transport/autoDetect.js';
 
 import LoginView from './login/loginView.js';
 import DialogView from './dialogView.js';
@@ -15,28 +16,24 @@ export default class App extends React.Component {
         data: 'Connecting to the server...'
       }
     };
-    // Make a connection manager? It shouldn't be here...
-    this.socket = io(null, {
-      reconnection: false,
-      timeout: 1000
-    });
-    this.socket.on('connect', () => {
+    this.transport = autoDetectTransport(this);
+    this.transport.init();
+    this.transport.on('connect', () => {
       this.setView(LoginView, {
         onSubmit: (name) => {
           // Submit login data to the server
-          this.socket.emit('login', name);
+          this.transport.login(name);
         }
       });
     });
-    this.socket.on('error', (error) => {
-      console.log('Error!!');
+    this.transport.on('error', (error) => {
       this.setView(DialogView, {
         type: 'error',
         name: 'Error',
         data: error.toString()
       });
     });
-    this.socket.on('disconnect', () => {
+    this.transport.on('disconnect', () => {
       this.setView(DialogView, {
         type: 'error',
         name: 'Connection Lost',
