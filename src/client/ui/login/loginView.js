@@ -16,7 +16,7 @@ export default class LoginView extends React.Component {
     this.setState({value: event.target.value});
   }
   render() {
-    return <div className='view loginView'>
+    return <div className='view login'>
       <form onSubmit={this.handleSubmit.bind(this)}>
         <p>
           Please type your nickname.

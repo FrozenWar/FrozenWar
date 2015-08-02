@@ -8,7 +8,7 @@ export default class GameView extends React.Component {
     super(props);
   }
   render() {
-    return <div className='view gameView'>
+    return <div className='view game'>
       <GameDebugBox engine={this.props.engine} />
       <ViewportBox engine={this.props.engine} width={800} height={600} />
     </div>;

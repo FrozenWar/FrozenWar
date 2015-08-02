@@ -1,7 +1,8 @@
 import React from 'react';
 
 import autoDetectTransport from '../transport/autoDetect.js';
-
+import ChatConsole from './chat/chatConsole.js';
+import MessageList from './chat/messageList.js';
 import LoginView from './login/loginView.js';
 import DialogView from './dialogView.js';
 
@@ -16,11 +17,15 @@ export default class App extends React.Component {
         data: 'Connecting to the server...'
       }
     };
+  }
+  componentDidMount() {
     this.transport = autoDetectTransport(this);
     this.transport.init();
     this.transport.on('connect', () => {
+      this.chat.log('Connected');
       this.setView(LoginView, {
         onSubmit: (name) => {
+          this.chat.log('Trying to login with nickname ' + name);
           // Submit login data to the server
           this.transport.login(name);
         }
@@ -34,12 +39,15 @@ export default class App extends React.Component {
       });
     });
     this.transport.on('disconnect', () => {
+      this.chat.log('Lost connection');
       this.setView(DialogView, {
         type: 'error',
         name: 'Connection Lost',
         data: 'Lost connection from the server.'
       });
     });
+    this.chat = new ChatConsole(this.refs.chat);
+    this.chat.log('Application starting up');
   }
   setView(view, props) {
     this.setState({
@@ -51,6 +59,7 @@ export default class App extends React.Component {
     let CurrentView = this.state.view;
     return <div className='app'>
       <CurrentView {... this.state.props} app={this} />
+      <MessageList ref='chat' />
     </div>;
   }
 }
