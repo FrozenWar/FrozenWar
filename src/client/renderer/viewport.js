@@ -87,14 +87,21 @@ export default class Viewport {
     this.freeCamera(posX, posY);
     this.posX = posX;
     this.posY = posY;
-    let reindexRequired = false;
+    let invalidated = false;
     let stepWidth = this.hexagon.width;
     let stepHeight = this.hexagon.stepHeight;
     let tileX = Math.floor(this.posX / stepWidth) - 1;
     let tileY = Math.floor(this.posY / stepHeight) - 1;
+    if (tileX !== this.tileX || tileY !== this.tileY) {
+      this.tileX = tileX;
+      this.tileY = tileY;
+      invalidated = true;
+    }
     // Kinda tricky, it has to support negative numbers
-    let initX = -(this.flooredModulo(this.posX, stepWidth)) - stepWidth;
-    let initY = -(this.flooredModulo(this.posY, stepHeight)) - stepHeight;
+    let initX = -stepWidth;
+    let initY = -stepHeight;
+    this.container.position.x = -(this.flooredModulo(this.posX, stepWidth));
+    this.container.position.y = -(this.flooredModulo(this.posY, stepHeight));
     for (let y = 0; y <= tileHeight; ++y) {
       let realY = tileY + y;
       let renderY = initY + stepHeight * y;
@@ -129,8 +136,7 @@ export default class Viewport {
             sprite.addChild(entitySprite);
           });*/
           renderRow[realX] = tile;
-          reindexRequired = true;
-        } else {
+        } else if (invalidated) {
           // Update position only
           let tile = renderRow[realX];
           tile.update(this.renderer);
@@ -140,13 +146,6 @@ export default class Viewport {
         }
       }
       this.invalidated = true;
-    }
-    if (reindexRequired) {
-      this.container.children.sort((a, b) => {
-        let yDiff = a.position.y - b.position.y;
-        if (yDiff !== 0) return yDiff;
-        return a.position.x - b.position.x;
-      });
     }
   }
   updateTile(tile) {

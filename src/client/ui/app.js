@@ -5,6 +5,7 @@ import ChatConsole from './chat/chatConsole.js';
 import MessageList from './chat/messageList.js';
 import LoginView from './login/loginView.js';
 import DialogView from './dialogView.js';
+import GameView from './game/gameView.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -44,6 +45,15 @@ export default class App extends React.Component {
         type: 'error',
         name: 'Connection Lost',
         data: 'Lost connection from the server.'
+      });
+    });
+    this.transport.on('chat', (message) => {
+      this.chat.log(message);
+    });
+    this.transport.on('game:start', () => {
+      this.chat.log('Game start');
+      this.setView(GameView, {
+        engine: this.props.engine
       });
     });
     this.chat = new ChatConsole(this.refs.chat);

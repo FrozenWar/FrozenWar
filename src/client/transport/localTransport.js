@@ -14,5 +14,7 @@ export default class LocalTransport extends Transport {
   }
   login(credentials) {
     console.log('Login:', credentials);
+    this.emit('game:start');
+    // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
 }

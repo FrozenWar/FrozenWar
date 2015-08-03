@@ -23,6 +23,7 @@ export default class ViewportBox extends React.Component {
     /*eslint-enable */
     this.viewport = new Viewport(this.props.engine, this.renderer, hexagon,
       this.props.width, this.props.height);
+    this.stage.interactive = false;
     this.stage.addChild(this.viewport.container);
     this.animate();
     // TODO Horrible function chunk. it needs to be fixed.
