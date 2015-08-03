@@ -10,6 +10,9 @@ export default class Transport extends EventEmitter {
   init() {
     throw new Error('Not implemented');
   }
+  validateNickname() {
+    throw new Error('Not implemented');
+  }
   login() {
     throw new Error('Not implemented');
   }
