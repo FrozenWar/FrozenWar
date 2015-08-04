@@ -16,4 +16,7 @@ export default class Transport extends EventEmitter {
   login() {
     throw new Error('Not implemented');
   }
+  chat() {
+    throw new Error('Not implemented');
+  }
 }

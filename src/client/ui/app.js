@@ -2,7 +2,7 @@ import React from 'react';
 
 import autoDetectTransport from '../transport/autoDetect.js';
 import ChatConsole from './chat/chatConsole.js';
-import MessageList from './chat/messageList.js';
+import MessageBox from './chat/messageBox.js';
 import LoginView from './login/loginView.js';
 import DialogView from './dialogView.js';
 import GameView from './game/gameView.js';
@@ -69,7 +69,7 @@ export default class App extends React.Component {
     let CurrentView = this.state.view;
     return <div className='app'>
       <CurrentView {... this.state.props} app={this} />
-      <MessageList ref='chat' />
+      <MessageBox app={this} ref='chat' />
     </div>;
   }
 }

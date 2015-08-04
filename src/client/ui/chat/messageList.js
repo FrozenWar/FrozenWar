@@ -5,14 +5,11 @@ import Message from './message.js';
 export default class MessageList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      messages: []
-    };
   }
   render() {
-    return <div className='chat'>
+    return <div className='message list'>
       {
-        this.state.messages.map((message, i) => {
+        this.props.messages.map((message, i) => {
           return <Message key={i} type={message.type} text={message.text} />;
         })
       }
