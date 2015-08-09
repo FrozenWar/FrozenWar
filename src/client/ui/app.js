@@ -50,10 +50,10 @@ export default class App extends React.Component {
     this.transport.on('chat', (message) => {
       this.chat.log(message);
     });
-    this.transport.on('game:start', () => {
+    this.transport.on('game:start', (engine) => {
       this.chat.log('Game start');
       this.setView(GameView, {
-        engine: this.props.engine
+        engine: engine
       });
     });
     this.chat = new ChatConsole(this.refs.chat);

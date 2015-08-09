@@ -1,5 +1,6 @@
 import Q from 'q';
 
+import buildEngine from '../../game/init.js';
 import Transport from './transport.js';
 import Channel from '../../server/channel.js';
 import User from '../../server/user.js';
@@ -22,7 +23,18 @@ export default class LocalTransport extends Transport {
     console.log('Login:', credentials);
     let user = new User(credentials);
     this.channel.addUser(user);
-    this.emit('game:start');
+    let engine = buildEngine(true);
+    engine.e()
+      .c('player', {
+        name: 'test'
+      });
+    engine.aa('spawn', null, null, {
+      type: 'TestEntity',
+      x: 4,
+      y: 4,
+      player: 0
+    });
+    this.emit('game:start', engine);
     // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
   chat(message) {
