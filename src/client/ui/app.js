@@ -6,6 +6,7 @@ import MessageBox from './chat/messageBox.js';
 import LoginView from './login/loginView.js';
 import DialogView from './dialogView.js';
 import GameView from './game/gameView.js';
+import LobbyView from './lobby/lobbyView.js';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,6 +31,11 @@ export default class App extends React.Component {
           // Submit login data to the server
           this.transport.login(name);
         }
+      });
+    });
+    this.transport.on('login', () => {
+      this.setView(LobbyView, {
+        channel: this.transport.channel
       });
     });
     this.transport.on('error', (error) => {

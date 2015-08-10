@@ -4,10 +4,13 @@ import buildEngine from '../../game/init.js';
 import Transport from './transport.js';
 import Channel from '../../server/channel.js';
 import User from '../../server/user.js';
+import Room from '../../server/room.js';
 
 export default class LocalTransport extends Transport {
   init() {
     this.channel = new Channel();
+    // Just example room. heh
+    this.channel.addRoom(new Room('Test room'));
     // TODO register events to channel
     // register channel to global scope for debugging
     window.channel = this.channel;
@@ -22,6 +25,7 @@ export default class LocalTransport extends Transport {
   login(credentials) {
     console.log('Login:', credentials);
     let user = new User(credentials);
+    this.user = user;
     this.channel.addUser(user);
     let engine = buildEngine(true);
     engine.e()
@@ -34,7 +38,8 @@ export default class LocalTransport extends Transport {
       y: 4,
       player: 0
     });
-    this.emit('game:start', engine);
+    this.emit('login');
+    // this.emit('game:start', engine);
     // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
   chat(message) {
