@@ -42,6 +42,10 @@ export default class LocalTransport extends Transport {
     // this.emit('game:start', engine);
     // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
+  joinRoom(room) {
+    console.log('Join:', room);
+    // TODO Handle room join
+  }
   chat(message) {
     this.emit('chat', message);
   }
