@@ -24,7 +24,7 @@ export default class Room extends EventEmitter {
       throw new Error('User cannnot join two rooms at once');
     }
     if (this.users[user.id] != null) return;
-    user.room = this.id;
+    user.room = this;
     this.users[user.id] = user;
     this.emit('user:add', user);
   }
