@@ -38,6 +38,7 @@ export default class Room extends EventEmitter {
     return {
       id: this.id,
       name: this.name,
+      options: this.options,
       users: this.getUsers()
     };
   }
