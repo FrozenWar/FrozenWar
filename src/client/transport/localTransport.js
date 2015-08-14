@@ -38,8 +38,10 @@ export default class LocalTransport extends Transport {
       y: 4,
       player: 0
     });
-    this.emit('login');
-    // this.emit('game:start', engine);
+    // Expose engine to global scope
+    window.engine = engine;
+    // this.emit('login');
+    this.emit('game:start', engine);
     // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
   joinRoom(room) {
