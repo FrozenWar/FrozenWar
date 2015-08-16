@@ -97,9 +97,6 @@ export class OwnerSystem extends System {
  */
 export class TransferOwnershipAction extends Action {
   run() {
-    if (!this.entity.c('owner')) {
-      throw new Error('Entity does not have owner Component');
-    }
     if (this.entity.c('owner').id !== this.player.id) {
       throw new Error('Entity\'s owner is not that player');
     }
@@ -108,5 +105,8 @@ export class TransferOwnershipAction extends Action {
   }
   static get key() {
     return 'transferOwnership';
+  }
+  static get depends() {
+    return ['owner'];
   }
 }

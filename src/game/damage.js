@@ -5,6 +5,7 @@ import {Action, System, Component} from 'ecstasy';
  */
 export class DamageComponent extends Component {
   constructor(options) {
+    super();
     this.health = options.health | 0;
     this.maxHealth = options.maxHealth | 0;
     this.defense = options.defense | 0;
@@ -23,6 +24,7 @@ export class DamageComponent extends Component {
  */
 export class InitHealthSystem extends System {
   constructor() {
+    super();
     this.priority = 10000;
   }
   add(engine) {
@@ -47,9 +49,6 @@ export class DeathAction extends Action {
   run(engine) {
     if (this.player != null) throw new Error('Players cannot run this action');
     let damage = this.entity.c('damage');
-    if (damage == null) {
-      throw new Error('Entity does not have damage Component');
-    }
     // TODO damage.isDead()
     if (damage.isAlive()) {
       throw new Error('Entity is still alive');
@@ -57,5 +56,11 @@ export class DeathAction extends Action {
     // Remove the entity from the map
     engine.removeEntity(this.entity);
     this.result = true;
+  }
+  static get depends() {
+    return ['damage'];
+  }
+  static get key() {
+    return 'death';
   }
 }

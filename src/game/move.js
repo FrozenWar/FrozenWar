@@ -76,9 +76,6 @@ export class MoveAction extends Action {
     this.options = new PositionComponent(options);
   }
   run(engine) {
-    if (this.entity.c('pos') == null) {
-      throw new Error('Entity does not have PositionComponent');
-    }
     let from = this.entity.c('pos');
     let move = this.entity.c('move');
     let cost = from.distance(this.options);
@@ -96,5 +93,8 @@ export class MoveAction extends Action {
   }
   static get key() {
     return 'move';
+  }
+  static get depends() {
+    return ['pos', 'move'];
   }
 }

@@ -31,6 +31,8 @@ import * as Info from './info.js';
 import * as Spawn from './spawn.js';
 import * as Position from './position.js';
 import * as Move from './move.js';
+import * as Damage from './damage.js';
+import * as Dependency from './dependency.js';
 
 /**
  * Returns a new Engine object and registers plugins to them.
@@ -45,5 +47,7 @@ export default function buildEngine(isServer) {
   discover(engine, Spawn);
   discover(engine, Position);
   discover(engine, Move);
+  discover(engine, Damage);
+  discover(engine, Dependency);
   return engine;
 }
