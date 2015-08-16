@@ -9,7 +9,7 @@ export class DependencySystem extends System {
   }
   preAction(turn, action) {
     let entity = action.entity;
-    let dependency = action.prototype.depends;
+    let dependency = action.constructor.depends;
     if (dependency == null) return;
     if (entity == null) {
       throw new Error('Action has dependency but there is no entity');
