@@ -45,10 +45,7 @@ var webpackConfiguration = {
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loaders: [
-          'file',
-          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
-        ]
+        loader: 'file'
       }
     ]
   }
@@ -103,5 +100,7 @@ gulp.task('clean', function(callback) {
 gulp.task('dev', ['devserver'], function() {
   gulp.watch(['src/**', 'test/**'], ['mocha', 'lint']);
 });
+
+gulp.task('test', ['mocha', 'lint']);
 
 gulp.task('default', ['mocha', 'lint', 'webpack']);

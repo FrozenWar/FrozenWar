@@ -32,8 +32,6 @@
     "gulp-util": "^3.0.6",
     "html-loader": "^0.3.0",
     "html-webpack-plugin": "^1.6.0",
-    "image-webpack-loader": "^1.6.1",
-    "imagemin": "^3.2.0",
     "json-loader": "^0.5.2",
     "style-loader": "^0.12.3",
     "uglify-loader": "^1.2.0",
@@ -41,7 +39,7 @@
     "webpack-dev-server": "^1.10.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/gulp test"
   },
   "repository": {
     "type": "git",
