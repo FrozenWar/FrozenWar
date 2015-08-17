@@ -133,13 +133,13 @@ export class PositionSystem extends System {
     this.clear();
   }
   /**
- * Reindexes an Entity to valid position.
- * You need to call this method after editing Entity's position.
- * @param entity {Entity} - The entity to reindex
- */
+   * Reindexes an Entity to valid position.
+   * You need to call this method after editing Entity's position.
+   * @param entity {Entity} - The entity to reindex
+   */
   updateEntity(entity) {
     this.removeEntity(entity);
-    this.addEntity(entity);
+    this.insertEntity(entity);
   }
   // TODO Used to check errors, should be removed in production state
   action() {
