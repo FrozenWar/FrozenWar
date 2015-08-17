@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 
 describe('PositionSystem', () => {
-  it('should present', () => {
+  it('should be present', () => {
     assert(engine.s('pos'));
   });
   it('should add entity to right pos', () => {
@@ -99,5 +99,26 @@ describe('PositionSystem', () => {
     assert.throws(() => {
       engine.aa('test', entity, null, null);
     }, 'Entity did not notify its position to PositionSystem');
+  });
+});
+
+describe('PositionComponent', () => {
+  let PosComp;
+  beforeEach(() => {
+    PosComp = engine.getComponentConstructor('pos');
+  });
+  it('should be present', () => {
+    assert(PosComp);
+  });
+  it('should return correct Z value', () => {
+    let comp = new PosComp({
+      x: 3, y: -1
+    });
+    assert.equal(comp.getZ(), -2);
+  });
+  it('should return correct distance', () => {
+    let origin = new PosComp({x: 3, y: -1});
+    assert.equal(origin.distance(new PosComp({x: 3, y: -1})), 0);
+    assert.equal(origin.distance(new PosComp({x: 2, y: 1})), 2);
   });
 });
