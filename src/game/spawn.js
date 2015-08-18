@@ -7,7 +7,11 @@ export class SpawnAction extends Action {
     var template = EntityBuilder.getEntityTemplate(this.options.type, Template);
     var entity = EntityBuilder.buildEntity(engine, template);
     if (entity.c('owner')) {
-      entity.c('owner').id = this.options.player;
+      if (this.options.player == null) {
+        entity.remove('owner');
+      } else {
+        entity.c('owner').id = this.options.player;
+      }
     }
     if (entity.c('pos')) {
       if (this.options.x != null && this.options.y != null) {
