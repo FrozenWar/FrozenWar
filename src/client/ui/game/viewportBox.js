@@ -67,6 +67,10 @@ export default class ViewportBox extends React.Component {
     }
     view.addEventListener('mousedown', onDragStart);
     view.addEventListener('mousemove', onMouseMove);
+    view.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return true;
+    });
   }
   animate() {
     if (this.viewport.shouldComponentUpdate()) {
