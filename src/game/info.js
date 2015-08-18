@@ -72,6 +72,7 @@ export class OwnerSystem extends System {
     if (turn.player !== action.player) {
       throw new Error('It\'s not your turn yet');
     }
+    if (action.entity == null) return;
     if (action.entity.c('owner')) {
       if (action.entity.c('owner').id !== action.player.id) {
         throw new Error('It\'s not your entity');
