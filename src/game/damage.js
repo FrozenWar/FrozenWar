@@ -64,3 +64,19 @@ export class DeathAction extends Action {
     return 'death';
   }
 }
+
+/**
+ * Force kills the entity.
+ */
+export class SuicideAction extends Action {
+  run(engine) {
+    let damage = this.entity.c('damage');
+    // Set health to 0
+    damage.health = 0;
+    // Run new death action
+    if (engine.isServer) engine.aa('death', this.entity, null, null);
+  }
+  static get depends() {
+    return ['damage', 'owner'];
+  }
+}
