@@ -75,6 +75,7 @@ export class SuicideAction extends Action {
     damage.health = 0;
     // Run new death action
     if (engine.isServer) engine.aa('death', this.entity, null, null);
+    this.result = true;
   }
   static get depends() {
     return ['damage', 'owner'];

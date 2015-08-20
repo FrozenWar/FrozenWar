@@ -33,6 +33,8 @@ import * as Position from './position.js';
 import * as Move from './move.js';
 import * as Damage from './damage.js';
 import * as Dependency from './dependency.js';
+import * as AttackEffect from './attackEffect.js';
+import * as Attack from './attack.js';
 
 /**
  * Returns a new Engine object and registers plugins to them.
@@ -49,5 +51,7 @@ export default function buildEngine(isServer) {
   discover(engine, Move);
   discover(engine, Damage);
   discover(engine, Dependency);
+  discover(engine, AttackEffect);
+  discover(engine, Attack);
   return engine;
 }

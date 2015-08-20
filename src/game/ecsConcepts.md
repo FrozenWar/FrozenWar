@@ -130,8 +130,24 @@ attack
 
 ```js
 {
-  attack: 90 // 전투력
-  range: 3 // 최대 거리
+  attack: 90, // 전투력
+  attackRand: 0, // 전투 랜덤
+  range: 3, // 최대 거리
+  effects: {
+    ...
+  },
+  noRegular: true, // 일반 공격 금지
+  types: [ // 공격 타입
+    {
+      name: 'throwing',
+      attack: 30,
+      effects: {
+        ...
+      },
+      ...
+    },
+    ...
+  ]
 }
 ```
 
