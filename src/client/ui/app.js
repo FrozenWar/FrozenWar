@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 import autoDetectTransport from '../transport/autoDetect.js';
 import ChatConsole from './chat/chatConsole.js';
@@ -12,12 +13,10 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: DialogView,
-      props: {
-        type: 'progress',
-        name: 'Connecting',
-        data: 'Connecting to the server...'
-      }
+      view:
+        <DialogView type='progress' name='Connecting'>
+          Connecting to the server...
+        </DialogView>
     };
   }
   componentDidMount() {
@@ -25,56 +24,59 @@ export default class App extends React.Component {
     this.transport.init();
     this.transport.on('connect', () => {
       this.chat.log('Connected');
-      this.setView(LoginView, {
-        onSubmit: (name) => {
-          this.chat.log('Trying to login with nickname ' + name);
-          // Submit login data to the server
-          this.transport.login(name);
-        }
-      });
+      let onsubmit = (name) => {
+        this.chat.log('Trying to login with nickname ' + name);
+        // Submit login data to the server
+        this.transport.login(name);
+      };
+      this.setView(
+        <LoginView onSubmit={onsubmit} />
+      );
     });
     this.transport.on('login', () => {
-      this.setView(LobbyView, {
-        channel: this.transport.channel
-      });
+      this.setView(
+        <LobbyView channel={this.transport.channel} />
+      );
     });
     this.transport.on('error', (error) => {
-      this.setView(DialogView, {
-        type: 'error',
-        name: 'Error',
-        data: error.toString()
-      });
+      this.setView(
+        <DialogView type='error' name='Error'>
+          {error.toString()}
+        </DialogView>
+      );
     });
     this.transport.on('disconnect', () => {
       this.chat.log('Lost connection');
-      this.setView(DialogView, {
-        type: 'error',
-        name: 'Connection Lost',
-        data: 'Lost connection from the server.'
-      });
+      this.setView(
+        <DialogView type='error' name='Connection Lost'>
+          Lost connection from the server
+        </DialogView>
+      );
     });
     this.transport.on('chat', (message) => {
       this.chat.log(message);
     });
     this.transport.on('game:start', (engine) => {
       this.chat.log('Game start');
-      this.setView(GameView, {
-        engine: engine
-      });
+      this.setView(
+        <GameView engine={engine} />
+      );
     });
     this.chat = new ChatConsole(this.refs.chat);
     this.chat.log('Application starting up');
   }
-  setView(view, props) {
+  setView(view) {
     this.setState({
-      view: view,
-      props: props
+      view: view
     });
   }
   render() {
-    let CurrentView = this.state.view;
+    let currentView = this.state.view;
+    currentView.props = _.defaults(currentView.props, this.props, {
+      app: this
+    });
     return <div className='app'>
-      <CurrentView {... this.state.props} app={this} />
+      {currentView}
       <MessageBox app={this} ref='chat' />
     </div>;
   }
