@@ -21,5 +21,5 @@ io.on('connection', (socket) => {
   });
 });
 
-import buildEngine from './game/init.js';
-console.log(buildEngine(true));
+import configureStore from './game/store.js';
+console.log(configureStore(true));
