@@ -7,7 +7,7 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackDevServer = require('webpack-dev-server');
 var del = require('del');
-require('babel/register');
+require('babel-core/register');
 
 var webpackConfiguration = {
   context: path.resolve(__dirname, 'src'),

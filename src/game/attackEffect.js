@@ -1,6 +1,6 @@
 import {System} from 'ecstasy';
 
-export default class AttackEffectSystem extends System {
+class AttackEffectSystem extends System {
   add(engine) {
     this.engine = engine;
     this.list = AttackEffectSystem.getList();
@@ -102,3 +102,5 @@ AttackEffectSystem.addStatus('first', (engine, entity, opponent, first) => {
 AttackEffectSystem.addStatus('counter', (engine, entity, opponent, first) => {
   return !first;
 });
+
+export default AttackEffectSystem;
