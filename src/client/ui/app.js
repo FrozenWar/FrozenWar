@@ -1,5 +1,4 @@
-import React from 'react';
-import _ from 'lodash';
+import React, { cloneElement } from 'react';
 
 import autoDetectTransport from '../transport/autoDetect.js';
 import ChatConsole from './chat/chatConsole.js';
@@ -71,12 +70,9 @@ export default class App extends React.Component {
     });
   }
   render() {
-    let currentView = this.state.view;
-    currentView.props = _.defaults(currentView.props, this.props, {
-      app: this
-    });
     return <div className='app'>
-      {currentView}
+      {cloneElement(this.state.view,
+        Object.assign({}, this.props, { app: this }))}
       <MessageBox app={this} ref='chat' />
     </div>;
   }

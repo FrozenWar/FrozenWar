@@ -1,6 +1,7 @@
 import Q from 'q';
 
-import buildEngine from '../../game/init.js';
+import configureStore from '../../game/store.js';
+import { spawn, spawnTemplate } from '../../game/actions/spawn.js';
 import Transport from './transport.js';
 import Channel from '../../server/channel.js';
 import User from '../../server/user.js';
@@ -27,21 +28,21 @@ export default class LocalTransport extends Transport {
     let user = new User(credentials);
     this.user = user;
     this.channel.addUser(user);
-    let engine = buildEngine(true);
-    engine.e()
-      .c('player', {
+    let store = configureStore(true);
+    store.dispatch(spawn({
+      player: {
         name: 'test'
-      });
-    engine.aa('spawn', null, null, {
-      type: 'TestEntity',
-      x: 4,
-      y: 4,
-      player: 0
-    });
+      }
+    }));
+    store.dispatch(spawnTemplate('TestEntity', {
+      pos: {
+        x: 4, y: 4
+      }
+    }));
     // Expose engine to global scope
-    window.engine = engine;
+    window.engine = store;
     // this.emit('login');
-    this.emit('game:start', engine);
+    this.emit('game:start', store);
     // setTimeout(this.emit.bind(this, 'game:start'), 0);
   }
   joinRoom(room) {

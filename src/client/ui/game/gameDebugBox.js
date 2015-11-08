@@ -5,15 +5,8 @@ export default class GameDebugBox extends React.Component {
     super(props);
   }
   render() {
-    let entityList = this.props.engine.getEntities().map((entity) => {
-      return <li key={entity.id}>
-        {JSON.stringify(entity.toJSON())}
-      </li>;
-    });
     return <div className='gameDebugView'>
-      <ul>
-        {entityList}
-      </ul>
+      {JSON.stringify(this.props.engine.getState())}
     </div>;
   }
 }

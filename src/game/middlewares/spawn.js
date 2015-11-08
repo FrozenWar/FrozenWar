@@ -17,7 +17,7 @@ export function spawnTemplate(engine, action, next) {
   if (type !== SPAWN_TEMPLATE) return next(action);
   let template = getTemplate(payload.template);
   if (payload.override) {
-    deepCopy(template, payload.override);
+    deepCopy(payload.override, template);
   }
   return engine.dispatch(spawnAction(template));
 }

@@ -73,7 +73,12 @@ export default class Viewport {
   setCamera(posX, posY) {
     let tileWidth = this.getRenderWidth(this.width) + 1;
     let tileHeight = this.getRenderHeight(this.height) + 1;
-    let tilemap = this.engine.s('pos');
+    // temporary placeholder
+    let tilemap = {
+      width: 20, height: 20
+    };
+    let state = this.engine.getState();
+    let posIndex = state.posIndex;
     // Determine the size of the tile map.
     let mapWidth = this.hexagon.width * tilemap.width +
       this.hexagon.sideX;
@@ -116,10 +121,13 @@ export default class Viewport {
         // TODO validate
         if (renderRow[realX] == null) {
           // Doing this to use axial coordinates
-          let entities = tilemap.get(realX - (realY / 2 | 0), realY);
+          let entities = [];
+          if (posIndex[realY]) {
+            entities = posIndex[realX - (realY / 2 | 0)] || [];
+          }
           if (entities == null) continue;
           // Create new sprite and add it to container.
-          let tile = new Tile(realX - (realY / 2 | 0), realY, entities);
+          let tile = new Tile(realX - (realY / 2 | 0), realY, entities, state);
           this.container.addChild(tile.sprite);
           tile.sprite.position.x = renderX;
           tile.sprite.position.y = renderY;

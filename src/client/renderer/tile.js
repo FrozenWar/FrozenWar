@@ -9,10 +9,11 @@ let hexagon = new Hexagon(80);
  * Represents a tile in the game.
  */
 export default class Tile {
-  constructor(x, y, entities) {
+  constructor(x, y, entities, state) {
     this.x = x;
     this.y = y;
     this.entities = entities;
+    this.state = state;
     this.selected = false;
     this.hover = false;
     this.sprite = new PIXI.Container();

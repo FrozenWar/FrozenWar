@@ -32,7 +32,8 @@ export default class PositionLayer extends Layer {
       graphics.position.x = drawX + 4;
       graphics.position.y = drawY + hexagon.height / 2 -
         hexagon.side / 2;
-      let text = new PIXI.Text(entity.c('info').name, {
+      console.log(entity, this.tile.state);
+      let text = new PIXI.Text(this.tile.state.info[entity].name, {
         font: '12px NanumGothic, 나눔고딕, 맑은 고딕, MalgunGothic, sans-serif',
         align: 'center',
         wordWrap: true,
