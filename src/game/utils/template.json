@@ -1,0 +1,20 @@
+{
+  "BaseEntity": {
+    "owner": {},
+    "info": {
+      "type": "unit",
+      "name": "Unknown"
+    },
+    "pos": {}
+  },
+  "TestEntity": {
+    "prototype": "BaseEntity",
+    "info": {
+      "type": "unit",
+      "name": "테스트용 엔티티"
+    },
+    "move": {
+      "maxStep": 2
+    }
+  }
+}
