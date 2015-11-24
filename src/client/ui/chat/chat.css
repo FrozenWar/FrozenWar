@@ -1,8 +1,0 @@
-.message.list {
-  border: 1px solid #000;
-  padding: 3pt;
-  margin: 10pt;
-  overflow-y: scroll;
-  height: 120pt;
-  width: 300pt;
-}
